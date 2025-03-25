@@ -327,7 +327,7 @@ public class HeroStateMachine : MonoBehaviour
         
         bool isCritical = Random.Range(0, 100) < 5;
         if (isCritical) getDamageAmount *= 2;
-        DamagePopup.Create(this.transform.Find("Body").position, getDamageAmount, isCritical);
+        DamagePopup.Create(this.transform.Find("Body").position, getDamageAmount, isCritical, false);
         this.baseHero.curHP -= getDamageAmount;
         CameraShakeManager.instance.CameraShake(this.impulseSource);
         float ratio = this.baseHero.curHP / this.baseHero.baseHP;
@@ -349,32 +349,65 @@ public class HeroStateMachine : MonoBehaviour
     //Do damage
     public void DoDamage()
     {
+        float calDamage = this.baseHero.curATK + combatStateMachine.performList[0].choosenAttack.attackDamage;
         if (this.combatStateMachine.performList.Count > 0)
         {
-            float calDamage = this.baseHero.curATK + combatStateMachine.performList[0].choosenAttack.attackDamage;
-            
-            this.baseHero.curMP -= this.combatStateMachine.performList[0].choosenAttack.attackCost;
-           
-            float ratio = this.baseHero.curMP / this.baseHero.baseMP;
-            Sequence sequence = DOTween.Sequence();
-            sequence.Append(this.heroMPBarFill.DOFillAmount(ratio, 0.25f)).SetEase(Ease.InOutSine);
-            sequence.AppendInterval(this.trailDelay);
-            sequence.Append(this.heroMPBarTrail.DOFillAmount(ratio, 0.3f)).SetEase(Ease.InOutSine);
-            sequence.Play();
+            this.ManaBar();
             this.enemyToAttack.GetComponent<EnemyStateMachine>().TakeDamage(calDamage, this.combatStateMachine.performList[0].choosenAttack.effect1, this.combatStateMachine.performList[0].choosenAttack.effect2);
-
-
-            if(this.baseHero.curMP <= 0)
-            {
-                this.baseHero.curMP = 0;
-                //Debug.Log("Het mana");
-            }
             this.UpdateHeroPanel();
         }
         else
         {
             return;
         }
+    }
+    protected void ManaBar()
+    {
+        if (this.combatStateMachine.performList[0].choosenAttack.attackType == BaseAttack.AttackType.NormalAttack)
+        {
+            this.RestoreMana();
+        }
+        else
+        {
+            this.DescreaseMana();
+        }
+        
+        if (this.baseHero.curMP <= 0)
+        {
+            this.baseHero.curMP = 0;
+            //Debug.Log("Het mana");
+        }
+    }
+    protected void RestoreMana()
+    {
+        // Tăng mana hiện tại
+        this.baseHero.curMP += 3f;
+
+        // Đảm bảo mana không vượt quá giá trị tối đa
+        if (this.baseHero.curMP > this.baseHero.baseMP)
+        {
+            this.baseHero.curMP = this.baseHero.baseMP;
+        }
+
+        // Tính tỷ lệ mana để cập nhật thanh UI
+        float ratio = this.baseHero.curMP / this.baseHero.baseMP;
+
+        // Tạo Sequence để làm animation
+        Sequence sequence = DOTween.Sequence();
+        sequence.Append(this.heroMPBarFill.DOFillAmount(ratio, 0.25f)).SetEase(Ease.InOutSine);
+        sequence.AppendInterval(this.trailDelay);
+        sequence.Append(this.heroMPBarTrail.DOFillAmount(ratio, 0.3f)).SetEase(Ease.InOutSine);
+        sequence.Play();
+    }
+    protected void DescreaseMana()
+    {
+        this.baseHero.curMP -= this.combatStateMachine.performList[0].choosenAttack.attackCost;
+        float ratio = this.baseHero.curMP / this.baseHero.baseMP;
+        Sequence sequence = DOTween.Sequence();
+        sequence.Append(this.heroMPBarFill.DOFillAmount(ratio, 0.25f)).SetEase(Ease.InOutSine);
+        sequence.AppendInterval(this.trailDelay);
+        sequence.Append(this.heroMPBarTrail.DOFillAmount(ratio, 0.3f)).SetEase(Ease.InOutSine);
+        sequence.Play();
     }
     //Create a player panel
     public void CreateHeroPanel()
@@ -407,6 +440,10 @@ public class HeroStateMachine : MonoBehaviour
     IEnumerator MoveTowardsStart()
     {
         yield return new WaitForSeconds(0.25f);
+        if (this.combatStateMachine.performList[0].choosenAttack.attackType == BaseAttack.AttackType.NormalAttack)
+        {
+            DamagePopup.Create(this.body.transform.position, 3f, false, true);
+        }
         this.anim.SetBool("IdleBattle", true);
         yield return new WaitForSeconds(0.5f);
         //do damage

@@ -4,11 +4,11 @@ using UnityEngine;
 using TMPro;
 public class DamagePopup : MonoBehaviour
 {
-    public static DamagePopup Create(Vector3 position, float damageAmout, bool isCriticalHit)
+    public static DamagePopup Create(Vector3 position, float damageAmout, bool isCriticalHit, bool isNormalAttack)
     {
         Transform damagePopupTransform = Instantiate(GameAssets.Instance.popupText,position,Quaternion.identity);
         DamagePopup damagePopup = damagePopupTransform.GetComponent<DamagePopup>();
-        damagePopup.SetUp(damageAmout, isCriticalHit);
+        damagePopup.SetUp(damageAmout, isCriticalHit, isNormalAttack);
         return damagePopup;
     }
 
@@ -24,25 +24,30 @@ public class DamagePopup : MonoBehaviour
         this.textMesh = this.transform.GetComponent<TextMeshPro>();
     }
 
-    public void SetUp(float damageAmount, bool isCriticalHit)
+    public void SetUp(float damageAmount, bool isCriticalHit, bool isNormalAttack)
     {
         this.textMesh.SetText(damageAmount.ToString());
         if (!isCriticalHit)
         {
-            this.textMesh.fontSize = 5f;
+            this.textMesh.fontSize = 10f;
             this.textColor = Color.white;
         }
         else
         {
-            this.textMesh.fontSize = 10f;
+            this.textMesh.fontSize = 15f;
             this.textColor = Color.yellow;
 
+        }
+        if (isNormalAttack)
+        {
+            this.textMesh.fontSize = 10;
+            this.textColor = Color.blue;
         }
         textMesh.color = this.textColor;
         this.disappearTimer = DISAPPEAR_TIMER_MAX;
         sortingOrder++;
         this.textMesh.sortingOrder = sortingOrder;
-        this.moveVector = new Vector3(0.2f, 1f) * 10f;
+        this.moveVector = new Vector3(0f, 0.5f) * 10f;
     }
 
     private void Update()

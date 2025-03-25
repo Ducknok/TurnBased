@@ -231,7 +231,7 @@ public class EnemyStateMachine : MonoBehaviour
 
         bool isCritical = Random.Range(0, 100) < 20;
         if (isCritical) getDamageAmount *= 2;
-        DamagePopup.Create(this.transform.Find("Body").position, getDamageAmount, isCritical);
+        DamagePopup.Create(this.transform.Find("Body").position, getDamageAmount, isCritical, false);
         this.baseEnemy.curHP -= getDamageAmount;
         this.curHpNumber.text = this.baseEnemy.curHP.ToString();
         

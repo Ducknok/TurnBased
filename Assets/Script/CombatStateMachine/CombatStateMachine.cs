@@ -184,10 +184,11 @@ public class CombatStateMachine : MonoBehaviour
                 {
                     //call function
                     this.ClearAttackPanel();
+                    if(this.AreAllHeroesDone()) this.heroesDoneTurn.Clear();
                     if (this.AreAllEnemiesDone())
                     {
                         Debug.LogWarning("Enemy done");
-                        // ✅ Nếu tất cả enemy đã tấn công xong, reset Lock & Timer, rồi chuyển lượt cho player
+                        //Nếu tất cả enemy đã tấn công xong, reset Lock & Timer, rồi chuyển lượt cho player
 
                         this.enemiesAttacked.Clear();
                         this.heroTurn = true;
@@ -196,7 +197,6 @@ public class CombatStateMachine : MonoBehaviour
                         {
 
                             EnemyStateMachine esm = enemy.GetComponent<EnemyStateMachine>();
-                            Debug.LogWarning(esm.gameObject);
                             esm.timer = Random.Range(1, this.playersInCombat.Count + 1);
                             esm.ChooseAction();
                         }
@@ -331,7 +331,6 @@ public class CombatStateMachine : MonoBehaviour
         this.CreateAttackTypeInfoPanel(this.playerChoice.choosenAttack);
         this.isSelectingEnemy = true;
         this.actionPanel.SetActive(false);
-
     }
 
     //Open skill panel
