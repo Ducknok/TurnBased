@@ -464,6 +464,7 @@ public class HeroStateMachine : MonoBehaviour
         if (this.combatStateMachine.AreAllHeroesDone())
         {
             this.combatStateMachine.heroesDoneTurn.Clear();
+
             Debug.LogWarning("hero done");
             if (this.combatStateMachine.AreAllEnemiesDone())
             {

@@ -211,32 +211,43 @@ public class EnemyStateMachine : MonoBehaviour
     {
         CameraShakeManager.instance.CameraShake(impulseSource);
 
-        // Kiểm tra tất cả Lock hiện có
-        foreach (var lockSystem in activeLocks)
+        // Kiểm tra nếu enemy có Lock
+        bool hasLocks = activeLocks.Count > 0;
+        bool allLocksBroken = false;
+
+        if (hasLocks)
         {
-            lockSystem.TryBreakLock(attackType1, attackType2);
-            this.enemyUI.GrayOutAttackType(attackType1, attackType2);
+            // Kiểm tra tất cả Lock hiện có
+            foreach (var lockSystem in activeLocks)
+            {
+                lockSystem.TryBreakLock(attackType1, attackType2);
+                this.enemyUI.GrayOutAttackType(attackType1, attackType2);
+            }
+
+            // Nếu tất cả Lock bị phá, tăng sát thương
+            allLocksBroken = activeLocks.TrueForAll(lockSystem => lockSystem.IsBroken());
         }
 
-        // Nếu tất cả Lock bị phá, tăng sát thương
-        bool allLocksBroken = activeLocks.TrueForAll(lockSystem => lockSystem.IsBroken());
-        if (allLocksBroken && !this.isLockBrokenOnce)
+        if (hasLocks && allLocksBroken && !this.isLockBrokenOnce)
         {
-
             getDamageAmount *= 1.5f; // Tăng 50% sát thương khi Lock bị phá
             this.isLockBrokenOnce = true;
             StartCoroutine(enemyUI.ClearAllAttackTypeIcons());
-            //Debug.Log("🔥 Lock bị phá! Gây thêm sát thương!");
+            // Debug.Log("🔥 Lock bị phá! Gây thêm sát thương!");
         }
 
+        // Xử lý chí mạng
         bool isCritical = Random.Range(0, 100) < 20;
         if (isCritical) getDamageAmount *= 2;
+
+        // Hiển thị popup sát thương
         DamagePopup.Create(this.transform.Find("Body").position, getDamageAmount, isCritical, false);
         this.baseEnemy.curHP -= getDamageAmount;
         this.curHpNumber.text = this.baseEnemy.curHP.ToString();
-        
+
+        // Cập nhật thanh máu
         float ratio = this.baseEnemy.curHP / this.baseEnemy.baseHP;
-        if (this.enemyHPBarFill != null) // Kiểm tra lại trước khi tạo tween
+        if (this.enemyHPBarFill != null)
         {
             Sequence sequence = DOTween.Sequence();
             sequence.Append(this.enemyHPBarFill.DOFillAmount(ratio, 0.25f).SetEase(Ease.InOutSine));
@@ -246,7 +257,7 @@ public class EnemyStateMachine : MonoBehaviour
 
         StartCoroutine(this.ClearEnemyInfo());
 
-
+        // Kiểm tra chết
         if (this.baseEnemy.curHP <= 0)
         {
             this.baseEnemy.curHP = 0;
@@ -254,6 +265,7 @@ public class EnemyStateMachine : MonoBehaviour
             StartCoroutine(this.DeadSequence());
         }
     }
+
     IEnumerator DeadSequence()
     {
         yield return new WaitForSeconds(1f);
@@ -306,7 +318,7 @@ public class EnemyStateMachine : MonoBehaviour
             if (this.combatStateMachine.AreAllEnemiesDone())
             {
                 Debug.LogWarning("Enemy done");
-                // ✅ Nếu tất cả enemy đã tấn công xong, reset Lock & Timer, rồi chuyển lượt cho player
+                //Nếu tất cả enemy đã tấn công xong, reset Lock & Timer, rồi chuyển lượt cho player
 
                 this.combatStateMachine.enemiesAttacked.Clear();
                 this.combatStateMachine.heroTurn = true;

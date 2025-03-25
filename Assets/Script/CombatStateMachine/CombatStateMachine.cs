@@ -184,7 +184,7 @@ public class CombatStateMachine : MonoBehaviour
                 {
                     //call function
                     this.ClearAttackPanel();
-                    if(this.AreAllHeroesDone()) this.heroesDoneTurn.Clear();
+                    if (this.AreAllHeroesDone()) this.heroesDoneTurn.Clear();
                     if (this.AreAllEnemiesDone())
                     {
                         Debug.LogWarning("Enemy done");
@@ -195,7 +195,6 @@ public class CombatStateMachine : MonoBehaviour
                         this.enemyTurn = false;
                         foreach (var enemy in this.enemiesInCombat)
                         {
-
                             EnemyStateMachine esm = enemy.GetComponent<EnemyStateMachine>();
                             esm.timer = Random.Range(1, this.playersInCombat.Count + 1);
                             esm.ChooseAction();
