@@ -184,8 +184,8 @@ public class CombatStateMachine : MonoBehaviour
                 {
                     //call function
                     this.ClearAttackPanel();
-                    if (this.AreAllHeroesDone()) this.heroesDoneTurn.Clear();
-                    if (this.AreAllEnemiesDone())
+                    if(this.AreAllHeroesDone()) this.heroesDoneTurn.Clear();
+                    if(this.AreAllEnemiesDone())
                     {
                         Debug.LogWarning("Enemy done");
                         //Nếu tất cả enemy đã tấn công xong, reset Lock & Timer, rồi chuyển lượt cho player
