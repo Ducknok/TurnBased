@@ -6,7 +6,7 @@ using TMPro;
 using System;
 using UnityEngine.EventSystems;
 
-public class UIInventoryItem : MonoBehaviour
+public class UIInventoryItem : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IEndDragHandler, IDropHandler, IDragHandler
 {
     [SerializeField]
     private Image itemImage;
@@ -14,9 +14,9 @@ public class UIInventoryItem : MonoBehaviour
     private TextMeshProUGUI quantityText;
 
     [SerializeField]
-    private Image boderImage;
+    private Image borderImage;
 
-    public event Action<UIInventoryItem> OnItemClicked, OnItemDroppedOn, OnItemBeginDrag, OnItemEndDrag, OnItemSold, OnRightMouseBtnClick;
+    public event Action<UIInventoryItem> OnItemClicked, OnItemDroppedOn, OnItemBeginDrag, OnItemEndDrag /*OnItemSold*/, OnRightMouseBtnClick;
 
     private bool empty = true;
 
@@ -32,7 +32,7 @@ public class UIInventoryItem : MonoBehaviour
     }
     public void Deselect()
     {
-        this.boderImage.enabled = false;
+        this.borderImage.enabled = false;
     }
     public void SetData(Sprite sprite, int quantity)
     {
@@ -43,25 +43,28 @@ public class UIInventoryItem : MonoBehaviour
     }
     public void Select()
     {
-        this.boderImage.enabled = true;
+        this.borderImage.enabled = true;
     }
     public void OnBeginDrag()
     {
-        if (this.empty) return;
-        OnItemBeginDrag?.Invoke(this);
+       
     }
     public void OnDrop()
     {
-        OnItemDroppedOn?.Invoke(this);
+        
     }
     public void OnEndDrag()
     {
-        OnItemEndDrag?.Invoke(this);
+        
     }
     public void OnPointerClick(BaseEventData data)
     {
-        PointerEventData pointer = (PointerEventData)data;
-        if(pointer.button == PointerEventData.InputButton.Right)
+        
+    }
+
+    public void OnPointerClick(PointerEventData pointerData)
+    {
+        if (pointerData.button == PointerEventData.InputButton.Right)
         {
             OnRightMouseBtnClick?.Invoke(this);
         }
@@ -69,5 +72,26 @@ public class UIInventoryItem : MonoBehaviour
         {
             OnItemClicked?.Invoke(this);
         }
+    }
+
+    public void OnBeginDrag(PointerEventData eventData)
+    {
+        if (this.empty) return;
+        OnItemBeginDrag?.Invoke(this);
+    }
+
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        OnItemEndDrag?.Invoke(this);
+    }
+
+    public void OnDrop(PointerEventData eventData)
+    {
+        OnItemDroppedOn?.Invoke(this);
+    }
+
+    public void OnDrag(PointerEventData eventData)
+    {
+        throw new NotImplementedException();
     }
 }
