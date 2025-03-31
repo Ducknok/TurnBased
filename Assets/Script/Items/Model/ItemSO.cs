@@ -14,7 +14,7 @@ namespace Inventory.Model
         public int ID => GetInstanceID();
 
         [field: SerializeField]
-        public int MaxStackSize { get; set; } = 1;
+        public int MaxStackSize { get; set; } = 99;
         [field: SerializeField]
         public string Name { get; set; }
         [field: SerializeField]

@@ -15,31 +15,54 @@ namespace Inventory
 
         [SerializeField]
         private InventorySO inventoryData;
-        public int inventorySize = 10;
+        public List<InventoryItem> initialItems = new List<InventoryItem>();
 
         private void Start()
         {
             PrepareUI();
-            //this.inventoryData.Initialize();
+            PrepareInventoryData();
+        }
+
+        private void PrepareInventoryData()
+        {
+            this.inventoryData.Initialize();
+            this.inventoryData.OnInventoryUpdated += UpdateInventoryUI;
+            foreach (InventoryItem item in this.initialItems)
+            {
+                if (item.IsEmpty) continue;
+                this.inventoryData.AddItem(item);
+            }
+        }
+
+        private void UpdateInventoryUI(Dictionary<int, InventoryItem> inventoryState)
+        {
+            this.inventoryUI.ResetAllItems();
+            foreach (var item in inventoryState)
+            {
+                this.inventoryUI.UpdateData(item.Key, item.Value.item.ItemImage,
+                    item.Value.quantity);
+            }
         }
 
         private void PrepareUI()
         {
-            inventoryUI.InitializeInventoryUI(inventoryData.Size);
-            inventoryUI.OnDescriptionRequested += HandleDescriptionRequest;
-            inventoryUI.OnItemActionRequested += HandleItemActionRequest;
-            inventoryUI.OnStartDragging += HandleStartDragging;
-            inventoryUI.OnSwapItems += HandleSwapItems;
+            this.inventoryUI.InitializeInventoryUI(this.inventoryData.Size);
+            this.inventoryUI.OnDescriptionRequested += HandleDescriptionRequest;
+            this.inventoryUI.OnItemActionRequested += HandleItemActionRequest;
+            this.inventoryUI.OnStartDragging += HandleStartDragging;
+            this.inventoryUI.OnSwapItems += HandleSwapItems;
         }
 
         private void HandleSwapItems(int itemIndex1, int itemIndex2)
         {
-
+            this.inventoryData.SwapItems(itemIndex1, itemIndex2);
         }
 
         private void HandleStartDragging(int itemIndex)
         {
-
+            InventoryItem inventoryItem = this.inventoryData.GetItemAt(itemIndex);
+            if (inventoryItem.IsEmpty) return;
+            this.inventoryUI.CreatedDraggedItem(inventoryItem.item.ItemImage, inventoryItem.quantity);
         }
 
         private void HandleItemActionRequest(int itemIndex)

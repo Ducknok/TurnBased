@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee94f780c8abf9643b9b127f48f9612d, type: 3}
   m_Name: Lance
   m_EditorClassIdentifier: 
-  <IsStackable>k__BackingField: 0
+  <IsStackable>k__BackingField: 1
   <MaxStackSize>k__BackingField: 99
   <Name>k__BackingField: Lance
   <ReceiveEffect>k__BackingField: +3 damage
