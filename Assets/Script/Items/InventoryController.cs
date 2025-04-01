@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Text;
 
 //Controller (C) in MVC
 namespace Inventory
@@ -51,8 +52,8 @@ namespace Inventory
             this.inventoryUI.OnSwapItems += HandleSwapItems;
             this.inventoryUI.OnDescriptionRequested += HandleDescriptionRequest;
             this.inventoryUI.OnItemActionRequested += HandleItemActionRequest;
-            
-            
+
+
         }
 
         private void HandleSwapItems(int itemIndex1, int itemIndex2)
@@ -71,17 +72,19 @@ namespace Inventory
         {
             InventoryItem inventoryItem = this.inventoryData.GetItemAt(itemIndex);
             if (inventoryItem.IsEmpty) return;
-            IItemAction itemAction = inventoryItem.item as IItemAction;
-            if(itemAction != null)
-            {
-                Debug.LogWarning("Performing action");
-                itemAction.PerformAction(this.gameObject);
-            }
             IDestroyableItem destroyableItem = inventoryItem.item as IDestroyableItem;
             if (destroyableItem != null)
             {
                 this.inventoryData.RemoveItem(itemIndex, 1);
             }
+
+            IItemAction itemAction = inventoryItem.item as IItemAction;
+            if (itemAction != null)
+            {
+                Debug.LogWarning("Performing action");
+                itemAction.PerformAction(this.gameObject, inventoryItem.itemState);
+            }
+            
         }
 
         private void HandleDescriptionRequest(int itemIndex)
@@ -93,9 +96,25 @@ namespace Inventory
                 return;
             }
             ItemSO item = inventoryItem.item;
-            inventoryUI.UpdateDescription(itemIndex, item.ItemImage, item.name, item.ReceiveEffect, item.Description);
+            string description = PrepareDescription(inventoryItem);
+            inventoryUI.UpdateDescription(itemIndex, item.ItemImage, item.name
+                , item.ReceiveEffect, description);
         }
 
+        public string PrepareDescription(InventoryItem inventoryItem)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append(inventoryItem.item.Description);
+            //sb.AppendLine();
+            for (int i = 0; i < inventoryItem.itemState.Count; i++)
+            {
+                sb.Append($" {inventoryItem.itemState[i].itemParameter.ParameterName}" + 
+                    $": {inventoryItem.itemState[i].value}/" +
+                    $"{inventoryItem.item.DefaultParameterList[i].value}");
+                //sb.AppendLine();
+            }
+            return sb.ToString();
+        }
         public void Update()
         {
             if (Input.GetKeyDown(KeyCode.Tab))

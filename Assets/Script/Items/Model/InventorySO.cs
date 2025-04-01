@@ -25,7 +25,7 @@ namespace Inventory.Model
                 this.inventoryItems.Add(InventoryItem.GetEmptyItem());
             }
         }
-        public int AddItem(ItemSO item, int quantity)
+        public int AddItem(ItemSO item, int quantity, List<ItemParameter> itemState = null)
         {
             if(item.IsStackable == false)
             {
@@ -33,7 +33,7 @@ namespace Inventory.Model
                 {
                     while(quantity > 0 && !this.IsInventoryFull()) 
                     {
-                        quantity -= this.AddItemToFirstFreeSlot(item, 1);
+                        quantity -= this.AddItemToFirstFreeSlot(item, 1, itemState);
 
                     }
                     this.InformAboutChange();
@@ -46,12 +46,14 @@ namespace Inventory.Model
             return quantity;
         }
 
-        private int AddItemToFirstFreeSlot(ItemSO item, int quantity)
+        private int AddItemToFirstFreeSlot(ItemSO item, int quantity
+            , List<ItemParameter> itemState = null)
         {
             InventoryItem newItem = new InventoryItem
             {
                 item = item,
-                quantity = quantity
+                quantity = quantity,
+                itemState = new List<ItemParameter>(itemState == null ? item.DefaultParameterList : itemState)
             };
             for (int i = 0; i < this.inventoryItems.Count; i++)
             {
@@ -165,13 +167,15 @@ namespace Inventory.Model
     {
         public int quantity;
         public ItemSO item;
+        public List<ItemParameter> itemState;
         public bool IsEmpty => item == null;
         public InventoryItem ChangeQuantity(int newQuantity)
         {
             return new InventoryItem
             {
                 quantity = newQuantity,
-                item = this.item
+                item = this.item,
+                itemState = new List<ItemParameter>(this.itemState)
             };
         }
         public static InventoryItem GetEmptyItem()
@@ -179,6 +183,7 @@ namespace Inventory.Model
             {
                 item = null,
                 quantity = 0,
+                itemState = new List<ItemParameter>(),
             };
     }
 }
