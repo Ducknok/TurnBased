@@ -47,10 +47,12 @@ namespace Inventory
         private void PrepareUI()
         {
             this.inventoryUI.InitializeInventoryUI(this.inventoryData.Size);
-            this.inventoryUI.OnDescriptionRequested += HandleDescriptionRequest;
-            this.inventoryUI.OnItemActionRequested += HandleItemActionRequest;
             this.inventoryUI.OnStartDragging += HandleStartDragging;
             this.inventoryUI.OnSwapItems += HandleSwapItems;
+            this.inventoryUI.OnDescriptionRequested += HandleDescriptionRequest;
+            this.inventoryUI.OnItemActionRequested += HandleItemActionRequest;
+            
+            
         }
 
         private void HandleSwapItems(int itemIndex1, int itemIndex2)
@@ -67,7 +69,19 @@ namespace Inventory
 
         private void HandleItemActionRequest(int itemIndex)
         {
-
+            InventoryItem inventoryItem = this.inventoryData.GetItemAt(itemIndex);
+            if (inventoryItem.IsEmpty) return;
+            IItemAction itemAction = inventoryItem.item as IItemAction;
+            if(itemAction != null)
+            {
+                Debug.LogWarning("Performing action");
+                itemAction.PerformAction(this.gameObject);
+            }
+            IDestroyableItem destroyableItem = inventoryItem.item as IDestroyableItem;
+            if (destroyableItem != null)
+            {
+                this.inventoryData.RemoveItem(itemIndex, 1);
+            }
         }
 
         private void HandleDescriptionRequest(int itemIndex)
@@ -75,7 +89,6 @@ namespace Inventory
             InventoryItem inventoryItem = inventoryData.GetItemAt(itemIndex);
             if (inventoryItem.IsEmpty)
             {
-                Debug.LogWarning("Item is empty");
                 inventoryUI.ResetSelection();
                 return;
             }

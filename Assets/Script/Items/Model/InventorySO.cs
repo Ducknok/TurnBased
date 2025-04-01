@@ -139,6 +139,25 @@ namespace Inventory.Model
             }
             return this.inventoryItems[itemIndex];
         }
+
+        public void RemoveItem(int itemIndex, int amount)
+        {
+            if (this.inventoryItems.Count > itemIndex)
+            {
+                if (this.inventoryItems[itemIndex].IsEmpty) return;
+                int reminder = this.inventoryItems[itemIndex].quantity - amount;
+                if(reminder <= 0)
+                {
+                    this.inventoryItems[itemIndex] = InventoryItem.GetEmptyItem();
+                }
+                else
+                {
+                    this.inventoryItems[itemIndex] = this.inventoryItems[itemIndex]
+                        .ChangeQuantity(reminder);
+                }
+                this.InformAboutChange();
+            }
+        }
     }
 
     [Serializable]

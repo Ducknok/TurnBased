@@ -10,12 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 974e5d7ae6792a844958ce2271187f9a, type: 3}
-  m_Name: Sword
+  m_Name: Food
   m_EditorClassIdentifier: 
   <IsStackable>k__BackingField: 1
   <MaxStackSize>k__BackingField: 99
-  <Name>k__BackingField: Silver Sword
-  <ReceiveEffect>k__BackingField: +4 damage
-  <Description>k__BackingField: 
-  <ItemImage>k__BackingField: {fileID: 254677325, guid: b66d1bbd6ca38954d83ef330e39cb070, type: 3}
-  modifiersData: []
+  <Name>k__BackingField: Food
+  <ReceiveEffect>k__BackingField: +20 Hp
+  <Description>k__BackingField: "\t"
+  <ItemImage>k__BackingField: {fileID: 2136223142, guid: b66d1bbd6ca38954d83ef330e39cb070, type: 3}
+  modifiersData:
+  - stat: {fileID: 11400000, guid: 878c4a7146a23c949a406b6ad6496612, type: 2}
+    value: 20
