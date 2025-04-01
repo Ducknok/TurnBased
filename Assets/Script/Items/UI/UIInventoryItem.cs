@@ -48,22 +48,6 @@ namespace Inventory.UI
         {
             borderImage.enabled = true;
         }
-        public void OnBeginDrag()
-        {
-
-        }
-        public void OnDrop()
-        {
-
-        }
-        public void OnEndDrag()
-        {
-
-        }
-        public void OnPointerClick(BaseEventData data)
-        {
-
-        }
 
         public void OnPointerClick(PointerEventData pointerData)
         {
@@ -95,7 +79,7 @@ namespace Inventory.UI
 
         public void OnDrag(PointerEventData eventData)
         {
-            throw new NotImplementedException();
+            
         }
     }
 }
