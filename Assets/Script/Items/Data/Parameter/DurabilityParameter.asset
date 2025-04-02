@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d17bdcb46d508e2488863c9f8f1d6ff6, type: 3}
   m_Name: DurabilityParameter
   m_EditorClassIdentifier: 
-  <ParameterName>k__BackingField: 
+  <ParameterName>k__BackingField: Durability

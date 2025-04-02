@@ -12,7 +12,9 @@ namespace Inventory.Model
         [SerializeField]
         private List<ModifierData> modifiersData = new List<ModifierData>();
         public string ActionName => "Consume";
-        public AudioClip actionSFX { get; private set; }
+
+        //[field: SerializeField]
+        //public AudioClip actionSFX { get; private set; }
         public bool PerformAction(GameObject character, List<ItemParameter> itemState = null)
         {
             foreach (ModifierData data in modifiersData)

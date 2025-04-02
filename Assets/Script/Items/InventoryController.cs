@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Text;
+using Unity.VisualScripting;
 
 //Controller (C) in MVC
 namespace Inventory
@@ -18,6 +19,10 @@ namespace Inventory
         private InventorySO inventoryData;
         public List<InventoryItem> initialItems = new List<InventoryItem>();
 
+        //[SerializeField]
+        //private AudioClip dropClip;
+        //[SerializeField]
+        //private AudioSource audioSource;
         private void Start()
         {
             PrepareUI();
@@ -68,7 +73,7 @@ namespace Inventory
             this.inventoryUI.CreatedDraggedItem(inventoryItem.item.ItemImage, inventoryItem.quantity);
         }
 
-        private void HandleItemActionRequest(int itemIndex)
+        public void PerformAction(int itemIndex)
         {
             InventoryItem inventoryItem = this.inventoryData.GetItemAt(itemIndex);
             if (inventoryItem.IsEmpty) return;
@@ -83,8 +88,36 @@ namespace Inventory
             {
                 Debug.LogWarning("Performing action");
                 itemAction.PerformAction(this.gameObject, inventoryItem.itemState);
+                //audioSource.PlayOnShot(itemAction.ActionSound);
+                if(this.inventoryData.GetItemAt(itemIndex).IsEmpty)
+                {
+                    this.inventoryUI.ResetSelection();
+                }
             }
-            
+        }
+        private void HandleItemActionRequest(int itemIndex)
+        {
+            InventoryItem inventoryItem = this.inventoryData.GetItemAt(itemIndex);
+            if (inventoryItem.IsEmpty) return;
+            IItemAction itemAction = inventoryItem.item as IItemAction;
+            if (itemAction != null)
+            {
+                this.inventoryUI.ShowItemAction(itemIndex);
+                this.inventoryUI.AddAction(itemAction.ActionName, () => PerformAction(itemIndex));
+            }
+            IDestroyableItem destroyableItem = inventoryItem.item as IDestroyableItem;
+            if (destroyableItem != null)
+            {
+                //this.inventoryData.RemoveItem(itemIndex, 1);
+                this.inventoryUI.AddAction("Drop", () => DropItem(itemIndex, inventoryItem.quantity));
+            }
+        }
+
+        private void DropItem(int itemIndex, int quantity)
+        {
+            this.inventoryData.RemoveItem(itemIndex, quantity);
+            this.inventoryUI.ResetSelection();
+            //this.audioSource.PlayOnShot(dropClip);
         }
 
         private void HandleDescriptionRequest(int itemIndex)
