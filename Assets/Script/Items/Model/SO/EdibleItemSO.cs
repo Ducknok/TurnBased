@@ -13,6 +13,7 @@ namespace Inventory.Model
         private List<ModifierData> modifiersData = new List<ModifierData>();
         public string ActionName => "Consume";
 
+        //TODO: add sound effect for item here
         //[field: SerializeField]
         //public AudioClip actionSFX { get; private set; }
         public bool PerformAction(GameObject character, List<ItemParameter> itemState = null)

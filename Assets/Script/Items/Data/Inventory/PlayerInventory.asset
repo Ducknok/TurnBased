@@ -13,12 +13,22 @@ MonoBehaviour:
   m_Name: PlayerInventory
   m_EditorClassIdentifier: 
   inventoryItems:
-  - quantity: 99
-    item: {fileID: 11400000, guid: c49b6382cf26655498a6a25a789b0744, type: 2}
+  - quantity: 3
+    item: {fileID: 11400000, guid: 177f4c0fb2ac90e47b2c9a5899f8dfbf, type: 2}
+    itemState: []
   - quantity: 1
-    item: {fileID: 11400000, guid: c49b6382cf26655498a6a25a789b0744, type: 2}
-  - quantity: 99
-    item: {fileID: 11400000, guid: 17033616050a04e49a507ff342e8b752, type: 2}
+    item: {fileID: 11400000, guid: 5615864efc1ceda4f96066cf1a53daff, type: 2}
+    itemState:
+    - itemParameter: {fileID: 11400000, guid: 9201eba36d55d714db818ff484519046, type: 2}
+      value: 100
   - quantity: 1
-    item: {fileID: 11400000, guid: 17033616050a04e49a507ff342e8b752, type: 2}
-  <Size>k__BackingField: 4
+    item: {fileID: 11400000, guid: 1a231fafe3633b14d8de0bf038ae2e0a, type: 2}
+    itemState:
+    - itemParameter: {fileID: 11400000, guid: 9201eba36d55d714db818ff484519046, type: 2}
+      value: 100
+  - quantity: 1
+    item: {fileID: 11400000, guid: 5615864efc1ceda4f96066cf1a53daff, type: 2}
+    itemState:
+    - itemParameter: {fileID: 11400000, guid: 9201eba36d55d714db818ff484519046, type: 2}
+      value: 80
+  <Size>k__BackingField: 10

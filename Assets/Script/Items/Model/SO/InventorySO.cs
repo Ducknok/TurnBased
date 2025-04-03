@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +17,7 @@ namespace Inventory.Model
 
         public event Action<Dictionary<int, InventoryItem>> OnInventoryUpdated;
 
+        //Khởi tạo và truyền giá trị null vào các slot trong kho đồ
         public void Initialize()
         {
             this.inventoryItems = new List<InventoryItem>();
@@ -25,12 +26,15 @@ namespace Inventory.Model
                 this.inventoryItems.Add(InventoryItem.GetEmptyItem());
             }
         }
-        public int AddItem(ItemSO item, int quantity, List<ItemParameter> itemState = null)
+        
+        public int AddItem(ItemSO item, int quantity
+            , List<ItemParameter> itemState = null)
         {
             if(item.IsStackable == false)
             {
                 for (int i = 0; i < this.inventoryItems.Count; i++)
                 {
+                    // Kiểm tra số lương và kho đồ vẫn còn slot
                     while(quantity > 0 && !this.IsInventoryFull()) 
                     {
                         quantity -= this.AddItemToFirstFreeSlot(item, 1, itemState);
@@ -38,7 +42,6 @@ namespace Inventory.Model
                     }
                     this.InformAboutChange();
                     return quantity;
-                    
                 }
             }
             quantity = AddStackableItem(item, quantity);
@@ -46,6 +49,7 @@ namespace Inventory.Model
             return quantity;
         }
 
+        //thêm item vào ô trống được duyệt thấy đầu tiên
         private int AddItemToFirstFreeSlot(ItemSO item, int quantity
             , List<ItemParameter> itemState = null)
         {
@@ -66,8 +70,11 @@ namespace Inventory.Model
             return 0;
         }
 
+        //Trả về danh sách chứa ô trống
         private bool IsInventoryFull()
-            => this.inventoryItems.Where(item => item.IsEmpty).Any() == false;
+            => !this.inventoryItems.Where(item => item.IsEmpty).Any();
+        //(parameters) => expression
+        // =>: biểu thức lambda, item: biến, item.IsEmpty: biếu thức thực thi
 
         private int AddStackableItem(ItemSO item, int quantity)
         {
@@ -108,6 +115,7 @@ namespace Inventory.Model
             this.AddItem(item.item, item.quantity);
         }
 
+        //trả về danh sách dạng key-value
         public Dictionary<int, InventoryItem> GetCurrentInventoryState()
         {
             Dictionary<int, InventoryItem> returnValue
@@ -169,6 +177,8 @@ namespace Inventory.Model
         public ItemSO item;
         public List<ItemParameter> itemState;
         public bool IsEmpty => item == null;
+
+        //thay doi so luong
         public InventoryItem ChangeQuantity(int newQuantity)
         {
             return new InventoryItem
