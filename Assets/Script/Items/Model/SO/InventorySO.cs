@@ -26,7 +26,6 @@ namespace Inventory.Model
                 this.inventoryItems.Add(InventoryItem.GetEmptyItem());
             }
         }
-        
         public int AddItem(ItemSO item, int quantity
             , List<ItemParameter> itemState = null)
         {
@@ -103,7 +102,6 @@ namespace Inventory.Model
             while(quantity > 0 && !this.IsInventoryFull())
             {
                 int newQuantity = Mathf.Clamp(quantity, 0, item.MaxStackSize);
-                Debug.LogWarning(newQuantity);
                 quantity -= newQuantity;
                 this.AddItemToFirstFreeSlot(item, newQuantity);
             }

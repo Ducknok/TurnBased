@@ -1,7 +1,8 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//TODO: tạo 3 class charstatATKmodifierSO, charstatDEFmodifierSO, charstatMAGICmodifierSO
 [CreateAssetMenu]
 public class CharacterStatHealthModifierSO : CharacterStatModifierSO
 {

@@ -6,9 +6,18 @@ using UnityEngine;
 //Model (M) in MVC
 namespace Inventory.Model
 {
+    public enum ItemType
+    {
+        Weapon,
+        Armor,
+        Consumable,
+        Miscellaneous
+    }
     public abstract class ItemSO : ScriptableObject
     {
-        public int MyProperty { get; set; }
+
+        [field: SerializeField]
+        public ItemType itemType;
         [field: SerializeField]
         public bool IsStackable { get; set; }
         public int ID => GetInstanceID();
@@ -26,6 +35,7 @@ namespace Inventory.Model
         public Sprite ItemImage { get; set; }
         [field: SerializeField]
         public List<ItemParameter> DefaultParameterList { get; set; }
+        
     }
     [Serializable]
     public struct ItemParameter: IEquatable<ItemParameter>

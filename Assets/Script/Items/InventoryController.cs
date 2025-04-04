@@ -1,4 +1,4 @@
-using Inventory.UI;
+﻿using Inventory.UI;
 using Inventory.Model;
 using System;
 using System.Collections;
@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Text;
 using Unity.VisualScripting;
+using UnityEngine.UI;
 
 //Controller (C) in MVC
 namespace Inventory
@@ -19,6 +20,12 @@ namespace Inventory
         private InventorySO inventoryData;
         public List<InventoryItem> initialItems = new List<InventoryItem>();
 
+        [SerializeField]
+        public List<Button> inventoryTabs = new List<Button>();
+       
+
+        private int currentTabIndex = 0;
+
         //[SerializeField]
         //private AudioClip dropClip;
         //[SerializeField]
@@ -27,6 +34,11 @@ namespace Inventory
         {
             PrepareUI();
             PrepareInventoryData();
+            
+        }
+        private void Awake()
+        {
+            this.RefreshCurrentTab();
         }
 
         private void PrepareInventoryData()
@@ -36,6 +48,7 @@ namespace Inventory
             foreach (InventoryItem item in this.initialItems)
             {
                 if (item.IsEmpty) continue;
+                
                 this.inventoryData.AddItem(item);
             }
         }
@@ -148,24 +161,93 @@ namespace Inventory
             }
             return sb.ToString();
         }
-        public void Update()
+        private void UpdateFilteredInventoryUI(int index)
+        {
+            this.inventoryUI.ResetAllItems();
+            var inventoryState = this.inventoryData.GetCurrentInventoryState();
+            Dictionary<int, InventoryItem> filteredItems = new Dictionary<int, InventoryItem>();
+
+            foreach (var item in inventoryState)
+            {
+                    filteredItems.Add(item.Key, item.Value);
+            }
+            // Đổ item vào UI theo thứ tự mới (bắt đầu từ slot đầu tiên)
+            for (int i = 0; i < filteredItems.Count; i++)
+            {
+                if (filteredItems[i].item.itemType.ToString() == this.inventoryTabs[index].gameObject.name)
+                {
+                    this.inventoryUI.UpdateData(i, filteredItems[i].item.ItemImage, filteredItems[i].quantity);
+                }
+                    
+
+            }
+        }
+
+        private void SwitchTab(int direction)
+        {
+            int previousTabIndex = currentTabIndex;
+            currentTabIndex += direction;
+
+            if (currentTabIndex < 0)
+                currentTabIndex = inventoryTabs.Count - 1;
+            else if (currentTabIndex >= inventoryTabs.Count)
+                currentTabIndex = 0;
+
+            if (previousTabIndex != currentTabIndex)
+            {
+                Debug.LogWarning(inventoryTabs[previousTabIndex].transform.Find("Background"));
+                inventoryTabs[previousTabIndex].transform.Find("Background").gameObject.GetComponent<Image>().enabled = false;
+                inventoryTabs[currentTabIndex].transform.Find("Background").gameObject.GetComponent<Image>().enabled = true;
+                UpdateFilteredInventoryUI(currentTabIndex);
+            }
+        }
+
+
+        private void SwitchTabInput()
+        {
+            if (Input.GetKeyDown(KeyCode.Q))
+            {
+                SwitchTab(-1); // Chuyển về trái
+            }
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                SwitchTab(1);  // Chuyển sang phải
+            }
+        }
+        private void RefreshCurrentTab()
+        {
+            
+            this.inventoryTabs[currentTabIndex].transform.Find("Background").gameObject.gameObject.GetComponent<Image>().enabled = true;
+            UpdateFilteredInventoryUI(currentTabIndex);
+        }
+
+        private void OpenInventory()
         {
             if (Input.GetKeyDown(KeyCode.Tab))
             {
                 if (inventoryUI.isActiveAndEnabled == false)
                 {
-                    inventoryUI.Show();
-                    foreach (var item in inventoryData.GetCurrentInventoryState())
-                    {
-                        inventoryUI.UpdateData(item.Key,
-                            item.Value.item.ItemImage, item.Value.quantity);
-                    }
+                    
+                    this.inventoryUI.Show();
+                    this.RefreshCurrentTab();
+
+
                 }
                 else
                 {
+                    
                     inventoryUI.Hide();
+                    this.RefreshCurrentTab();
+
                 }
             }
+        }
+        public void Update()
+        {
+            this.OpenInventory();
+            //Debug.LogWarning(this.inventoryTabs[currentTabIndex].gameObject.name);
+            
+            this.SwitchTabInput();
         }
     }
 }
