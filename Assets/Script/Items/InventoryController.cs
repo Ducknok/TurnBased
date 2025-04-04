@@ -19,13 +19,17 @@ namespace Inventory
         [SerializeField]
         private InventorySO inventoryData;
         public List<InventoryItem> initialItems = new List<InventoryItem>();
+        private List<InventoryItem> currentFilteredItems = new List<InventoryItem>();
 
         [SerializeField]
         public List<Button> inventoryTabs = new List<Button>();
-       
+        private int currentButtonIndex = 0;
 
-        private int currentTabIndex = 0;
 
+
+        
+
+        //TODO: audio drop item here
         //[SerializeField]
         //private AudioClip dropClip;
         //[SerializeField]
@@ -63,15 +67,13 @@ namespace Inventory
             }
         }
 
-        private void PrepareUI()
+        public void PrepareUI()
         {
             this.inventoryUI.InitializeInventoryUI(this.inventoryData.Size);
-            this.inventoryUI.OnStartDragging += HandleStartDragging;
-            this.inventoryUI.OnSwapItems += HandleSwapItems;
+            //this.inventoryUI.OnStartDragging += HandleStartDragging;
+            //this.inventoryUI.OnSwapItems += HandleSwapItems;
             this.inventoryUI.OnDescriptionRequested += HandleDescriptionRequest;
             this.inventoryUI.OnItemActionRequested += HandleItemActionRequest;
-
-
         }
 
         private void HandleSwapItems(int itemIndex1, int itemIndex2)
@@ -79,12 +81,12 @@ namespace Inventory
             this.inventoryData.SwapItems(itemIndex1, itemIndex2);
         }
 
-        private void HandleStartDragging(int itemIndex)
-        {
-            InventoryItem inventoryItem = this.inventoryData.GetItemAt(itemIndex);
-            if (inventoryItem.IsEmpty) return;
-            this.inventoryUI.CreatedDraggedItem(inventoryItem.item.ItemImage, inventoryItem.quantity);
-        }
+        //private void HandleStartDragging(int itemIndex)
+        //{
+        //    InventoryItem inventoryItem = this.inventoryData.GetItemAt(itemIndex);
+        //    if (inventoryItem.IsEmpty) return;
+        //    this.inventoryUI.CreatedDraggedItem(inventoryItem.item.ItemImage, inventoryItem.quantity);
+        //}
 
         public void PerformAction(int itemIndex)
         {
@@ -135,90 +137,109 @@ namespace Inventory
 
         private void HandleDescriptionRequest(int itemIndex)
         {
-            InventoryItem inventoryItem = inventoryData.GetItemAt(itemIndex);
+            if (this.currentFilteredItems == null || this.currentFilteredItems.Count == 0 || itemIndex >= this.currentFilteredItems.Count)
+            {
+                inventoryUI.ResetSelection();
+                return;
+            }
+
+            InventoryItem inventoryItem = this.currentFilteredItems[itemIndex];
+
             if (inventoryItem.IsEmpty)
             {
                 inventoryUI.ResetSelection();
                 return;
             }
+
             ItemSO item = inventoryItem.item;
-            string description = PrepareDescription(inventoryItem);
-            inventoryUI.UpdateDescription(itemIndex, item.ItemImage, item.name
-                , item.ReceiveEffect, description);
+            this.inventoryUI.UpdateDescription(itemIndex, item.ItemImage, item.Name, item.ReceiveEffect, item.Description);
         }
 
-        public string PrepareDescription(InventoryItem inventoryItem)
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.Append(inventoryItem.item.Description);
-            //sb.AppendLine();
-            for (int i = 0; i < inventoryItem.itemState.Count; i++)
-            {
-                sb.Append($" {inventoryItem.itemState[i].itemParameter.ParameterName}" + 
-                    $": {inventoryItem.itemState[i].value}/" +
-                    $"{inventoryItem.item.DefaultParameterList[i].value}");
-                //sb.AppendLine();
-            }
-            return sb.ToString();
-        }
+
+        //public string PrepareDescription(InventoryItem inventoryItem)
+        //{
+        //    StringBuilder sb = new StringBuilder();
+        //    sb.Append(inventoryItem.item.Description);
+        //    //sb.AppendLine();
+        //    for (int i = 0; i < inventoryItem.itemState.Count; i++)
+        //    {
+        //        sb.Append($" {inventoryItem.itemState[i].itemParameter.ParameterName}" + 
+        //            $": {inventoryItem.itemState[i].value}/" +
+        //            $"{inventoryItem.item.DefaultParameterList[i].value}");
+        //        //sb.AppendLine();
+        //    }
+        //    return sb.ToString();
+        //}
+
+        //Lọc item theo button
         private void UpdateFilteredInventoryUI(int index)
         {
             this.inventoryUI.ResetAllItems();
             var inventoryState = this.inventoryData.GetCurrentInventoryState();
-            Dictionary<int, InventoryItem> filteredItems = new Dictionary<int, InventoryItem>();
+            this.currentFilteredItems.Clear();  // Xóa danh sách cũ trước khi thêm dữ liệu mới
 
+            // Lọc các item đúng loại với tab đang chọn
             foreach (var item in inventoryState)
             {
-                    filteredItems.Add(item.Key, item.Value);
-            }
-            // Đổ item vào UI theo thứ tự mới (bắt đầu từ slot đầu tiên)
-            for (int i = 0; i < filteredItems.Count; i++)
-            {
-                if (filteredItems[i].item.itemType.ToString() == this.inventoryTabs[index].gameObject.name)
+                if (item.Value.item.itemType.ToString() == this.inventoryTabs[index].gameObject.name)
                 {
-                    this.inventoryUI.UpdateData(i, filteredItems[i].item.ItemImage, filteredItems[i].quantity);
+                    this.currentFilteredItems.Add(item.Value);
                 }
-                    
-
             }
-        }
-
-        private void SwitchTab(int direction)
-        {
-            int previousTabIndex = currentTabIndex;
-            currentTabIndex += direction;
-
-            if (currentTabIndex < 0)
-                currentTabIndex = inventoryTabs.Count - 1;
-            else if (currentTabIndex >= inventoryTabs.Count)
-                currentTabIndex = 0;
-
-            if (previousTabIndex != currentTabIndex)
+            // Cập nhật UI: Đưa item lọc được vào các slot đầu tiên
+            for (int i = 0; i < this.currentFilteredItems.Count; i++)
             {
-                Debug.LogWarning(inventoryTabs[previousTabIndex].transform.Find("Background"));
-                inventoryTabs[previousTabIndex].transform.Find("Background").gameObject.GetComponent<Image>().enabled = false;
-                inventoryTabs[currentTabIndex].transform.Find("Background").gameObject.GetComponent<Image>().enabled = true;
-                UpdateFilteredInventoryUI(currentTabIndex);
+                this.inventoryUI.UpdateData(i, this.currentFilteredItems[i].item.ItemImage, this.currentFilteredItems[i].quantity);
+            }
+            // Đặt lại selection về item đầu tiên nếu có item
+            if (this.currentFilteredItems.Count > 0)
+            {
+                this.inventoryUI.SetSelectedIndex(0);
+                
+            }
+            else
+            {
+                this.inventoryUI.ResetSelection();
+                Debug.Log("No items after filter, resetting selection");
             }
         }
 
+        //đổi qua lại giữa các button
+        private void SwitchButton(int direction)
+        {
+            int previousTabIndex = currentButtonIndex;
+            currentButtonIndex += direction;
 
-        private void SwitchTabInput()
+            if (currentButtonIndex < 0)
+                currentButtonIndex = inventoryTabs.Count - 1;
+            else if (currentButtonIndex >= inventoryTabs.Count)
+                currentButtonIndex = 0;
+
+            if (previousTabIndex != currentButtonIndex)
+            {
+                //Debug.LogWarning(inventoryTabs[previousTabIndex].transform.Find("Background"));
+                inventoryTabs[previousTabIndex].transform.Find("Background").gameObject.GetComponent<Image>().enabled = false;
+                inventoryTabs[currentButtonIndex].transform.Find("Background").gameObject.GetComponent<Image>().enabled = true;
+                UpdateFilteredInventoryUI(currentButtonIndex);
+            }
+        }
+
+        private void SwitchButtonInput()
         {
             if (Input.GetKeyDown(KeyCode.Q))
             {
-                SwitchTab(-1); // Chuyển về trái
+                SwitchButton(-1); // Chuyển về trái
             }
             if (Input.GetKeyDown(KeyCode.E))
             {
-                SwitchTab(1);  // Chuyển sang phải
+                SwitchButton(1);  // Chuyển sang phải
             }
         }
         private void RefreshCurrentTab()
         {
             
-            this.inventoryTabs[currentTabIndex].transform.Find("Background").gameObject.gameObject.GetComponent<Image>().enabled = true;
-            UpdateFilteredInventoryUI(currentTabIndex);
+            this.inventoryTabs[currentButtonIndex].transform.Find("Background").gameObject.gameObject.GetComponent<Image>().enabled = true;
+            UpdateFilteredInventoryUI(currentButtonIndex);
         }
 
         private void OpenInventory()
@@ -230,24 +251,21 @@ namespace Inventory
                     
                     this.inventoryUI.Show();
                     this.RefreshCurrentTab();
-
-
                 }
                 else
                 {
-                    
                     inventoryUI.Hide();
                     this.RefreshCurrentTab();
-
                 }
             }
         }
+
         public void Update()
         {
             this.OpenInventory();
-            //Debug.LogWarning(this.inventoryTabs[currentTabIndex].gameObject.name);
+            //Debug.LogWarning(this.inventoryTabs[currentButtonIndex].gameObject.name);
             
-            this.SwitchTabInput();
+            this.SwitchButtonInput();
         }
     }
 }

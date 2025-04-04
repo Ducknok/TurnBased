@@ -49,7 +49,7 @@ namespace Inventory.Model
         }
 
         //thêm item vào ô trống được duyệt thấy đầu tiên
-        private int AddItemToFirstFreeSlot(ItemSO item, int quantity
+        public int AddItemToFirstFreeSlot(ItemSO item, int quantity
             , List<ItemParameter> itemState = null)
         {
             InventoryItem newItem = new InventoryItem

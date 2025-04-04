@@ -9,7 +9,7 @@ using UnityEngine.EventSystems;
 //View (V) in MVC
 namespace Inventory.UI
 {
-    public class UIInventoryItem : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IEndDragHandler, IDropHandler, IDragHandler
+    public class UIInventoryItem : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDropHandler, IDragHandler
     {
         [SerializeField]
         private Image itemImage;
@@ -19,7 +19,7 @@ namespace Inventory.UI
         [SerializeField]
         private Image borderImage;
 
-        public event Action<UIInventoryItem> OnItemClicked, OnItemDroppedOn, OnItemBeginDrag, OnItemEndDrag /*OnItemSold*/, OnRightMouseBtnClick;
+        public event Action<UIInventoryItem> OnItemSelected, OnItemDroppedOn, OnItemBeginDrag, OnItemEndDrag /*OnItemSold*/;
 
         private bool empty = true;
 
@@ -47,18 +47,7 @@ namespace Inventory.UI
         public void Select()
         {
             borderImage.enabled = true;
-        }
-
-        public void OnPointerClick(PointerEventData pointerData)
-        {
-            if (pointerData.button == PointerEventData.InputButton.Right)
-            {
-                OnRightMouseBtnClick?.Invoke(this);
-            }
-            else
-            {
-                OnItemClicked?.Invoke(this);
-            }
+            OnItemSelected?.Invoke(this);
         }
 
         public void OnBeginDrag(PointerEventData eventData)
