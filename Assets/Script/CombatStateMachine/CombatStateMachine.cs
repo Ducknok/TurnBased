@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 using System.Collections;
 using TMPro;
 using UnityEngine.EventSystems;
+using Inventory;
 
 public class CombatStateMachine : MonoBehaviour
 {

@@ -3,20 +3,19 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 //View (V) in MVC
 namespace Inventory.UI
 {
     public class UIInventoryPage : MonoBehaviour
     {
-        [SerializeField]
-        private UIInventoryItem itemPrefab;
-        [SerializeField]
-        private RectTransform contentPanel;
-        [SerializeField]
-        private UIInventoryDescription itemDescription;
-        [SerializeField]
-        private MouseFollower mouseFollower;
+        [SerializeField] private CombatStateMachine cbm;
+        [SerializeField] private UIInventoryItem itemPrefab;
+        [SerializeField] private RectTransform contentPanel;
+        [SerializeField] public UIInventoryDescription itemDescription;
+        [SerializeField] private MouseFollower mouseFollower;
+       
 
         List<UIInventoryItem> listOfUIItems = new List<UIInventoryItem>();
         private int currentIndex = 0; // Index của item đang chọn
@@ -29,6 +28,10 @@ namespace Inventory.UI
         public event Action<int> OnDescriptionRequested;
         [SerializeField]
         private ItemActionPanel itemActionPanel;
+
+        [SerializeField] private Image heroImagePrefab;
+        [SerializeField] private Transform heroButtonSpacer;
+        private List<Image> heroButtons = new List<Image>();
 
 
         private void Awake()
@@ -98,6 +101,31 @@ namespace Inventory.UI
             this.UpdateSelection();
         }
 
+        public void InitializeHeroButton()
+        {
+                // Clear old buttons (nếu cần)
+                foreach (Transform child in this.heroButtonSpacer)
+                {
+                    Destroy(child.gameObject);
+                }
+
+                this.heroButtons.Clear();
+
+                // Instantiate button và fill dữ liệu
+                for (int i = 0; i < this.cbm.playersInCombat.Count; i++)
+                {
+                    HeroStateMachine hero = this.cbm.playersInCombat[i].GetComponent<HeroStateMachine>();
+                    Image newImage = Instantiate(this.heroImagePrefab, this.heroButtonSpacer);
+                    this.heroButtons.Add(newImage);
+
+                    // Gọi hàm fill dữ liệu vào button
+                    this.itemDescription.SetHeroDescription(newImage, hero);
+
+                    // Optional: Add onClick event
+                    int index = i;
+                    //newButton.onClick.AddListener(() => OnHeroButtonClicked(index));
+                }
+        }
         internal void ResetAllItems()
         {
             foreach (var item in this.listOfUIItems)
@@ -222,9 +250,9 @@ namespace Inventory.UI
             ResetDraggedItem();
         }
 
-        internal void UpdateDescription(int itemIndex, Sprite itemImage, string name, string receiveEffect, string description)
+        internal void UpdateItemDescription(int itemIndex, Sprite itemImage, string name, string receiveEffect, string description)
         {
-            this.itemDescription.SetDescription(itemImage, name, receiveEffect, description);
+            this.itemDescription.SetItemDescription(itemImage, name, receiveEffect, description);
             DeselectAllItems();
             this.listOfUIItems[itemIndex].Select();
         }

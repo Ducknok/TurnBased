@@ -13,25 +13,16 @@ namespace Inventory
 {
     public class InventoryController : MonoBehaviour
     {
-        [SerializeField]
-        private UIInventoryPage inventoryUI;
+        [SerializeField] public UIInventoryPage inventoryUI;
 
-        [SerializeField]
-        private InventorySO inventoryData;
+        [SerializeField] private InventorySO inventoryData;
         public List<InventoryItem> initialItems = new List<InventoryItem>();
         private List<InventoryItem> currentFilteredItems = new List<InventoryItem>();
 
-        [SerializeField]
-        public List<Button> inventoryTabs = new List<Button>();
+        [SerializeField] public List<Button> inventoryTabs = new List<Button>();
         private int currentButtonIndex = 0;
 
-        [SerializeField]
-
-
-
-
         
-
         //TODO: audio drop item here
         //[SerializeField]
         //private AudioClip dropClip;
@@ -41,6 +32,7 @@ namespace Inventory
         {
             PrepareUI();
             PrepareInventoryData();
+            
             
         }
         private void Awake()
@@ -169,7 +161,7 @@ namespace Inventory
             }
 
             ItemSO item = inventoryItem.item;
-            this.inventoryUI.UpdateDescription(itemIndex, item.ItemImage, item.Name, item.ReceiveEffect, item.Description);
+            this.inventoryUI.UpdateItemDescription(itemIndex, item.ItemImage, item.Name, item.ReceiveEffect, item.Description);
         }
 
 
@@ -265,7 +257,7 @@ namespace Inventory
             {
                 if (inventoryUI.isActiveAndEnabled == false)
                 {
-                    
+                    this.inventoryUI.InitializeHeroButton();
                     this.inventoryUI.Show();
                     this.RefreshCurrentTab();
                 }

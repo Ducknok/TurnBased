@@ -9,7 +9,7 @@ using UnityEngine.EventSystems;
 //View (V) in MVC
 namespace Inventory.UI
 {
-    public class UIInventoryItem : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDropHandler, IDragHandler
+    public class UIInventoryItem : MonoBehaviour, IDropHandler /*IBeginDragHandler*//*IEndDragHandler*//*IDragHandler*/
     {
         [SerializeField]
         private Image itemImage;
@@ -19,7 +19,7 @@ namespace Inventory.UI
         [SerializeField]
         private Image borderImage;
 
-        public event Action<UIInventoryItem> OnItemSelected, OnItemDroppedOn, OnItemBeginDrag, OnItemEndDrag /*OnItemSold*/;
+        public event Action<UIInventoryItem> OnItemSelected, OnItemDroppedOn /*OnItemBeginDrag, OnItemEndDrag /*OnItemSold*/;
 
         private bool empty = true;
 
@@ -50,25 +50,25 @@ namespace Inventory.UI
             OnItemSelected?.Invoke(this);
         }
 
-        public void OnBeginDrag(PointerEventData eventData)
-        {
-            if (empty) return;
-            OnItemBeginDrag?.Invoke(this);
-        }
+        //public void OnBeginDrag(PointerEventData eventData)
+        //{
+        //    if (empty) return;
+        //    OnItemBeginDrag?.Invoke(this);
+        //}
 
-        public void OnEndDrag(PointerEventData eventData)
-        {
-            OnItemEndDrag?.Invoke(this);
-        }
+        //public void OnEndDrag(PointerEventData eventData)
+        //{
+        //    OnItemEndDrag?.Invoke(this);
+        //}
 
         public void OnDrop(PointerEventData eventData)
         {
             OnItemDroppedOn?.Invoke(this);
         }
 
-        public void OnDrag(PointerEventData eventData)
-        {
+        //public void OnDrag(PointerEventData eventData)
+        //{
             
-        }
+        //}
     }
 }

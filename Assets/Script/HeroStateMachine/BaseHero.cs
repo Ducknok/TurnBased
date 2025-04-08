@@ -6,6 +6,7 @@ using UnityEngine.UI;
 [Serializable]
 public class BaseHero : BaseClass
 {
+    public Sprite heroImage;
     public int stamina;     //Suc ben
     public int intellect;   //Tri tue
     public int dexterity;   //Kheo leo
