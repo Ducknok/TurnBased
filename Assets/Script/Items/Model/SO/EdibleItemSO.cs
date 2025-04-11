@@ -20,7 +20,7 @@ namespace Inventory.Model
         {
             foreach (ModifierData data in modifiersData)
             {
-                data.stat.AffectCharacter(character, data.value);
+                data.stat.AffectCharacter(character, data.val1, data.val2);
             }
             return true;
         }
@@ -28,6 +28,7 @@ namespace Inventory.Model
 
     public interface IDestroyableItem
     {
+        
     }
 
     public interface IItemAction
@@ -36,11 +37,6 @@ namespace Inventory.Model
         //public AudioClip actionSFX { get; }
         bool PerformAction(GameObject character, List<ItemParameter> itemState);
     }
-    [Serializable]
-    public class ModifierData
-    {
-        public CharacterStatModifierSO stat;
-        public float value;
-    }
+    
 }
 

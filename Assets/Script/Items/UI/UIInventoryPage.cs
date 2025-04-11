@@ -21,11 +21,8 @@ namespace Inventory.UI
         private int currentIndex = 0; // Index của item đang chọn
 
        // private int currentlyDraggedItemIndex = -1;
-        public event Action<int> OnItemActionRequested
-            /*OnStartDragging*/;
-
-        //public event Action<int, int> OnSwapItems;
-        public event Action<int> OnDescriptionRequested;
+        public event Action<int> OnItemActionRequested, OnDescriptionRequested /*OnStartDragging*/;
+        private Action<HeroStateMachine> onHeroSelectedCallback;
         [SerializeField]
         private ItemActionPanel itemActionPanel;
 
@@ -33,16 +30,63 @@ namespace Inventory.UI
         [SerializeField] private Transform heroButtonSpacer;
         private List<Image> heroButtons = new List<Image>();
 
+        private bool isSelectingHero = false;
+        private int currentHeroIndex = 0;
+        
+
+
 
         private void Awake()
         {
             Hide();
-            mouseFollower.Toggle(false);
-            itemDescription.ResetDescription();
+            this.mouseFollower.Toggle(false);
+            this.itemDescription.ResetDescription();
         }
         private void Update()
         {
-            this.SelectItem();
+            if (this.isSelectingHero)
+            {
+                SelectHero();
+            }
+            else
+            {
+                SelectItem();
+            }
+        }
+
+        public void StartHeroSelection(Action<HeroStateMachine> onSelected)
+        {
+            this.isSelectingHero = true;
+            this.currentHeroIndex = 0;
+            this.onHeroSelectedCallback = onSelected;
+            HighlightHeroButton(this.currentHeroIndex); // Làm nổi bật hero đầu tiên
+        }
+        private void SelectHero()
+        {
+            if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
+            {
+                this.currentHeroIndex = (this.currentHeroIndex + 1) % this.heroButtons.Count;
+                HighlightHeroButton(this.currentHeroIndex);
+            }
+            else if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
+            {
+                this.currentHeroIndex = (this.currentHeroIndex - 1 + this.heroButtons.Count) % this.heroButtons.Count;
+                HighlightHeroButton(this.currentHeroIndex);
+            }
+            else if (Input.GetKeyDown(KeyCode.Return))
+            {
+                this.isSelectingHero = false;
+                this.UnHighlightHeroButton(this.currentHeroIndex);
+                this.SetSelectedIndex(0);
+                HeroStateMachine selectedHero = this.cbm.playersInCombat[currentHeroIndex].GetComponent<HeroStateMachine>();
+                this.onHeroSelectedCallback?.Invoke(selectedHero);
+            }
+            else if (Input.GetKeyDown(KeyCode.LeftControl)) // 👈 quay về chọn item
+            {
+                this.isSelectingHero = false;
+                this.UnHighlightHeroButton(this.currentHeroIndex);
+                this.SetSelectedIndex(0);
+            }
         }
         private void SelectItem()
         {
@@ -58,24 +102,46 @@ namespace Inventory.UI
             {
                 if (this.listOfUIItems.Count > 0)
                 {
-                    OnItemActionRequested?.Invoke(currentIndex);
+                    this.OnItemActionRequested?.Invoke(this.currentIndex);
+                }
+            }
+        }
+        private void HighlightHeroButton(int index)
+        {
+            for (int i = 0; i < heroButtons.Count; i++)
+            {
+                Transform heroIcon = heroButtons[i].transform.Find("HeroIcon").Find("Choose");
+                if (heroIcon != null)
+                {
+                    heroIcon.gameObject.SetActive(i == index);
+                }
+            }
+        }
+        private void UnHighlightHeroButton(int index)
+        {
+            for (int i = 0; i < heroButtons.Count; i++)
+            {
+                Transform heroIcon = heroButtons[i].transform.Find("HeroIcon").Find("Choose");
+                if (heroIcon != null)
+                {
+                    heroIcon.gameObject.SetActive(false);
                 }
             }
         }
 
         private void MoveSelection(int direction)
         {
-            if (listOfUIItems.Count == 0) return; // Nếu inventory rỗng thì không làm gì
+            if (this.listOfUIItems.Count == 0) return; // Nếu inventory rỗng thì không làm gì
 
             // Bỏ chọn item hiện tại
-            listOfUIItems[currentIndex].Deselect();
+            this.listOfUIItems[currentIndex].Deselect();
 
             // Cập nhật index
-            currentIndex += direction;
-            if (currentIndex < 0)
-                currentIndex = listOfUIItems.Count - 1;
-            else if (currentIndex >= listOfUIItems.Count)
-                currentIndex = 0;
+            this.currentIndex += direction;
+            if (this.currentIndex < 0)
+                this.currentIndex = this.listOfUIItems.Count - 1;
+            else if (this.currentIndex >= this.listOfUIItems.Count)
+                this.currentIndex = 0;
 
             // Chọn item mới
             UpdateSelection();
@@ -84,16 +150,16 @@ namespace Inventory.UI
         private void UpdateSelection()
         {
             //this.ResetAllItems();
-            listOfUIItems[currentIndex].Select();
-            OnDescriptionRequested?.Invoke(currentIndex);
+            this.listOfUIItems[this.currentIndex].Select();
+            this.OnDescriptionRequested?.Invoke(this.currentIndex);
         }
         public void InitializeInventoryUI(int inventorySize)
         {
             for (int i = 0; i < inventorySize; i++)
             {
-                UIInventoryItem uiItem = Instantiate(itemPrefab, Vector3.zero, Quaternion.identity);
-                uiItem.transform.SetParent(contentPanel);
-                listOfUIItems.Add(uiItem);
+                UIInventoryItem uiItem = Instantiate(this.itemPrefab, Vector3.zero, Quaternion.identity);
+                uiItem.transform.SetParent(this.contentPanel);
+                this.listOfUIItems.Add(uiItem);
                 //uiItem.OnItemBeginDrag += HandleBeginDrag;
                 //uiItem.OnItemDroppedOn += HandleSwap;
                 //uiItem.OnItemEndDrag += HandleEndDrag;
@@ -198,6 +264,7 @@ namespace Inventory.UI
         //    if (index == -1) return;
         //    OnDescriptionRequested?.Invoke(index);
         //}
+     
 
         public void Show()
         {
@@ -207,7 +274,7 @@ namespace Inventory.UI
 
         public void ResetSelection()
         {
-            itemDescription.ResetDescription();
+            this.itemDescription.ResetDescription();
             DeselectAllItems();
         }
         public void AddAction(string actionName, Action performAction)

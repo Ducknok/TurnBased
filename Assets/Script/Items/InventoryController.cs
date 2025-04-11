@@ -114,7 +114,7 @@ namespace Inventory
                 return;
             }
 
-            InventoryItem inventoryItem = this.currentFilteredItems[itemIndex];
+            InventoryItem inventoryItem = currentFilteredItems[itemIndex];
             if (inventoryItem.IsEmpty)
             {
                 inventoryUI.ResetSelection();
@@ -122,20 +122,29 @@ namespace Inventory
             }
 
             IItemAction itemAction = inventoryItem.item as IItemAction;
+            IDestroyableItem destroyableItem = inventoryItem.item as IDestroyableItem;
+
             if (itemAction != null)
             {
-                this.inventoryUI.ShowItemAction(itemIndex);
-                this.inventoryUI.AddAction(itemAction.ActionName, () => PerformAction(itemIndex));
-            }
+                // Không hiển thị nút gì cả — chuyển luôn sang chọn Hero
+                this.inventoryUI.StartHeroSelection((HeroStateMachine selectedHero) =>
+                {
+                    if (itemAction.ActionName == "Consume" && selectedHero.baseHero.curHP == selectedHero.baseHero.baseHP && selectedHero.baseHero.curMP == selectedHero.baseHero.baseMP) return;
+                    //Gọi hiệu ứng item lên hero
+                    itemAction.PerformAction(selectedHero.gameObject, inventoryItem.itemState);
 
-            IDestroyableItem destroyableItem = inventoryItem.item as IDestroyableItem;
-            if (destroyableItem != null)
-            {
-                // Nếu có thêm action Drop sau này, đặt vào đây
-                // this.inventoryUI.AddAction("Drop", () => DropItem(itemIndex, inventoryItem.quantity));
+                    //Nếu là item tiêu hao thì xóa nó khỏi inventory
+                    if (destroyableItem != null)
+                    {
+                        this.inventoryData.RemoveItem(inventoryItem.item, 1);
+                        UpdateFilteredInventoryUI(this.currentButtonIndex);
+                    }
+
+                    //Reset UI sau khi dùng
+                    this.inventoryUI.ResetSelection();
+                });
             }
         }
-
 
         //private void DropItem(int itemIndex, int quantity)
         //{
@@ -164,7 +173,7 @@ namespace Inventory
             this.inventoryUI.UpdateItemDescription(itemIndex, item.ItemImage, item.Name, item.ReceiveEffect, item.Description);
         }
 
-
+        
         //public string PrepareDescription(InventoryItem inventoryItem)
         //{
         //    StringBuilder sb = new StringBuilder();
