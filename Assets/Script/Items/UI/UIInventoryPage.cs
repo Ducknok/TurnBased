@@ -10,29 +10,37 @@ namespace Inventory.UI
 {
     public class UIInventoryPage : MonoBehaviour
     {
+        [Header("LinkClass")]
         [SerializeField] private CombatStateMachine cbm;
         [SerializeField] private UIInventoryItem itemPrefab;
         [SerializeField] private RectTransform contentPanel;
         [SerializeField] public UIInventoryDescription itemDescription;
         [SerializeField] private MouseFollower mouseFollower;
        
-
+        [Header("ListOfUIItem")]
         List<UIInventoryItem> listOfUIItems = new List<UIInventoryItem>();
         private int currentIndex = 0; // Index của item đang chọn
 
-       // private int currentlyDraggedItemIndex = -1;
+        // private int currentlyDraggedItemIndex = -1;
+        //Event
         public event Action<int> OnItemActionRequested, OnDescriptionRequested /*OnStartDragging*/;
         private Action<HeroStateMachine> onHeroSelectedCallback;
-        [SerializeField]
-        private ItemActionPanel itemActionPanel;
 
+        [Header("ItemActionPanel")]
+        [SerializeField] private ItemActionPanel itemActionPanel;
+
+        [Header("HeroButton")]
         [SerializeField] private Image heroImagePrefab;
         [SerializeField] private Transform heroButtonSpacer;
         private List<Image> heroButtons = new List<Image>();
-
         private bool isSelectingHero = false;
         private int currentHeroIndex = 0;
-        
+
+        [Header("ItemInfoPanel")]
+        [SerializeField] public List<GameObject> heroInfoPanelList = new List<GameObject>();
+        [SerializeField] public List<Image> heroInfoPanelPrefab = new List<Image>();
+        [SerializeField] public Transform infoHeroPanelSpacer;
+        private List<Image> heroPanel = new List<Image>();
 
 
 
@@ -188,9 +196,36 @@ namespace Inventory.UI
                     this.itemDescription.SetHeroDescription(newImage, hero);
 
                     // Optional: Add onClick event
-                    int index = i;
+                    //int index = i;
                     //newButton.onClick.AddListener(() => OnHeroButtonClicked(index));
                 }
+        }
+        public void InitializeHeroBar(ItemSO selectedItem)
+        {
+            // Clear old buttons (nếu cần)
+            foreach (Transform child in this.infoHeroPanelSpacer)
+            {
+                Destroy(child.gameObject);
+            }
+            this.heroPanel.Clear();
+
+            // Instantiate button và fill dữ liệu
+            for (int i = 0; i < this.cbm.playersInCombat.Count; i++)
+            {
+                HeroStateMachine hero = this.cbm.playersInCombat[i].GetComponent<HeroStateMachine>();
+                foreach(var bar in this.heroInfoPanelPrefab)
+                { 
+                   Image newBar = Instantiate(bar, this.infoHeroPanelSpacer);
+                   this.heroButtons.Add(newBar);
+                   // Gọi hàm fill dữ liệu vào button
+                   this.itemDescription.SetATKDescription(newBar, hero, selectedItem);
+                }
+
+                // Optional: Add onClick event
+                //int index = i;
+                //newButton.onClick.AddListener(() => OnHeroButtonClicked(index));
+            }
+
         }
         internal void ResetAllItems()
         {
@@ -208,6 +243,7 @@ namespace Inventory.UI
                 listOfUIItems[itemIndex].SetData(itemImage, itemQuantity);
             }
         }
+
         private void HandleShowItemActions(UIInventoryItem inventoryItemUI)
         {
             int index = listOfUIItems.IndexOf(inventoryItemUI);

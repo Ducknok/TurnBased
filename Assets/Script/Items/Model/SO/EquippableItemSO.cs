@@ -29,5 +29,4 @@ namespace Inventory.Model
             return false;
         }
     }
-    
 }

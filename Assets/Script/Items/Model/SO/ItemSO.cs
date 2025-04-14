@@ -35,7 +35,9 @@ namespace Inventory.Model
         public Sprite ItemImage { get; set; }
         [field: SerializeField]
         public List<ItemParameter> DefaultParameterList { get; set; }
-        
+        [field: SerializeField]
+        public List<ModifierData> Modifiers { get; set; } = new List<ModifierData>();
+
     }
     [Serializable]
     public struct ItemParameter: IEquatable<ItemParameter>
@@ -55,6 +57,5 @@ namespace Inventory.Model
         public float val1;
         public float val2;
     }
-
 }
 

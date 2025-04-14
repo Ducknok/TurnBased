@@ -23,6 +23,8 @@ namespace Inventory
         private int currentButtonIndex = 0;
 
         
+
+        
         //TODO: audio drop item here
         //[SerializeField]
         //private AudioClip dropClip;
@@ -31,15 +33,19 @@ namespace Inventory
         private void Start()
         {
             PrepareUI();
-            PrepareInventoryData();
-            
-            
+            PrepareInventoryData(); 
         }
         private void Awake()
         {
             this.RefreshCurrentTab();
         }
+        public void Update()
+        {
+            this.OpenInventory();
+            //Debug.LogWarning(this.inventoryTabs[currentButtonIndex].gameObject.name);
 
+            this.SwitchButtonInput();
+        }
         private void PrepareInventoryData()
         {
             this.inventoryData.Initialize();
@@ -173,7 +179,7 @@ namespace Inventory
             this.inventoryUI.UpdateItemDescription(itemIndex, item.ItemImage, item.Name, item.ReceiveEffect, item.Description);
         }
 
-        
+
         //public string PrepareDescription(InventoryItem inventoryItem)
         //{
         //    StringBuilder sb = new StringBuilder();
@@ -190,35 +196,96 @@ namespace Inventory
         //}
 
         //Lọc item theo button
+        //private void UpdateFilteredInventoryUI(int index)
+        //{
+        //    this.inventoryUI.ResetAllItems();
+        //    var inventoryState = this.inventoryData.GetCurrentInventoryState();
+        //    this.currentFilteredItems.Clear();  // Xóa danh sách cũ trước khi thêm dữ liệu mới
+
+        //    // Lọc các item đúng loại với tab đang chọn
+        //    foreach (var item in inventoryState)
+        //    {
+        //        if (item.Value.item.itemType.ToString() == this.inventoryTabs[index].gameObject.name)
+        //        {                   
+        //            this.currentFilteredItems.Add(item.Value);
+        //            foreach(GameObject bar in this.inventoryUI.heroInfoPanelList)
+        //            {
+        //                if (item.Value.item.itemType.ToString() == bar.name)
+        //                {
+        //                    bar.gameObject.SetActive(true);
+        //                    //this.inventoryUI.InitializeHeroBar(item as ItemSO);
+        //                }
+        //                else bar.gameObject.SetActive(false);
+        //            }
+        //        }
+        //    }
+        //    // Cập nhật UI: Đưa item lọc được vào các slot đầu tiên
+        //    for (int i = 0; i < this.currentFilteredItems.Count; i++)
+        //    {
+        //        this.inventoryUI.UpdateData(i, this.currentFilteredItems[i].item.ItemImage, this.currentFilteredItems[i].quantity);
+        //    }
+        //    // Đặt lại selection về item đầu tiên nếu có item
+        //    if (this.currentFilteredItems.Count > 0)
+        //    {
+        //        this.inventoryUI.SetSelectedIndex(0);
+
+        //    }
+        //    else
+        //    {
+        //        this.inventoryUI.ResetSelection();
+        //        //Debug.Log("No items after filter, resetting selection");
+        //    }
+        //}
         private void UpdateFilteredInventoryUI(int index)
         {
             this.inventoryUI.ResetAllItems();
             var inventoryState = this.inventoryData.GetCurrentInventoryState();
-            this.currentFilteredItems.Clear();  // Xóa danh sách cũ trước khi thêm dữ liệu mới
+            this.currentFilteredItems.Clear();
 
-            // Lọc các item đúng loại với tab đang chọn
+            // Lấy tên tab hiện tại (để so sánh với itemType)
+            string selectedTab = this.inventoryTabs[index].gameObject.name;
+            ItemSO firstFilteredItem = null;
+
             foreach (var item in inventoryState)
             {
-                if (item.Value.item.itemType.ToString() == this.inventoryTabs[index].gameObject.name)
+                if (item.Value.item.itemType.ToString() == selectedTab)
                 {
                     this.currentFilteredItems.Add(item.Value);
+
+                    // Lưu item đầu tiên (nếu có)
+                    if (firstFilteredItem == null)
+                    {
+                        firstFilteredItem = item.Value.item as ItemSO;
+                    }
                 }
             }
-            // Cập nhật UI: Đưa item lọc được vào các slot đầu tiên
+
+            // Hiện panel phù hợp và gọi InitializeHeroBar (chỉ gọi 1 lần)
+            foreach (GameObject bar in this.inventoryUI.heroInfoPanelList)
+            {
+                bool shouldShow = bar.name == selectedTab;
+                bar.SetActive(shouldShow);
+
+                if (shouldShow)
+                {
+                    this.inventoryUI.InitializeHeroBar(firstFilteredItem); // Truyền item vào để tính toán
+                }
+            }
+
+            // Cập nhật UI slot
             for (int i = 0; i < this.currentFilteredItems.Count; i++)
             {
                 this.inventoryUI.UpdateData(i, this.currentFilteredItems[i].item.ItemImage, this.currentFilteredItems[i].quantity);
             }
-            // Đặt lại selection về item đầu tiên nếu có item
+
+            // Set lại selected index
             if (this.currentFilteredItems.Count > 0)
             {
                 this.inventoryUI.SetSelectedIndex(0);
-                
             }
             else
             {
                 this.inventoryUI.ResetSelection();
-                Debug.Log("No items after filter, resetting selection");
             }
         }
 
@@ -264,26 +331,22 @@ namespace Inventory
         {
             if (Input.GetKeyDown(KeyCode.Tab))
             {
-                if (inventoryUI.isActiveAndEnabled == false)
+                if (this.inventoryUI.isActiveAndEnabled == false)
                 {
                     this.inventoryUI.InitializeHeroButton();
+                   
                     this.inventoryUI.Show();
                     this.RefreshCurrentTab();
+                    
                 }
                 else
                 {
-                    inventoryUI.Hide();
+                    this.inventoryUI.Hide();
                     this.RefreshCurrentTab();
                 }
             }
         }
 
-        public void Update()
-        {
-            this.OpenInventory();
-            //Debug.LogWarning(this.inventoryTabs[currentButtonIndex].gameObject.name);
-            
-            this.SwitchButtonInput();
-        }
+        
     }
 }

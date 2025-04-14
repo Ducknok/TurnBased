@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using DG.Tweening;
+using Inventory.Model;
 
 //View (V) in MVC
 namespace Inventory.UI
@@ -56,6 +57,53 @@ namespace Inventory.UI
             this.UpdateHPBar(hpBarFill, hero);
             this.UpdateMPBar(mpBarFill, hero);
 
+        }
+
+        public float GetATKBonusFromModifiers(ItemSO item)
+        {
+            float total = 0f;
+
+            if (item == null || item.Modifiers == null) return 0f;
+            foreach (var modifier in item.Modifiers)
+            {
+                if (modifier.stat != null)
+                {
+                    total += modifier.val1; // Lấy val1 cho ATK
+                }
+            }
+
+            return total;
+        }
+
+        public float GetMATKBonusFromModifiers(ItemSO item)
+        {
+            float total = 0f;
+            if (item == null || item.Modifiers == null) return 0f;
+            foreach (var modifier in item.Modifiers)
+            {
+                if (modifier.stat != null)
+                {
+                    total += modifier.val2; // Lấy val2 cho MATK
+                }
+            }
+
+            return total;
+        }
+
+        public void SetATKDescription(Image image, HeroStateMachine hero, ItemSO item)
+        {
+            Image heroBar = image.transform.Find("HeroIcon").Find("Icon").GetComponent<Image>();
+            //Debug.LogWarning(heroBar);
+            TextMeshProUGUI atk = image.transform.Find("ATKBG").Find("ATKText").GetComponent<TextMeshProUGUI>();
+            //Debug.LogWarning(atk);
+            TextMeshProUGUI matk = image.transform.Find("MATKBG").Find("MATKText").GetComponent<TextMeshProUGUI>();
+            //Debug.LogWarning(matk);
+
+            float bonusATK = GetATKBonusFromModifiers(item);
+            float bonusMATK = GetMATKBonusFromModifiers(item);
+            heroBar.sprite = hero.baseHero.heroImage;
+            atk.text = $"{hero.baseHero.baseATK} -> {hero.baseHero.baseATK + bonusATK}";
+            matk.text = $"{hero.baseHero.baseAP} -> {hero.baseHero.baseAP + bonusMATK}";
         }
         public void UpdateHPBar(Image hpBar, HeroStateMachine hero)
         {

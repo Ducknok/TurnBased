@@ -48,6 +48,7 @@ namespace Inventory.Model
             return quantity;
         }
 
+
         //thêm item vào ô trống được duyệt thấy đầu tiên
         public int AddItemToFirstFreeSlot(ItemSO item, int quantity
             , List<ItemParameter> itemState = null)
