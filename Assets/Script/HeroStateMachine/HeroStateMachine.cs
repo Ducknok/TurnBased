@@ -414,11 +414,7 @@ public class HeroStateMachine : MonoBehaviour
     {
         this.playerPanel = Instantiate(this.playerPanel) as GameObject;
         this.stats = this.playerPanel.GetComponent<HeroPanelStats>();
-        this.InitializeStatHero();
-        
-    }
-    public void InitializeStatHero()
-    {
+
         this.stats.heroName.text = this.baseHero.theName;
         this.stats.heroHP.text = this.baseHero.curHP.ToString();
         this.stats.heroMP.text = this.baseHero.curMP.ToString();

@@ -25,9 +25,6 @@ namespace Inventory
         public List<Button> inventoryTabs = new List<Button>();
         private int currentButtonIndex = 0;
 
-        [SerializeField]
-
-
 
 
         
@@ -93,64 +90,50 @@ namespace Inventory
 
         public void PerformAction(int itemIndex)
         {
-            if (itemIndex < 0 || itemIndex >= currentFilteredItems.Count)
-                return;
-            InventoryItem inventoryItem = this.currentFilteredItems[itemIndex];
+            InventoryItem inventoryItem = this.inventoryData.GetItemAt(itemIndex);
+            if (inventoryItem.IsEmpty) return;
             IDestroyableItem destroyableItem = inventoryItem.item as IDestroyableItem;
             if (destroyableItem != null)
             {
-                this.inventoryData.RemoveItem(inventoryItem.item, 1);
-                this.UpdateFilteredInventoryUI(currentButtonIndex);
+                this.inventoryData.RemoveItem(itemIndex, 1);
             }
 
             IItemAction itemAction = inventoryItem.item as IItemAction;
             if (itemAction != null)
             {
+                Debug.LogWarning("Performing action");
                 itemAction.PerformAction(this.gameObject, inventoryItem.itemState);
-                if (itemIndex >= currentFilteredItems.Count || currentFilteredItems[itemIndex].IsEmpty)
+                //audioSource.PlayOnShot(itemAction.ActionSound);
+                if(this.inventoryData.GetItemAt(itemIndex).IsEmpty)
                 {
-                    this.UpdateFilteredInventoryUI(currentButtonIndex);
                     this.inventoryUI.ResetSelection();
                 }
             }
         }
         private void HandleItemActionRequest(int itemIndex)
         {
-            if (itemIndex < 0 || itemIndex >= currentFilteredItems.Count)
-            {
-                inventoryUI.ResetSelection();
-                return;
-            }
-
-            InventoryItem inventoryItem = this.currentFilteredItems[itemIndex];
-            if (inventoryItem.IsEmpty)
-            {
-                inventoryUI.ResetSelection();
-                return;
-            }
-
+            InventoryItem inventoryItem = this.inventoryData.GetItemAt(itemIndex);
+            if (inventoryItem.IsEmpty) return;
             IItemAction itemAction = inventoryItem.item as IItemAction;
             if (itemAction != null)
             {
                 this.inventoryUI.ShowItemAction(itemIndex);
                 this.inventoryUI.AddAction(itemAction.ActionName, () => PerformAction(itemIndex));
             }
-
             IDestroyableItem destroyableItem = inventoryItem.item as IDestroyableItem;
             if (destroyableItem != null)
             {
-                // Nếu có thêm action Drop sau này, đặt vào đây
-                // this.inventoryUI.AddAction("Drop", () => DropItem(itemIndex, inventoryItem.quantity));
+                //this.inventoryData.RemoveItem(itemIndex, 1);
+                this.inventoryUI.AddAction("Drop", () => DropItem(itemIndex, inventoryItem.quantity));
             }
         }
 
-
-        //private void DropItem(int itemIndex, int quantity)
-        //{
-        //    this.inventoryData.RemoveItem(itemIndex, quantity);
-        //    this.inventoryUI.ResetSelection();
-        //    //this.audioSource.PlayOnShot(dropClip);
-        //}
+        private void DropItem(int itemIndex, int quantity)
+        {
+            this.inventoryData.RemoveItem(itemIndex, quantity);
+            this.inventoryUI.ResetSelection();
+            //this.audioSource.PlayOnShot(dropClip);
+        }
 
         private void HandleDescriptionRequest(int itemIndex)
         {

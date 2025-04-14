@@ -21,11 +21,11 @@ namespace Inventory.UI
         List<UIInventoryItem> listOfUIItems = new List<UIInventoryItem>();
         private int currentIndex = 0; // Index của item đang chọn
 
-       // private int currentlyDraggedItemIndex = -1;
-        public event Action<int> OnItemActionRequested
-            /*OnStartDragging*/;
+        private int currentlyDraggedItemIndex = -1;
+        public event Action<int> OnItemActionRequested,
+            OnStartDragging;
 
-        //public event Action<int, int> OnSwapItems;
+        public event Action<int, int> OnSwapItems;
         public event Action<int> OnDescriptionRequested;
         [SerializeField]
         private ItemActionPanel itemActionPanel;
@@ -146,7 +146,7 @@ namespace Inventory.UI
         private void ResetDraggedItem()
         {
             mouseFollower.Toggle(false);
-            //currentlyDraggedItemIndex = -1;
+            currentlyDraggedItemIndex = -1;
         }
 
         //private void HandleBeginDrag(UIInventoryItem inventoryItemUI)
