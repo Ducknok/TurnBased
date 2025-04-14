@@ -22,4 +22,5 @@ MonoBehaviour:
   <DefaultParameterList>k__BackingField: []
   modifiersData:
   - stat: {fileID: 11400000, guid: 878c4a7146a23c949a406b6ad6496612, type: 2}
-    value: 20
+    val1: 20
+    val2: 0

@@ -14,6 +14,9 @@ public class BaseClass
     public float baseATK;
     public float curATK;
 
+    public float baseAP;
+    public float curAP;
+
     public float baseDEF;
     public float curDEF;
 

@@ -13,22 +13,16 @@ namespace Inventory
 {
     public class InventoryController : MonoBehaviour
     {
-        [SerializeField]
-        private UIInventoryPage inventoryUI;
+        [SerializeField] public UIInventoryPage inventoryUI;
 
-        [SerializeField]
-        private InventorySO inventoryData;
+        [SerializeField] private InventorySO inventoryData;
         public List<InventoryItem> initialItems = new List<InventoryItem>();
         private List<InventoryItem> currentFilteredItems = new List<InventoryItem>();
 
-        [SerializeField]
-        public List<Button> inventoryTabs = new List<Button>();
+        [SerializeField] public List<Button> inventoryTabs = new List<Button>();
         private int currentButtonIndex = 0;
 
-
-
         
-
         //TODO: audio drop item here
         //[SerializeField]
         //private AudioClip dropClip;
@@ -38,6 +32,7 @@ namespace Inventory
         {
             PrepareUI();
             PrepareInventoryData();
+            
             
         }
         private void Awake()
@@ -90,50 +85,73 @@ namespace Inventory
 
         public void PerformAction(int itemIndex)
         {
-            InventoryItem inventoryItem = this.inventoryData.GetItemAt(itemIndex);
-            if (inventoryItem.IsEmpty) return;
+            if (itemIndex < 0 || itemIndex >= currentFilteredItems.Count)
+                return;
+            InventoryItem inventoryItem = this.currentFilteredItems[itemIndex];
             IDestroyableItem destroyableItem = inventoryItem.item as IDestroyableItem;
             if (destroyableItem != null)
             {
-                this.inventoryData.RemoveItem(itemIndex, 1);
+                this.inventoryData.RemoveItem(inventoryItem.item, 1);
+                this.UpdateFilteredInventoryUI(currentButtonIndex);
             }
 
             IItemAction itemAction = inventoryItem.item as IItemAction;
             if (itemAction != null)
             {
-                Debug.LogWarning("Performing action");
                 itemAction.PerformAction(this.gameObject, inventoryItem.itemState);
-                //audioSource.PlayOnShot(itemAction.ActionSound);
-                if(this.inventoryData.GetItemAt(itemIndex).IsEmpty)
+                if (itemIndex >= currentFilteredItems.Count || currentFilteredItems[itemIndex].IsEmpty)
                 {
+                    this.UpdateFilteredInventoryUI(currentButtonIndex);
                     this.inventoryUI.ResetSelection();
                 }
             }
         }
         private void HandleItemActionRequest(int itemIndex)
         {
-            InventoryItem inventoryItem = this.inventoryData.GetItemAt(itemIndex);
-            if (inventoryItem.IsEmpty) return;
+            if (itemIndex < 0 || itemIndex >= currentFilteredItems.Count)
+            {
+                inventoryUI.ResetSelection();
+                return;
+            }
+
+            InventoryItem inventoryItem = currentFilteredItems[itemIndex];
+            if (inventoryItem.IsEmpty)
+            {
+                inventoryUI.ResetSelection();
+                return;
+            }
+
             IItemAction itemAction = inventoryItem.item as IItemAction;
+            IDestroyableItem destroyableItem = inventoryItem.item as IDestroyableItem;
+
             if (itemAction != null)
             {
-                this.inventoryUI.ShowItemAction(itemIndex);
-                this.inventoryUI.AddAction(itemAction.ActionName, () => PerformAction(itemIndex));
-            }
-            IDestroyableItem destroyableItem = inventoryItem.item as IDestroyableItem;
-            if (destroyableItem != null)
-            {
-                //this.inventoryData.RemoveItem(itemIndex, 1);
-                this.inventoryUI.AddAction("Drop", () => DropItem(itemIndex, inventoryItem.quantity));
+                // Không hiển thị nút gì cả — chuyển luôn sang chọn Hero
+                this.inventoryUI.StartHeroSelection((HeroStateMachine selectedHero) =>
+                {
+                    if (itemAction.ActionName == "Consume" && selectedHero.baseHero.curHP == selectedHero.baseHero.baseHP && selectedHero.baseHero.curMP == selectedHero.baseHero.baseMP) return;
+                    //Gọi hiệu ứng item lên hero
+                    itemAction.PerformAction(selectedHero.gameObject, inventoryItem.itemState);
+
+                    //Nếu là item tiêu hao thì xóa nó khỏi inventory
+                    if (destroyableItem != null)
+                    {
+                        this.inventoryData.RemoveItem(inventoryItem.item, 1);
+                        UpdateFilteredInventoryUI(this.currentButtonIndex);
+                    }
+
+                    //Reset UI sau khi dùng
+                    this.inventoryUI.ResetSelection();
+                });
             }
         }
 
-        private void DropItem(int itemIndex, int quantity)
-        {
-            this.inventoryData.RemoveItem(itemIndex, quantity);
-            this.inventoryUI.ResetSelection();
-            //this.audioSource.PlayOnShot(dropClip);
-        }
+        //private void DropItem(int itemIndex, int quantity)
+        //{
+        //    this.inventoryData.RemoveItem(itemIndex, quantity);
+        //    this.inventoryUI.ResetSelection();
+        //    //this.audioSource.PlayOnShot(dropClip);
+        //}
 
         private void HandleDescriptionRequest(int itemIndex)
         {
@@ -152,10 +170,10 @@ namespace Inventory
             }
 
             ItemSO item = inventoryItem.item;
-            this.inventoryUI.UpdateDescription(itemIndex, item.ItemImage, item.Name, item.ReceiveEffect, item.Description);
+            this.inventoryUI.UpdateItemDescription(itemIndex, item.ItemImage, item.Name, item.ReceiveEffect, item.Description);
         }
 
-
+        
         //public string PrepareDescription(InventoryItem inventoryItem)
         //{
         //    StringBuilder sb = new StringBuilder();
@@ -248,7 +266,7 @@ namespace Inventory
             {
                 if (inventoryUI.isActiveAndEnabled == false)
                 {
-                    
+                    this.inventoryUI.InitializeHeroButton();
                     this.inventoryUI.Show();
                     this.RefreshCurrentTab();
                 }

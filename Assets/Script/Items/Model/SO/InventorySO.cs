@@ -148,24 +148,33 @@ namespace Inventory.Model
             return this.inventoryItems[itemIndex];
         }
 
-        public void RemoveItem(int itemIndex, int amount)
+        // Xoá item theo ItemSO, sử dụng trong trường hợp lọc (filtered item)
+        public void RemoveItem(ItemSO itemSO, int amount)
         {
-            if (this.inventoryItems.Count > itemIndex)
+            for (int i = 0; i < this.inventoryItems.Count; i++)
             {
-                if (this.inventoryItems[itemIndex].IsEmpty) return;
-                int reminder = this.inventoryItems[itemIndex].quantity - amount;
-                if(reminder <= 0)
+                var current = this.inventoryItems[i];
+                if (current.IsEmpty) continue;
+
+                if (current.item == itemSO)
                 {
-                    this.inventoryItems[itemIndex] = InventoryItem.GetEmptyItem();
+                    int reminder = current.quantity - amount;
+                    if (reminder <= 0)
+                    {
+                        this.inventoryItems[i] = InventoryItem.GetEmptyItem();
+                    }
+                    else
+                    {
+                        this.inventoryItems[i] = current.ChangeQuantity(reminder);
+                    }
+                    this.InformAboutChange();
+                    return;
                 }
-                else
-                {
-                    this.inventoryItems[itemIndex] = this.inventoryItems[itemIndex]
-                        .ChangeQuantity(reminder);
-                }
-                this.InformAboutChange();
             }
+
+            Debug.LogWarning($"Không tìm thấy item cần xoá: {itemSO.name}");
         }
+
     }
 
     [Serializable]

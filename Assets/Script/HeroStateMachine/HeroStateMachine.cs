@@ -5,12 +5,14 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using DG.Tweening;
 using Cinemachine;
+using Inventory;
 
 public class HeroStateMachine : MonoBehaviour
 {
     private CombatStateMachine combatStateMachine;
     public CombatZone combatZone;
     public BaseHero baseHero;
+    public InventoryController inventoryController;
 
     public enum TurnState
     {
@@ -27,10 +29,10 @@ public class HeroStateMachine : MonoBehaviour
     //For the Player Bar
     private CinemachineImpulseSource impulseSource;
     public GameObject choose;
-    private Image heroHPBarFill;
-    private Image heroHPBarTrail;
-    private Image heroMPBarFill;
-    private Image heroMPBarTrail;
+    public Image heroHPBarFill;
+    public Image heroHPBarTrail;
+    public Image heroMPBarFill;
+    public Image heroMPBarTrail;
     private float trailDelay = 0.4f;
 
 
@@ -77,22 +79,9 @@ public class HeroStateMachine : MonoBehaviour
         this.body = this.transform.Find("Body").gameObject;
         this.anim = this.body.GetComponent<Animator>();
         this.impulseSource = this.transform.GetComponent<CinemachineImpulseSource>();
+        //this.inventoryController = this.transform.GetComponent<InventoryController>();
 
-        // Xác định chỉ số của hero trong playerPosition
-        for (int i = 0; i < this.combatZone.players.Length; i++)
-        {
-            if (this.combatZone.players[i] == this.gameObject)
-            {
-                this.heroIndex = i;
-                break;
-            }
-        }
-
-        if (this.heroIndex == -1)
-        {
-            Debug.LogError($"Không tìm thấy hero {this.gameObject.name} trong CombatSystem.players.");
-        }
-
+        this.HeroPosition();
         this.currentState = TurnState.PROCESSING;
     }
 
@@ -176,6 +165,23 @@ public class HeroStateMachine : MonoBehaviour
 
     }
 
+    private void HeroPosition()
+    {
+        // Xác định chỉ số của hero trong playerPosition
+        for (int i = 0; i < this.combatZone.players.Length; i++)
+        {
+            if (this.combatZone.players[i] == this.gameObject)
+            {
+                this.heroIndex = i;
+                break;
+            }
+        }
+
+        if (this.heroIndex == -1)
+        {
+            Debug.LogError($"Không tìm thấy hero {this.gameObject.name} trong CombatSystem.players.");
+        }
+    }
     // Thay đổi cách chọn hero
     private void HandleHeroSelection()
     {
@@ -346,6 +352,13 @@ public class HeroStateMachine : MonoBehaviour
         }
         this.UpdateHeroPanel();
     }
+
+    public void BindHeroUI(Image hpFill, Image mpFill)
+    {
+        heroHPBarFill = hpFill;
+        heroMPBarFill = mpFill;
+        //this.DescreaseMana();
+    }
     //Do damage
     public void DoDamage()
     {
@@ -378,7 +391,7 @@ public class HeroStateMachine : MonoBehaviour
             //Debug.Log("Het mana");
         }
     }
-    protected void RestoreMana()
+    public void RestoreMana()
     {
         // Tăng mana hiện tại
         this.baseHero.curMP += 3f;
@@ -399,7 +412,7 @@ public class HeroStateMachine : MonoBehaviour
         sequence.Append(this.heroMPBarTrail.DOFillAmount(ratio, 0.3f)).SetEase(Ease.InOutSine);
         sequence.Play();
     }
-    protected void DescreaseMana()
+    public void DescreaseMana()
     {
         this.baseHero.curMP -= this.combatStateMachine.performList[0].choosenAttack.attackCost;
         float ratio = this.baseHero.curMP / this.baseHero.baseMP;
@@ -414,7 +427,11 @@ public class HeroStateMachine : MonoBehaviour
     {
         this.playerPanel = Instantiate(this.playerPanel) as GameObject;
         this.stats = this.playerPanel.GetComponent<HeroPanelStats>();
-
+        this.InitializeStatHero();
+        
+    }
+    public void InitializeStatHero()
+    {
         this.stats.heroName.text = this.baseHero.theName;
         this.stats.heroHP.text = this.baseHero.curHP.ToString();
         this.stats.heroMP.text = this.baseHero.curMP.ToString();
@@ -428,6 +445,7 @@ public class HeroStateMachine : MonoBehaviour
         this.heroMPBarTrail.fillAmount = 1f;
         this.heroMPBarFill = this.stats.mpBarFill;
         this.heroMPBarTrail = this.stats.mpBarTrail;
+       
         this.playerPanel.transform.SetParent(this.heroPanelSpacer, false);
     }
     //Update stats hp, mp, heal

@@ -48,6 +48,13 @@ namespace Inventory.Model
             return other.itemParameter == itemParameter;
         }
     }
+    [Serializable]
+    public class ModifierData
+    {
+        public CharacterStatModifierSO stat;
+        public float val1;
+        public float val2;
+    }
 
 }
 
