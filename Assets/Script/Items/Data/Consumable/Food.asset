@@ -20,7 +20,7 @@ MonoBehaviour:
   <Description>k__BackingField: "\t"
   <ItemImage>k__BackingField: {fileID: 2136223142, guid: b66d1bbd6ca38954d83ef330e39cb070, type: 3}
   <DefaultParameterList>k__BackingField: []
-  modifiersData:
+  <Modifiers>k__BackingField:
   - stat: {fileID: 11400000, guid: 878c4a7146a23c949a406b6ad6496612, type: 2}
     val1: 20
     val2: 0

@@ -177,6 +177,7 @@ namespace Inventory
 
             ItemSO item = inventoryItem.item;
             this.inventoryUI.UpdateItemDescription(itemIndex, item.ItemImage, item.Name, item.ReceiveEffect, item.Description);
+            this.inventoryUI.InitializeHeroBar(item);
         }
 
 
@@ -334,7 +335,7 @@ namespace Inventory
                 if (this.inventoryUI.isActiveAndEnabled == false)
                 {
                     this.inventoryUI.InitializeHeroButton();
-                   
+                    
                     this.inventoryUI.Show();
                     this.RefreshCurrentTab();
                     

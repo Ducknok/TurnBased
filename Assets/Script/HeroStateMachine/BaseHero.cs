@@ -13,4 +13,5 @@ public class BaseHero : BaseClass
     public int agility;     //Lanh le
 
     public List<BaseAttack> skills = new List<BaseAttack>();
+    public HeroType heroType;
 }

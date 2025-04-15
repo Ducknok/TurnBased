@@ -118,24 +118,33 @@ namespace Inventory.UI
         {
             for (int i = 0; i < heroButtons.Count; i++)
             {
-                Transform heroIcon = heroButtons[i].transform.Find("HeroIcon").Find("Choose");
+                // ⚠️ Kiểm tra null hoặc bị destroy
+                if (heroButtons[i] == null || heroButtons[i].gameObject == null)
+                    continue;
+
+                Transform heroIcon = heroButtons[i].transform.Find("HeroIcon")?.Find("Choose");
                 if (heroIcon != null)
                 {
                     heroIcon.gameObject.SetActive(i == index);
                 }
             }
         }
+
         private void UnHighlightHeroButton(int index)
         {
             for (int i = 0; i < heroButtons.Count; i++)
             {
-                Transform heroIcon = heroButtons[i].transform.Find("HeroIcon").Find("Choose");
+                if (heroButtons[i] == null || heroButtons[i].gameObject == null)
+                    continue;
+
+                Transform heroIcon = heroButtons[i].transform.Find("HeroIcon")?.Find("Choose");
                 if (heroIcon != null)
                 {
                     heroIcon.gameObject.SetActive(false);
                 }
             }
         }
+
 
         private void MoveSelection(int direction)
         {
@@ -200,33 +209,42 @@ namespace Inventory.UI
                     //newButton.onClick.AddListener(() => OnHeroButtonClicked(index));
                 }
         }
-        public void InitializeHeroBar(ItemSO selectedItem)
+        public void InitializeHeroBar(ItemSO item)
         {
-            // Clear old buttons (nếu cần)
             foreach (Transform child in this.infoHeroPanelSpacer)
             {
                 Destroy(child.gameObject);
             }
             this.heroPanel.Clear();
 
-            // Instantiate button và fill dữ liệu
             for (int i = 0; i < this.cbm.playersInCombat.Count; i++)
             {
                 HeroStateMachine hero = this.cbm.playersInCombat[i].GetComponent<HeroStateMachine>();
-                foreach(var bar in this.heroInfoPanelPrefab)
-                { 
-                   Image newBar = Instantiate(bar, this.infoHeroPanelSpacer);
-                   this.heroButtons.Add(newBar);
-                   // Gọi hàm fill dữ liệu vào button
-                   this.itemDescription.SetATKDescription(newBar, hero, selectedItem);
+                foreach (var bar in this.heroInfoPanelPrefab)
+                {
+                    Image newBar = Instantiate(bar, this.infoHeroPanelSpacer);
+                    this.heroButtons.Add(newBar);
+
+                    // Chỉ hiển thị bonus nếu item là EquippableItemSO và hợp với hero
+                    if (item is EquippableItemSO weapon)
+                    {
+                        if (hero.baseHero.heroType == weapon.allowedWeapons)
+                        {
+                            this.itemDescription.SetATKDescription(newBar, hero, weapon);
+                        }
+                        else
+                        {
+                            this.itemDescription.SetATKDescription(newBar, hero, null); // hoặc không set gì cả
+                        }
+                    }
+                    else
+                    {
+                        this.itemDescription.SetATKDescription(newBar, hero, null);
+                    }
                 }
-
-                // Optional: Add onClick event
-                //int index = i;
-                //newButton.onClick.AddListener(() => OnHeroButtonClicked(index));
             }
-
         }
+
         internal void ResetAllItems()
         {
             foreach (var item in this.listOfUIItems)

@@ -7,7 +7,7 @@ using UnityEngine;
 public class AgentWeapon : MonoBehaviour
 {
     [SerializeField]
-    private EquippableItemSO weapon;
+    private EquippableItemSO weaponItemSO;
 
     [SerializeField]
     private InventorySO inventoryData;
@@ -17,14 +17,16 @@ public class AgentWeapon : MonoBehaviour
 
     public void SetWeapon(EquippableItemSO weaponItemSO, List<ItemParameter> itemState)
     {
-        if(this.weapon != null)
+        if (this.weaponItemSO != null)
         {
-            this.inventoryData.AddItem(this.weapon, 1, this.itemCurrentState);
+            this.inventoryData.AddItem(this.weaponItemSO, 1, this.itemCurrentState);
         }
-        this.weapon = weaponItemSO;
+
+        this.weaponItemSO = weaponItemSO;
         this.itemCurrentState = new List<ItemParameter>(itemState);
         ModifyParamter();
     }
+
 
     private void ModifyParamter()
     {

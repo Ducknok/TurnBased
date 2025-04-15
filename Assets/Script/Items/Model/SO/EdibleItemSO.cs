@@ -9,8 +9,8 @@ namespace Inventory.Model
     [CreateAssetMenu]
     public  class EdibleItemSO : ItemSO, IDestroyableItem, IItemAction
     {
-        [SerializeField]
-        private List<ModifierData> modifiersData = new List<ModifierData>();
+        //[SerializeField]
+        //private List<ModifierData> modifiersData = new List<ModifierData>();
         public string ActionName => "Consume";
 
         //TODO: add sound effect for item here
@@ -18,7 +18,7 @@ namespace Inventory.Model
         //public AudioClip actionSFX { get; private set; }
         public bool PerformAction(GameObject character, List<ItemParameter> itemState = null)
         {
-            foreach (ModifierData data in modifiersData)
+            foreach (ModifierData data in Modifiers)
             {
                 data.stat.AffectCharacter(character, data.val1, data.val2);
             }

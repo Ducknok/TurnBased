@@ -59,52 +59,43 @@ namespace Inventory.UI
 
         }
 
-        public float GetATKBonusFromModifiers(ItemSO item)
-        {
-            float total = 0f;
-
-            if (item == null || item.Modifiers == null) return 0f;
-            foreach (var modifier in item.Modifiers)
-            {
-                if (modifier.stat != null)
-                {
-                    total += modifier.val1; // Lấy val1 cho ATK
-                }
-            }
-
-            return total;
-        }
-
-        public float GetMATKBonusFromModifiers(ItemSO item)
-        {
-            float total = 0f;
-            if (item == null || item.Modifiers == null) return 0f;
-            foreach (var modifier in item.Modifiers)
-            {
-                if (modifier.stat != null)
-                {
-                    total += modifier.val2; // Lấy val2 cho MATK
-                }
-            }
-
-            return total;
-        }
 
         public void SetATKDescription(Image image, HeroStateMachine hero, ItemSO item)
         {
-            Image heroBar = image.transform.Find("HeroIcon").Find("Icon").GetComponent<Image>();
-            //Debug.LogWarning(heroBar);
-            TextMeshProUGUI atk = image.transform.Find("ATKBG").Find("ATKText").GetComponent<TextMeshProUGUI>();
-            //Debug.LogWarning(atk);
-            TextMeshProUGUI matk = image.transform.Find("MATKBG").Find("MATKText").GetComponent<TextMeshProUGUI>();
-            //Debug.LogWarning(matk);
+            Image heroBar = image.transform.Find("HeroIcon/Icon").GetComponent<Image>();
+            TextMeshProUGUI atk = image.transform.Find("ATKBG/ATKText").GetComponent<TextMeshProUGUI>();
+            TextMeshProUGUI matk = image.transform.Find("MATKBG/MATKText").GetComponent<TextMeshProUGUI>();
 
-            float bonusATK = GetATKBonusFromModifiers(item);
-            float bonusMATK = GetMATKBonusFromModifiers(item);
             heroBar.sprite = hero.baseHero.heroImage;
-            atk.text = $"{hero.baseHero.baseATK} -> {hero.baseHero.baseATK + bonusATK}";
-            matk.text = $"{hero.baseHero.baseAP} -> {hero.baseHero.baseAP + bonusMATK}";
+
+            // Nếu item null hoặc không phải EquippableItemSO → chỉ hiện icon, ẩn text
+            if (item is EquippableItemSO eqItem && eqItem.allowedWeapons == hero.baseHero.heroType)
+            {
+                float bonusATK = 0f;
+                float bonusMATK = 0f;
+
+                foreach (var mod in eqItem.Modifiers)
+                {
+                    if (mod.stat != null)
+                    {
+                        bonusATK += mod.val1;
+                        bonusMATK += mod.val2;
+                    }
+                }
+
+                atk.text = $"{hero.baseHero.baseATK} -> {hero.baseHero.baseATK + bonusATK}";
+                matk.text = $"{hero.baseHero.baseAP} -> {hero.baseHero.baseAP + bonusMATK}";
+                atk.transform.parent.gameObject.SetActive(true);
+                matk.transform.parent.gameObject.SetActive(true);
+            }
+            else
+            {
+                atk.transform.parent.gameObject.SetActive(false);  // Ẩn ATKBG
+                matk.transform.parent.gameObject.SetActive(false); // Ẩn MATKBG
+            }
         }
+
+
         public void UpdateHPBar(Image hpBar, HeroStateMachine hero)
         {
             float ratio = hero.baseHero.curHP / hero.baseHero.baseHP;
