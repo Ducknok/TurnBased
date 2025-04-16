@@ -37,7 +37,7 @@ namespace Inventory.UI
             this.receiveEffect.text = itemEffect;
             this.description.text = itemDescription;
         }
-        public void SetHeroDescription(Image image, HeroStateMachine hero) 
+        public void SetHeroBarDescription(Image image, HeroStateMachine hero) 
         {
             Image heroButton = image.transform.Find("HeroIcon").Find("Icon").GetComponent<Image>();
             TextMeshProUGUI curHP = image.transform.Find("HP").Find("CurHPNumber").GetComponent<TextMeshProUGUI>();
@@ -59,6 +59,33 @@ namespace Inventory.UI
 
         }
 
+        public void SetHeroUIDescription(GameObject image, HeroStateMachine hero)
+        {
+            Image heroButton = image.transform.Find("Icon").GetComponent<Image>();
+            TextMeshProUGUI name = image.transform.Find("Name").GetComponent<TextMeshProUGUI>();
+            TextMeshProUGUI hp = image.transform.Find("HPText").GetComponent<TextMeshProUGUI>();
+            TextMeshProUGUI mp = image.transform.Find("MPText").GetComponent<TextMeshProUGUI>();
+            TextMeshProUGUI hpValue = image.transform.Find("HPText").Find("HPNumber").GetComponent<TextMeshProUGUI>();
+            TextMeshProUGUI mpValue = image.transform.Find("MPText").Find("MPNumber").GetComponent<TextMeshProUGUI>();
+
+            if (hero == null || hero.baseHero == null)
+            {
+                // Nếu không có hero -> để trống hoặc ẩn nội dung
+                heroButton.gameObject.SetActive(false);
+                name.text = "";
+                hp.text = "";
+                mp.text = "";
+                hpValue.text = "";
+                mpValue.text = "";
+                return;
+            }
+
+            // Có hero -> hiển thị như bình thường
+            heroButton.sprite = hero.baseHero.heroImage;
+            name.text = hero.baseHero.theName;
+            hpValue.text = $"{hero.baseHero.curHP} / {hero.baseHero.baseHP}";
+            mpValue.text = $"{hero.baseHero.curMP} / {hero.baseHero.baseMP}";
+        }
 
         public void SetATKDescription(Image image, HeroStateMachine hero, ItemSO item)
         {

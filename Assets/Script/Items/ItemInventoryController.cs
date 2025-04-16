@@ -11,7 +11,7 @@ using UnityEngine.UI;
 //Controller (C) in MVC
 namespace Inventory
 {
-    public class InventoryController : MonoBehaviour
+    public class ItemInventoryController : MonoBehaviour
     {
         [SerializeField] public UIInventoryPage inventoryUI;
 

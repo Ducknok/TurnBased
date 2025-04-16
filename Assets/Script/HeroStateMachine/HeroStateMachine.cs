@@ -12,7 +12,7 @@ public class HeroStateMachine : MonoBehaviour
     private CombatStateMachine combatStateMachine;
     public CombatZone combatZone;
     public BaseHero baseHero;
-    public InventoryController inventoryController;
+    public ItemInventoryController inventoryController;
 
     public enum TurnState
     {

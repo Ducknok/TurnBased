@@ -202,7 +202,7 @@ namespace Inventory.UI
                     this.heroButtons.Add(newImage);
 
                     // Gọi hàm fill dữ liệu vào button
-                    this.itemDescription.SetHeroDescription(newImage, hero);
+                    this.itemDescription.SetHeroBarDescription(newImage, hero);
 
                     // Optional: Add onClick event
                     //int index = i;
