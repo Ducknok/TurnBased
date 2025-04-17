@@ -7,6 +7,17 @@ using UnityEngine.EventSystems;
 
 public class MainInventoryController : MonoBehaviour
 {
+    private enum UIState
+    {
+        MainMenu,      // Đang ở menu chính
+        HeroSelecting, // Đang chọn hero
+        EquipUI,
+        OrderUI,
+        SkillsUI,
+        ItemUI
+    }
+
+    private UIState currentState = UIState.MainMenu;
     [SerializeField] private CombatStateMachine cbm;
     [SerializeField] public UIInventoryDescription itemDescription;
 
@@ -24,6 +35,14 @@ public class MainInventoryController : MonoBehaviour
     [SerializeField] private Color selectedColor = new Color(0.8f, 0.8f, 0.8f, 1f);   // Xám nhạt
     [SerializeField] private Color unselectedColor = new Color(1f, 1f, 1f, 0f);     // Trắng nhạt (alpha thấp)
 
+    [Header("MenuPanel")]
+    [SerializeField] private GameObject mainMenuPanel;
+    [SerializeField] private GameObject equipPanel;
+    [SerializeField] private GameObject orderPanel;
+    [SerializeField] private GameObject skillsPanel;
+    [SerializeField] private GameObject itemsPanel;
+
+
 
 
 
@@ -37,52 +56,79 @@ public class MainInventoryController : MonoBehaviour
     }
     private void Update()
     {
-        if (!this.isSelectingHero)
+        // Khi đang ở menu chính
+        if (!this.isSelectingHero && currentState == UIState.MainMenu)
         {
-            HandleButtonNavigation();  // Chỉ điều hướng khi đang chọn item
+            HandleButtonNavigation();
 
             if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
             {
                 isSelectingHero = true;
                 currentHeroIndex = 0;
                 HighlightHero(currentHeroIndex);
-
-                SetButtonUIInteractable(false);
-
-                // ✅ Giữ lại highlight, nhưng tắt điều hướng
                 allowButtonNavigation = false;
+                LockSelectedButton();
             }
-
         }
-        else
+        // Khi đang chọn hero
+        else if (isSelectingHero && currentState == UIState.MainMenu)
         {
-            HandleHeroNavigation(); // Điều hướng Hero UI
+            HandleHeroNavigation();
 
             if (Input.GetKeyDown(KeyCode.LeftControl))
             {
                 isSelectingHero = false;
                 ResetHeroHighlight();
-
-                SetButtonUIInteractable(true);
-
-                allowButtonNavigation = true; // ✅ Cho điều hướng lại
                 SelectButton(currentSelectedIndex);
             }
 
+            LockSelectedButton(); // Giữ selection
         }
-        Debug.LogWarning(isSelectingHero);
-    }
-    private void SetButtonUIInteractable(bool state)
-    {
-        foreach (var button in buttonUI)
+        // Khi đang ở trong một UI phụ như Equip, Skill, Item,...
+        else if (IsInSubUI() && Input.GetKeyDown(KeyCode.LeftControl))
         {
-            button.interactable = state;
+            ReturnToMainMenu();
         }
+    }
+
+    // Kiểm tra xem đang ở UI phụ không
+    private bool IsInSubUI()
+    {
+        return currentState == UIState.EquipUI || currentState == UIState.OrderUI ||
+               currentState == UIState.SkillsUI || currentState == UIState.ItemUI;
+    }
+
+    // Quay lại menu chính
+    private void ReturnToMainMenu()
+    {
+        currentState = UIState.MainMenu;
+        CloseAllPanels();
+
+        mainMenuPanel.SetActive(true);
+        isSelectingHero = false;
+        ResetHeroHighlight();
+        SelectButton(currentSelectedIndex);
+    }
+
+    // Ẩn tất cả các UI phụ
+    private void CloseAllPanels()
+    {
+        equipPanel.SetActive(false);
+        //orderPanel.SetActive(false);
+        skillsPanel.SetActive(false);
+        itemsPanel.SetActive(false);
+    }
+
+
+    private void LockSelectedButton()
+    {
+        // Chỉ set lại selected GameObject đúng 1 lần
+        EventSystem.current.SetSelectedGameObject(buttonUI[currentSelectedIndex].gameObject);
     }
 
     private void HandleButtonNavigation()
     {
-        if (!allowButtonNavigation || buttonUI.Count == 0) return;
+        if (buttonUI.Count == 0 || this.isSelectingHero == true) return;
 
         if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
         {
@@ -114,9 +160,60 @@ public class MainInventoryController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
         {
-            Debug.Log("Selected Hero: " + currentHeroIndex);
-            // Xử lý trang bị item cho hero[currentHeroIndex] nếu cần
+            var hero = cbm.playersInCombat[currentHeroIndex].GetComponent<HeroStateMachine>();
+            mainMenuPanel.SetActive(false); // Ẩn menu chính
+
+            switch (currentSelectedIndex)
+            {
+                case 0:
+                    ShowEquipUI(hero);
+                    break;
+                case 1:
+                    ShowSkillUI(hero);
+                    break;
+                case 2:
+                    ShowItemUI(hero);
+                    break;
+                case 3:
+                    ShowOrderUI(hero);
+                    break;
+                default:
+                    Debug.LogWarning("Chưa có hành động cho lựa chọn này!");
+                    break;
+            }
         }
+    }
+
+    private void ShowEquipUI(HeroStateMachine hero)
+    {
+        Debug.Log("Hiện giao diện trang bị cho: " + hero.name);
+        this.currentState = UIState.EquipUI;
+        equipPanel.SetActive(true);
+        // equipUI.LoadForHero(hero);
+    }
+
+    private void ShowOrderUI(HeroStateMachine hero)
+    {
+        Debug.Log("Hiện order cho: " + hero.name);
+        //this.currentState = UIState.OrderUI;
+        // statsUI.SetActive(true);
+        // statsUI.SetData(hero);
+    }
+
+    private void ShowSkillUI(HeroStateMachine hero)
+    {
+        Debug.Log("Hiện kỹ năng cho: " + hero.name);
+        this.currentState = UIState.SkillsUI;
+        skillsPanel.SetActive(true);
+        // skillUI.LoadSkills(hero);
+    }
+
+    private void ShowItemUI(HeroStateMachine hero)
+    {
+        Debug.Log("Hiện item cho: " + hero.name);
+        this.currentState = UIState.ItemUI;
+        itemsPanel.SetActive(true);
+        // itemUI.Setup(hero);
     }
 
     private void HighlightHero(int index)
@@ -167,8 +264,6 @@ public class MainInventoryController : MonoBehaviour
             }
         }
     }
-
-
 
     private void CreateHeroUI()
     {
