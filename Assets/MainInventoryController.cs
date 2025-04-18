@@ -4,9 +4,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using Inventory;
 
 public class MainInventoryController : MonoBehaviour
 {
+    [SerializeField] private ItemInventoryController itemInventoryController;
     private enum UIState
     {
         MainMenu,      // Đang ở menu chính
@@ -37,6 +39,7 @@ public class MainInventoryController : MonoBehaviour
 
     [Header("MenuPanel")]
     [SerializeField] private GameObject mainMenuPanel;
+    [SerializeField] private GameObject mainManagePanel;
     [SerializeField] private GameObject equipPanel;
     [SerializeField] private GameObject orderPanel;
     [SerializeField] private GameObject skillsPanel;
@@ -56,6 +59,7 @@ public class MainInventoryController : MonoBehaviour
     }
     private void Update()
     {
+        this.OpenMainMenu();
         // Khi đang ở menu chính
         if (!this.isSelectingHero && currentState == UIState.MainMenu)
         {
@@ -104,7 +108,7 @@ public class MainInventoryController : MonoBehaviour
         currentState = UIState.MainMenu;
         CloseAllPanels();
 
-        mainMenuPanel.SetActive(true);
+        mainManagePanel.SetActive(true);
         isSelectingHero = false;
         ResetHeroHighlight();
         SelectButton(currentSelectedIndex);
@@ -161,7 +165,7 @@ public class MainInventoryController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
         {
             var hero = cbm.playersInCombat[currentHeroIndex].GetComponent<HeroStateMachine>();
-            mainMenuPanel.SetActive(false); // Ẩn menu chính
+            mainManagePanel.SetActive(false); // Ẩn menu chính
 
             switch (currentSelectedIndex)
             {
@@ -212,6 +216,7 @@ public class MainInventoryController : MonoBehaviour
     {
         Debug.Log("Hiện item cho: " + hero.name);
         this.currentState = UIState.ItemUI;
+        this.itemInventoryController.OpenItemInventory();
         itemsPanel.SetActive(true);
         // itemUI.Setup(hero);
     }
@@ -286,6 +291,21 @@ public class MainInventoryController : MonoBehaviour
             this.heroUIList.Add(newHeroUIInCombat);
             this.itemDescription.SetHeroUIDescription(newHeroUIInCombat, hero);
             this.itemDescription.SetHeroUIDescription(newHeroUINotInCombat, hero);
+        }
+    }
+    private void OpenMainMenu()
+    {
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            if(mainManagePanel.activeSelf)
+            {
+                mainManagePanel.SetActive(false);
+                
+            }
+            else
+            {
+                mainManagePanel.SetActive(true);
+            }
         }
     }
 }

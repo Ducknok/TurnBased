@@ -41,9 +41,6 @@ namespace Inventory
         }
         public void Update()
         {
-            this.OpenInventory();
-            //Debug.LogWarning(this.inventoryTabs[currentButtonIndex].gameObject.name);
-
             this.SwitchButtonInput();
         }
         private void PrepareInventoryData()
@@ -328,26 +325,11 @@ namespace Inventory
             UpdateFilteredInventoryUI(currentButtonIndex);
         }
 
-        private void OpenInventory()
+        public void OpenItemInventory()
         {
-            if (Input.GetKeyDown(KeyCode.Tab))
-            {
-                if (this.inventoryUI.isActiveAndEnabled == false)
-                {
-                    this.inventoryUI.InitializeHeroButton();
-                    
-                    this.inventoryUI.Show();
-                    this.RefreshCurrentTab();
-                    
-                }
-                else
-                {
-                    this.inventoryUI.Hide();
-                    this.RefreshCurrentTab();
-                }
-            }
+            this.inventoryUI.InitializeHeroButton();
+            this.inventoryUI.Show();
+            this.RefreshCurrentTab();
         }
-
-        
     }
 }
