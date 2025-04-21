@@ -111,7 +111,7 @@ namespace Inventory.UI
                 }
 
                 atk.text = $"{hero.baseHero.baseATK} -> {hero.baseHero.baseATK + bonusATK}";
-                matk.text = $"{hero.baseHero.baseAP} -> {hero.baseHero.baseAP + bonusMATK}";
+                matk.text = $"{hero.baseHero.baseMATK} -> {hero.baseHero.baseMATK + bonusMATK}";
                 atk.transform.parent.gameObject.SetActive(true);
                 matk.transform.parent.gameObject.SetActive(true);
             }

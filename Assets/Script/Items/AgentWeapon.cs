@@ -7,7 +7,7 @@ using UnityEngine;
 public class AgentWeapon : MonoBehaviour
 {
     [SerializeField]
-    private EquippableItemSO weaponItemSO;
+    public EquippableItemSO weaponItemSO;
 
     [SerializeField]
     private InventorySO inventoryData;

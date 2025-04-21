@@ -9,6 +9,7 @@ using Inventory;
 public class MainInventoryController : MonoBehaviour
 {
     [SerializeField] private ItemInventoryController itemInventoryController;
+    [SerializeField] private EquipMenuController equipMenuController;
     private enum UIState
     {
         MainMenu,      // Đang ở menu chính
@@ -193,6 +194,10 @@ public class MainInventoryController : MonoBehaviour
         Debug.Log("Hiện giao diện trang bị cho: " + hero.name);
         this.currentState = UIState.EquipUI;
         equipPanel.SetActive(true);
+        this.equipMenuController.LoadWeaponUI(hero);
+        this.equipMenuController.LoadHero(hero);
+        this.equipMenuController.LoadHeroStat(hero);
+        this.equipMenuController.CreateHeroSwapButton(cbm);
         // equipUI.LoadForHero(hero);
     }
 

@@ -12,7 +12,7 @@ public class CharacterStatATKModifierSO : CharacterStatModifierSO
         if (hsm != null)
         {
             hsm.baseHero.baseATK += atkVal;
-            hsm.baseHero.baseAP += apVal;
+            hsm.baseHero.baseMATK += apVal;
         }
         else Debug.Log("CharacterStatHealthModifierSO: AffectCharacter: No HeroStateMachine found in parent");
     }
