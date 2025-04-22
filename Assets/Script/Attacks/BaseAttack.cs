@@ -6,6 +6,7 @@ using UnityEngine;
 [Serializable]
 public class BaseAttack : MonoBehaviour
 {
+    
     public enum Effect
     {
         Sword,
@@ -18,6 +19,7 @@ public class BaseAttack : MonoBehaviour
         NormalAttack,
         SpecialAttack,
     }
+    public Sprite attackImage;
     public string attackName;
     public string attackDescription;
     public float attackDamage;  //Base Damage 15, lvl 10, stamina 35 = basedmg + lvl + stamina = 60

@@ -8,8 +8,10 @@ using Inventory;
 
 public class MainInventoryController : MonoBehaviour
 {
+    public bool isMainInventoryOpen = false;
     [SerializeField] private ItemInventoryController itemInventoryController;
     [SerializeField] private EquipMenuController equipMenuController;
+    [SerializeField] private SkillMenuController skillMenuController;
     private enum UIState
     {
         MainMenu,      // Đang ở menu chính
@@ -194,6 +196,7 @@ public class MainInventoryController : MonoBehaviour
         Debug.Log("Hiện giao diện trang bị cho: " + hero.name);
         this.currentState = UIState.EquipUI;
         equipPanel.SetActive(true);
+        this.equipMenuController.isEquipMenuOpen = true;
         this.equipMenuController.LoadWeaponUI(hero);
         this.equipMenuController.LoadHero(hero);
         this.equipMenuController.LoadHeroStat(hero);
@@ -214,6 +217,9 @@ public class MainInventoryController : MonoBehaviour
         Debug.Log("Hiện kỹ năng cho: " + hero.name);
         this.currentState = UIState.SkillsUI;
         skillsPanel.SetActive(true);
+        this.skillMenuController.isSkillMenuOpen = true;
+        this.skillMenuController.LoadHero(hero);
+        this.skillMenuController.LoadSkillUI(hero);
         // skillUI.LoadSkills(hero);
     }
 
@@ -221,6 +227,7 @@ public class MainInventoryController : MonoBehaviour
     {
         Debug.Log("Hiện item cho: " + hero.name);
         this.currentState = UIState.ItemUI;
+        this.itemInventoryController.isItemInventoryOpen = true;
         this.itemInventoryController.OpenItemInventory();
         itemsPanel.SetActive(true);
         // itemUI.Setup(hero);
@@ -305,11 +312,17 @@ public class MainInventoryController : MonoBehaviour
             if(mainManagePanel.activeSelf)
             {
                 mainManagePanel.SetActive(false);
+                this.isMainInventoryOpen = false;
+                this.equipMenuController.isEquipMenuOpen = false;
+                this.skillMenuController.isSkillMenuOpen = false;
+                this.itemInventoryController.isItemInventoryOpen = false;
                 
             }
             else
             {
+                
                 mainManagePanel.SetActive(true);
+                this.isMainInventoryOpen = true;
             }
         }
     }

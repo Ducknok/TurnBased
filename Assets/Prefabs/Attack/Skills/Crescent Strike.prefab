@@ -44,6 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6504ef8812ac5946b24ec95514fd2b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attackImage: {fileID: -2085691932, guid: fb051ba9df7a2724e99ecb3019809887, type: 3}
   attackName: Crescent Strike
   attackDescription: Unleashes a bolt of lunar energy in an arc
   attackDamage: 20

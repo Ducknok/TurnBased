@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class EquipMenuController : MonoBehaviour
 {
+    public bool isEquipMenuOpen = false;
     [Header("Hero")]
     [SerializeField] private Image heroImage;
     [SerializeField] private TextMeshProUGUI hereName;
@@ -13,7 +14,7 @@ public class EquipMenuController : MonoBehaviour
     [SerializeField] private GameObject weaponUI;
     [SerializeField] private Button weaponBut;
     [SerializeField] private Image weaponImage;
-    [SerializeField] private TextMeshProUGUI weaponDes;
+    [SerializeField] private TextMeshProUGUI weaponName;
 
     [Header("Hero Stat")]
     [SerializeField] private TextMeshProUGUI hpValue;
@@ -34,7 +35,11 @@ public class EquipMenuController : MonoBehaviour
 
     private void Update()
     {
-        if (heroSwapButtons.Count == 0) return;
+        if (!this.isEquipMenuOpen || heroSwapButtons.Count == 0)
+        {
+            Debug.LogWarning("Equip inventory dang dong");
+            return;
+        }
 
         if (Input.GetKeyDown(KeyCode.Q))
         {
@@ -50,7 +55,7 @@ public class EquipMenuController : MonoBehaviour
     private void ClearWeaponUI()
     {
         if(weaponImage != null) this.weaponImage.sprite = null;
-        if(weaponDes != null) this.weaponDes.text = "";
+        if(weaponName != null) this.weaponName.text = "";
     }
     private void ClearHero()
     {
@@ -71,7 +76,7 @@ public class EquipMenuController : MonoBehaviour
         this.ClearWeaponUI();
         AgentWeapon agentWeapon = hero.transform.GetComponent<AgentWeapon>();
         this.weaponImage.sprite = agentWeapon.weaponItemSO.ItemImage;
-        this.weaponDes.text = agentWeapon.weaponItemSO.Description;
+        this.weaponName.text = agentWeapon.weaponItemSO.Name;
     }
     public void LoadHero(HeroStateMachine hero)
     {

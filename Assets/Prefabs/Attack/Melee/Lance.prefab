@@ -44,6 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b2c211b2faba6843973e572e7e4cf3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attackImage: {fileID: 254677325, guid: b66d1bbd6ca38954d83ef330e39cb070, type: 3}
   attackName: Punch
   attackDescription: This is a Punch Attack
   attackDamage: 10

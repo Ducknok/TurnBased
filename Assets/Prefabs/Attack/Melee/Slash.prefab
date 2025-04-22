@@ -44,9 +44,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3127fca482cb1746a1e9286212d17ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attackImage: {fileID: 845128245, guid: b66d1bbd6ca38954d83ef330e39cb070, type: 3}
   attackName: Slash
   attackDescription: Fast Slash Attack with Your Weapon
   attackDamage: 10
   attackCost: 0
-  attackType1: 0
-  attackType2: 0
+  attackType: 0
+  effect1: 0
+  effect2: 0

@@ -44,6 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb5ad2a7e5601824886d1b7ef502f7b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attackImage: {fileID: 1116726303, guid: fb051ba9df7a2724e99ecb3019809887, type: 3}
   attackName: Fire Ball
   attackDescription: Shoot a fire ball forward enemy
   attackDamage: 20

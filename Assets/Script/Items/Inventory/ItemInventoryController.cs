@@ -13,6 +13,7 @@ namespace Inventory
 {
     public class ItemInventoryController : MonoBehaviour
     {
+        public bool isItemInventoryOpen = false;
         [SerializeField] public UIInventoryPage inventoryUI;
 
         [SerializeField] private InventorySO inventoryData;
@@ -41,6 +42,11 @@ namespace Inventory
         }
         public void Update()
         {
+            if (!this.isItemInventoryOpen)
+            {
+                Debug.LogWarning("Item inventory dang dong");
+                return;
+            }
             this.SwitchButtonInput();
         }
         private void PrepareInventoryData()
