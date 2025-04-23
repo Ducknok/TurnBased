@@ -74,11 +74,15 @@ namespace Inventory.UI
             if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
             {
                 this.currentHeroIndex = (this.currentHeroIndex + 1) % this.heroButtons.Count;
+                Debug.LogWarning("Nut S");
+
                 HighlightHeroButton(this.currentHeroIndex);
             }
             else if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
             {
                 this.currentHeroIndex = (this.currentHeroIndex - 1 + this.heroButtons.Count) % this.heroButtons.Count;
+                Debug.LogWarning("Nut W");
+
                 HighlightHeroButton(this.currentHeroIndex);
             }
             else if (Input.GetKeyDown(KeyCode.Return))
@@ -100,10 +104,14 @@ namespace Inventory.UI
         {
             if (Input.GetKeyDown(KeyCode.A))
             {
+                Debug.LogWarning("Nut A");
+
                 MoveSelection(-1);
             }
             else if (Input.GetKeyDown(KeyCode.D))
             {
+                Debug.LogWarning("Nut D");
+
                 MoveSelection(1);
             }
             else if (Input.GetKeyDown(KeyCode.Return))  // Nhấn Enter để mở menu hành động

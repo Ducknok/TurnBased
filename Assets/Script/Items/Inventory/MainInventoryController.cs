@@ -157,11 +157,14 @@ public class MainInventoryController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
         {
             currentHeroIndex = (currentHeroIndex - 1 + heroUIList.Count) % heroUIList.Count;
+            Debug.LogWarning("Nut len");
             HighlightHero(currentHeroIndex);
+           
         }
         else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
         {
             currentHeroIndex = (currentHeroIndex + 1) % heroUIList.Count;
+            Debug.LogWarning("Nut xuong");
             HighlightHero(currentHeroIndex);
         }
 
@@ -173,12 +176,15 @@ public class MainInventoryController : MonoBehaviour
             switch (currentSelectedIndex)
             {
                 case 0:
+                    this.equipMenuController.isEquipMenuOpen = true;
                     ShowEquipUI(hero);
                     break;
                 case 1:
+                    this.skillMenuController.isSkillMenuOpen = true;
                     ShowSkillUI(hero);
                     break;
                 case 2:
+                    this.itemInventoryController.isItemInventoryOpen = true;
                     ShowItemUI(hero);
                     break;
                 case 3:
@@ -196,11 +202,11 @@ public class MainInventoryController : MonoBehaviour
         Debug.Log("Hiện giao diện trang bị cho: " + hero.name);
         this.currentState = UIState.EquipUI;
         equipPanel.SetActive(true);
-        this.equipMenuController.isEquipMenuOpen = true;
+        
         this.equipMenuController.LoadWeaponUI(hero);
         this.equipMenuController.LoadHero(hero);
         this.equipMenuController.LoadHeroStat(hero);
-        this.equipMenuController.CreateHeroSwapButton(cbm);
+        this.equipMenuController.CreateHeroSwapButton(cbm, hero);
         // equipUI.LoadForHero(hero);
     }
 
@@ -217,9 +223,9 @@ public class MainInventoryController : MonoBehaviour
         Debug.Log("Hiện kỹ năng cho: " + hero.name);
         this.currentState = UIState.SkillsUI;
         skillsPanel.SetActive(true);
-        this.skillMenuController.isSkillMenuOpen = true;
         this.skillMenuController.LoadHero(hero);
         this.skillMenuController.LoadSkillUI(hero);
+        this.skillMenuController.CreateHeroSwapButton(cbm, hero);
         // skillUI.LoadSkills(hero);
     }
 
@@ -227,7 +233,7 @@ public class MainInventoryController : MonoBehaviour
     {
         Debug.Log("Hiện item cho: " + hero.name);
         this.currentState = UIState.ItemUI;
-        this.itemInventoryController.isItemInventoryOpen = true;
+        
         this.itemInventoryController.OpenItemInventory();
         itemsPanel.SetActive(true);
         // itemUI.Setup(hero);

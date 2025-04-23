@@ -40,28 +40,30 @@ public class EquipMenuController : MonoBehaviour
             Debug.LogWarning("Equip inventory dang dong");
             return;
         }
-
+        
         if (Input.GetKeyDown(KeyCode.Q))
         {
+            Debug.LogWarning("Nut Q");
             currentSwapIndex = (currentSwapIndex - 1 + heroSwapButtons.Count) % heroSwapButtons.Count;
             LoadCurrentHeroUI();
         }
         else if (Input.GetKeyDown(KeyCode.E))
         {
             currentSwapIndex = (currentSwapIndex + 1) % heroSwapButtons.Count;
+            Debug.LogWarning("Nut E");
             LoadCurrentHeroUI();
         }
     }
     private void ClearWeaponUI()
     {
-        if(weaponImage != null) this.weaponImage.sprite = null;
-        if(weaponName != null) this.weaponName.text = "";
+        if (weaponImage != null) this.weaponImage.sprite = null;
+        if (weaponName != null) this.weaponName.text = "";
     }
     private void ClearHero()
     {
         if (heroImage != null) this.heroImage.sprite = null;
         if (hereName != null) this.hereName.text = "";
-    } 
+    }
     private void ClearHeroStat()
     {
         if (hpValue != null) this.hpValue.text = "";
@@ -94,9 +96,8 @@ public class EquipMenuController : MonoBehaviour
         this.mAtkValue.text = hero.baseHero.curMATK.ToString();
         this.mDefValue.text = hero.baseHero.curMDEF.ToString();
     }
-    public void CreateHeroSwapButton(CombatStateMachine cbm)
+    public void CreateHeroSwapButton(CombatStateMachine cbm, HeroStateMachine selectedHero)
     {
-        // Clear cũ
         foreach (Transform child in this.heroSwapButtonSpacer.transform)
         {
             Destroy(child.gameObject);
@@ -105,7 +106,6 @@ public class EquipMenuController : MonoBehaviour
         heroSwapButtons.Clear();
         heroesInCombat.Clear();
 
-        // Tạo mới
         foreach (var heroGO in cbm.playersInCombat)
         {
             HeroStateMachine hero = heroGO.GetComponent<HeroStateMachine>();
@@ -121,7 +121,6 @@ public class EquipMenuController : MonoBehaviour
                 heroIcon.sprite = hero.baseHero.heroImage;
             }
 
-            // Optional: Gán onClick nếu muốn chọn bằng chuột
             HeroStateMachine capturedHero = hero;
             newSwapBut.onClick.AddListener(() =>
             {
@@ -130,10 +129,13 @@ public class EquipMenuController : MonoBehaviour
             });
         }
 
-        // Load UI hero đầu tiên
-        currentSwapIndex = 0;
+        // 🔥 Xác định hero đang được chọn khi vào Equip
+        currentSwapIndex = heroesInCombat.IndexOf(selectedHero);
+        if (currentSwapIndex < 0) currentSwapIndex = 0; // fallback nếu không tìm thấy
         LoadCurrentHeroUI();
     }
+
+
 
     private void LoadCurrentHeroUI()
     {
@@ -143,5 +145,29 @@ public class EquipMenuController : MonoBehaviour
         LoadHero(currentHero);
         LoadHeroStat(currentHero);
         LoadWeaponUI(currentHero);
+        // Cập nhật màu icon của nút chọn hero
+        for (int i = 0; i < heroSwapButtons.Count; i++)
+        {
+            Button btn = heroSwapButtons[i];
+            Transform iconTransform = btn.transform.Find("Icon");
+
+            if (iconTransform != null)
+            {
+                Image iconImage = iconTransform.GetComponent<Image>();
+                if (iconImage != null)
+                {
+                    // Nếu là hero đang được chọn thì sáng, ngược lại thì tối
+                    if (i == currentSwapIndex)
+                    {
+                        iconImage.color = Color.white; // hoặc new Color(1f, 1f, 1f, 1f)
+                    }
+                    else
+                    {
+                        iconImage.color = new Color(1f, 1f, 1f, 0.3f); // alpha thấp để tối đi
+                    }
+                }
+            }
+
+        }
     }
 }

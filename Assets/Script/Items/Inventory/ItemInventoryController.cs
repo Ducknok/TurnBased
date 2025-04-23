@@ -317,10 +317,12 @@ namespace Inventory
         {
             if (Input.GetKeyDown(KeyCode.Q))
             {
+                Debug.LogWarning("Nut Q");
                 SwitchButton(-1); // Chuyển về trái
             }
             if (Input.GetKeyDown(KeyCode.E))
             {
+                Debug.LogWarning("Nut E");
                 SwitchButton(1);  // Chuyển sang phải
             }
         }
