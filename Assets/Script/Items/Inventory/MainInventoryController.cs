@@ -9,9 +9,15 @@ using Inventory;
 public class MainInventoryController : MonoBehaviour
 {
     public bool isMainInventoryOpen = false;
-    [SerializeField] private ItemInventoryController itemInventoryController;
-    [SerializeField] private EquipMenuController equipMenuController;
+    protected static MainInventoryController instance;
+    public static MainInventoryController Instance => instance;
+    [SerializeField] protected ItemInventoryController itemInventoryController;
+    public ItemInventoryController ItemInventoryController => itemInventoryController;
+    [SerializeField] protected EquipMenuController equipMenuController;
+    public EquipMenuController EquipMenuController => equipMenuController;
     [SerializeField] private SkillMenuController skillMenuController;
+    public SkillMenuController SkillMenuController => skillMenuController;
+
     private enum UIState
     {
         MainMenu,      // Đang ở menu chính
@@ -23,7 +29,6 @@ public class MainInventoryController : MonoBehaviour
     }
 
     private UIState currentState = UIState.MainMenu;
-    [SerializeField] private CombatStateMachine cbm;
     [SerializeField] public UIInventoryDescription itemDescription;
 
     [Header("Button UI")]
@@ -54,49 +59,93 @@ public class MainInventoryController : MonoBehaviour
 
     private void Start()
     {
-        this.CreateHeroUI();
+        
         if (buttonUI.Count > 0)
         {
             SelectButton(0); // Chọn button đầu tiên khi mở lên
         }
     }
+    private void Awake()
+    {
+        if (instance != null && instance != this)
+        {
+            Destroy(this.gameObject);
+            return;
+        }
+
+        instance = this;
+        DontDestroyOnLoad(this.gameObject); // giữ nó giữa các scene
+        this.LoadItemInventoryController();
+        this.LoadEquipMenuController();
+        this.LoadSkillMenuController();
+    }
     private void Update()
     {
-        this.OpenMainMenu();
-        // Khi đang ở menu chính
-        if (!this.isSelectingHero && currentState == UIState.MainMenu)
+        if (CombatController.Instance.CBZ.isInCombat) return;
+        else
         {
-            HandleButtonNavigation();
-
-            if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+            this.OpenMainMenu();
+            // Khi đang ở menu chính
+            if (!this.isSelectingHero && currentState == UIState.MainMenu)
             {
-                isSelectingHero = true;
-                currentHeroIndex = 0;
-                HighlightHero(currentHeroIndex);
-                allowButtonNavigation = false;
-                LockSelectedButton();
+                HandleButtonNavigation();
+                this.ConfirmSelectHero();
+            }
+            // Khi đang chọn hero
+            else if (isSelectingHero && currentState == UIState.MainMenu)
+            {
+                HandleHeroNavigation();
+                this.UndoSelectHero();
+                LockSelectedButton(); // Giữ selection
+            }
+            // Khi đang ở trong một UI phụ như Equip, Skill, Item,...
+            else if (IsInSubUI() && Input.GetKeyDown(KeyCode.LeftControl))
+            {
+                ReturnToMainMenu();
             }
         }
-        // Khi đang chọn hero
-        else if (isSelectingHero && currentState == UIState.MainMenu)
-        {
-            HandleHeroNavigation();
+        
+    }
 
-            if (Input.GetKeyDown(KeyCode.LeftControl))
-            {
-                isSelectingHero = false;
-                ResetHeroHighlight();
-                SelectButton(currentSelectedIndex);
-            }
+    //LoadComponent
+    private void LoadItemInventoryController()
+    {
+        if (this.itemInventoryController != null) return;
+        this.itemInventoryController = FindObjectOfType<ItemInventoryController>();
+    }
+    private void LoadEquipMenuController()
+    {
+        if (this.equipMenuController != null) return;
+        this.equipMenuController = FindObjectOfType<EquipMenuController>();
+    }
+    private void LoadSkillMenuController()
+    {
+        if (this.skillMenuController != null) return;
+        this.skillMenuController = FindObjectOfType<SkillMenuController>();
+    }
 
-            LockSelectedButton(); // Giữ selection
-        }
-        // Khi đang ở trong một UI phụ như Equip, Skill, Item,...
-        else if (IsInSubUI() && Input.GetKeyDown(KeyCode.LeftControl))
+    //Confirm && Undo select hero
+    private void ConfirmSelectHero()
+    {
+        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
         {
-            ReturnToMainMenu();
+            isSelectingHero = true;
+            currentHeroIndex = 0;
+            HighlightHero(currentHeroIndex);
+            allowButtonNavigation = false;
+            LockSelectedButton();
         }
     }
+    private void UndoSelectHero()
+    {
+        if (Input.GetKeyDown(KeyCode.LeftControl))
+        {
+            isSelectingHero = false;
+            ResetHeroHighlight();
+            SelectButton(currentSelectedIndex);
+        }
+    }
+
 
     // Kiểm tra xem đang ở UI phụ không
     private bool IsInSubUI()
@@ -170,7 +219,7 @@ public class MainInventoryController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
         {
-            var hero = cbm.playersInCombat[currentHeroIndex].GetComponent<HeroStateMachine>();
+            var hero = CombatController.Instance.CBM.playersInCombat[currentHeroIndex].GetComponent<HeroStateMachine>();
             mainManagePanel.SetActive(false); // Ẩn menu chính
 
             switch (currentSelectedIndex)
@@ -206,7 +255,7 @@ public class MainInventoryController : MonoBehaviour
         this.equipMenuController.LoadWeaponUI(hero);
         this.equipMenuController.LoadHero(hero);
         this.equipMenuController.LoadHeroStat(hero);
-        this.equipMenuController.CreateHeroSwapButton(cbm, hero);
+        this.equipMenuController.CreateHeroSwapButton(CombatController.Instance.CBM, hero);
         // equipUI.LoadForHero(hero);
     }
 
@@ -225,7 +274,7 @@ public class MainInventoryController : MonoBehaviour
         skillsPanel.SetActive(true);
         this.skillMenuController.LoadHero(hero);
         this.skillMenuController.LoadSkillUI(hero);
-        this.skillMenuController.CreateHeroSwapButton(cbm, hero);
+        this.skillMenuController.CreateHeroSwapButton(CombatController.Instance.CBM, hero);
         // skillUI.LoadSkills(hero);
     }
 
@@ -291,20 +340,23 @@ public class MainInventoryController : MonoBehaviour
     private void CreateHeroUI()
     {
         // Clear old buttons (nếu cần)
-        //foreach (Transform child in this.heroManageSpacer)
-        //{
-        //    Destroy(child.gameObject);
-        //}
-
-        //this.heroUIList.Clear();
+        foreach (Transform child in this.heroManageSpacer.Find("HeroInCombat"))
+        {
+            Destroy(child.gameObject);
+        }
+        foreach (Transform child in this.heroManageSpacer.Find("HeroNotInCombat"))
+        {
+            Destroy(child.gameObject);
+        }
+        this.heroUIList.Clear();
         for (int i = 0; i < 3; i++)
         {
-            HeroStateMachine hero = (i < this.cbm.playersInCombat.Count)
-                ? this.cbm.playersInCombat[i].GetComponent<HeroStateMachine>()
+            HeroStateMachine hero = (i < CombatController.Instance.CBM.playersInCombat.Count)
+                ? CombatController.Instance.CBM.playersInCombat[i].GetComponent<HeroStateMachine>()
                 : null;
 
-            GameObject newHeroUIInCombat = Instantiate(this.infoHeroUIPrefab, this.heroManageSpacer.Find("PlayerInCombat"));
-            GameObject newHeroUINotInCombat = Instantiate(this.infoHeroUIPrefab, this.heroManageSpacer.Find("PlayerNotInCombat"));
+            GameObject newHeroUIInCombat = Instantiate(this.infoHeroUIPrefab, this.heroManageSpacer.Find("HeroInCombat"));
+            GameObject newHeroUINotInCombat = Instantiate(this.infoHeroUIPrefab, this.heroManageSpacer.Find("HeroNotInCombat"));
 
             this.heroUIList.Add(newHeroUIInCombat);
             this.itemDescription.SetHeroUIDescription(newHeroUIInCombat, hero);
@@ -317,6 +369,7 @@ public class MainInventoryController : MonoBehaviour
         {
             if(mainManagePanel.activeSelf)
             {
+                
                 mainManagePanel.SetActive(false);
                 this.isMainInventoryOpen = false;
                 this.equipMenuController.isEquipMenuOpen = false;
@@ -326,7 +379,7 @@ public class MainInventoryController : MonoBehaviour
             }
             else
             {
-                
+                this.CreateHeroUI();
                 mainManagePanel.SetActive(true);
                 this.isMainInventoryOpen = true;
             }
