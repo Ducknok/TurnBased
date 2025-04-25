@@ -1652,6 +1652,7 @@ GameObject:
   m_Component:
   - component: {fileID: 199924267}
   - component: {fileID: 199924268}
+  - component: {fileID: 199924269}
   m_Layer: 6
   m_Name: Movement
   m_TagString: Untagged
@@ -1690,6 +1691,20 @@ MonoBehaviour:
   anim: {fileID: 0}
   moveSpeed: 5
   movement: {x: 0, y: 0}
+--- !u!114 &199924269
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 199924266}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d63390f22ad515439213e478f53d49d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leader: {fileID: 1073275801}
+  delaySteps: 10
 --- !u!1 &228244716
 GameObject:
   m_ObjectHideFlags: 0
@@ -4526,6 +4541,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 943151433b6907b498852e6ac11b51b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  followerMovement: {fileID: 199924269}
   playerPositions:
   - {fileID: 624175609}
   - {fileID: 2140473436}
@@ -7021,6 +7037,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1073275799}
   - component: {fileID: 1073275800}
+  - component: {fileID: 1073275801}
   m_Layer: 6
   m_Name: Movement
   m_TagString: Untagged
@@ -7059,6 +7076,21 @@ MonoBehaviour:
   anim: {fileID: 0}
   moveSpeed: 5
   movement: {x: 0, y: 0}
+--- !u!114 &1073275801
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1073275798}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a82da323e5d45a4a8fe93067f7f5647, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 3
+  recordInterval: 0.1
+  historyLimit: 100
 --- !u!1 &1107068107
 GameObject:
   m_ObjectHideFlags: 0

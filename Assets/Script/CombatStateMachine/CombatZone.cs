@@ -5,6 +5,7 @@ using DG.Tweening; // DoTween for smooth animations
 
 public class CombatZone : MonoBehaviour
 {
+    [SerializeField] private FollowerMovement followerMovement; // Reference to the FollowerMovement script
     [Header("Combat Settings")]
     public Transform[] playerPositions;   // Set positions for players during combat
     public Transform[] enemyPositions;    // Set positions for enemies during combat
@@ -107,7 +108,7 @@ public class CombatZone : MonoBehaviour
     {
         Debug.Log("Combat Ended!");
         isInCombat = false;
-
+        this.followerMovement.JumpToFollowPosition(); // Reset follower position to leader's position
         // Reset positions, handle rewards, etc.
     }
     private void OnDrawGizmos()
