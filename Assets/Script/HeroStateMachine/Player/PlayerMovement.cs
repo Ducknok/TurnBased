@@ -1,37 +1,66 @@
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    private PlayerController playerCtrl; 
-    [SerializeField] protected Rigidbody2D rb;
-    [SerializeField] protected GameObject body { get; private set; }
-    [SerializeField] protected Animator anim;
-    [SerializeField] protected float moveSpeed = 5f;
-    [SerializeField] protected Vector2 movement;
-    protected void Awake()
+    public bool isLeader = false;
+    [SerializeField] public float moveSpeed = 5f;
+    [SerializeField] private Rigidbody2D rb;
+    [SerializeField] public Animator anim;
+    public Vector2 movement;
+
+    // Lưu lịch sử vị trí
+    public List<Vector3> positionHistory = new List<Vector3>();
+    private float recordTimer;
+    [SerializeField] private float recordInterval = 0.1f;
+
+    private void Awake()
     {
-        this.body = this.transform.parent.Find("Body").gameObject;
-        this.rb = this.body.GetComponent <Rigidbody2D>();
-        this.anim = this.body.GetComponent<Animator>();
-        this.playerCtrl = GetComponentInParent<PlayerController>();
+        this.rb = this.transform.parent.transform.Find("Body").GetComponent<Rigidbody2D>();
+        this.anim = this.transform.parent.transform.Find("Body").GetComponent<Animator>();
     }
-    protected void Update()
+
+    private void Update()
     {
-        this.anim.SetFloat("Horizontal", this.movement.x);
-        this.anim.SetFloat("Vertical", this.movement.y);
-        this.anim.SetFloat("Speed", this.movement.sqrMagnitude);
-        if(this.movement != Vector2.zero)
+        if (!isLeader) return; // Chỉ Leader mới nhập input
+
+        movement.Set(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+
+        anim.SetFloat("Horizontal", movement.x);
+        anim.SetFloat("Vertical", movement.y);
+        anim.SetFloat("Speed", movement.sqrMagnitude);
+
+        if (movement != Vector2.zero)
         {
-            this.anim.SetFloat("LastHorizontal", this.movement.x);
-            this.anim.SetFloat("LastVertical", this.movement.y);
+            anim.SetFloat("LastHorizontal", movement.x);
+            anim.SetFloat("LastVertical", movement.y);
         }
     }
-    protected void FixedUpdate()
+
+    private void FixedUpdate()
     {
-        if (this.playerCtrl.CombatZone.isInCombat) return;
-        this.movement.Set(InputManager.Movement.x, InputManager.Movement.y);
-        this.rb.velocity = this.movement * this.moveSpeed;
+            // Nếu đang combat thì không cho di chuyển
+            if (PlayerController.Instance.CombatZone.isInCombat)
+            {
+                rb.velocity = Vector2.zero;
+                return;
+            }
+
+            if (isLeader)
+            {
+                rb.velocity = movement.normalized * moveSpeed;
+
+                recordTimer += Time.fixedDeltaTime;
+                if (recordTimer >= recordInterval)
+                {
+                    positionHistory.Insert(0, this.transform.parent.Find("Body").position);
+                    recordTimer = 0f;
+                }
+            }
+    }
+
+    public void ClearHistory()
+    {
+        positionHistory.Clear();
     }
 }

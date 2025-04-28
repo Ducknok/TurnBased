@@ -74,7 +74,7 @@ public class MainInventoryController : MonoBehaviour
         }
 
         instance = this;
-        DontDestroyOnLoad(this.gameObject); // giữ nó giữa các scene
+        //DontDestroyOnLoad(this.gameObject); // giữ nó giữa các scene
         this.LoadItemInventoryController();
         this.LoadEquipMenuController();
         this.LoadSkillMenuController();

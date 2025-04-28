@@ -100,6 +100,10 @@ public class CombatZone : MonoBehaviour
     private void StartCombat()
     {
         this.isInCombat = true;
+        foreach (var hero in PlayerController.Instance.HeroSMList)
+        {
+            hero.anim.SetBool("IdleBattle", this.isInCombat);
+        }
     }
 
     // End the combat
@@ -107,7 +111,11 @@ public class CombatZone : MonoBehaviour
     {
         Debug.Log("Combat Ended!");
         isInCombat = false;
-
+        foreach(var hero in PlayerController.Instance.HeroSMList)
+        {
+            hero.anim.SetBool("IdleBattle", this.isInCombat);
+        }
+       
         // Reset positions, handle rewards, etc.
     }
     private void OnDrawGizmos()

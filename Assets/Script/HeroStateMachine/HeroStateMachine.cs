@@ -9,8 +9,6 @@ using Inventory;
 
 public class HeroStateMachine : MonoBehaviour
 {
-    private CombatStateMachine combatStateMachine;
-    public CombatZone combatZone;
     public BaseHero baseHero;
     public ItemInventoryController inventoryController;
 
@@ -74,8 +72,6 @@ public class HeroStateMachine : MonoBehaviour
 
 
         this.choose.SetActive(false);
-        this.combatStateMachine = GameObject.Find("StartCombat").GetComponent<CombatStateMachine>();
-        this.combatZone = GameObject.Find("StartCombat").GetComponent<CombatZone>();
         this.body = this.transform.Find("Body").gameObject;
         this.anim = this.body.GetComponent<Animator>();
         this.impulseSource = this.transform.GetComponent<CinemachineImpulseSource>();
@@ -99,19 +95,19 @@ public class HeroStateMachine : MonoBehaviour
         switch (this.currentState)
         {
             case (TurnState.PROCESSING):
-                this.anim.SetBool("IdleBattle", true);
+                
                 this.HandleHeroSelection();
                 break;
             case (TurnState.ADDTOLIST):
-                if (!this.combatStateMachine.playerToManage.Contains(this.gameObject))
+                if (!CombatController.Instance.CBM.playerToManage.Contains(this.gameObject))
                 {
-                    this.combatStateMachine.playerToManage.Add(this.gameObject);
+                    CombatController.Instance.CBM.playerToManage.Add(this.gameObject);
                 }
                 this.currentState = TurnState.WAITING;
                 break;
             case (TurnState.WAITING):
 
-                if (this.combatStateMachine.heroTurn && !this.combatStateMachine.heroesDoneTurn.Contains(this.gameObject) &&  this.combatStateMachine.combatZone.isInCombat) this.currentState = TurnState.PROCESSING;
+                if (CombatController.Instance.CBM.heroTurn && !CombatController.Instance.CBM.heroesDoneTurn.Contains(this.gameObject) &&  CombatController.Instance.CBZ.isInCombat) this.currentState = TurnState.PROCESSING;
                 break;
             case (TurnState.DEAD):
                 if (!this.alive)
@@ -123,35 +119,35 @@ public class HeroStateMachine : MonoBehaviour
                     //Change tag
                     this.gameObject.tag = "DeadPlayer";
                     //not attackable by enemy
-                    this.combatStateMachine.playersInCombat.Remove(this.gameObject);
+                    CombatController.Instance.CBM.playersInCombat.Remove(this.gameObject);
                     //not managable
-                    this.combatStateMachine.playerToManage.Remove(this.gameObject);
+                    CombatController.Instance.CBM.playerToManage.Remove(this.gameObject);
 
                     //reset gui
-                    this.combatStateMachine.actionPanel.SetActive(false);
+                    CombatController.Instance.CBM.actionPanel.SetActive(false);
                     //remove item from performList
-                    if (this.combatStateMachine.playersInCombat.Count > 0)
+                    if (CombatController.Instance.CBM.playersInCombat.Count > 0)
                     {
-                        for (int i = 0; i < this.combatStateMachine.performList.Count; i++)
+                        for (int i = 0; i < CombatController.Instance.CBM.performList.Count; i++)
                         {
-                            if (this.combatStateMachine.performList[i].AttacksGameObject == this.gameObject)
+                            if (CombatController.Instance.CBM.performList[i].AttacksGameObject == this.gameObject)
                             {
-                                this.combatStateMachine.performList.Remove(this.combatStateMachine.performList[i]);
+                                CombatController.Instance.CBM.performList.Remove(CombatController.Instance.CBM.performList[i]);
                             }
 
-                            if (this.combatStateMachine.performList[i].AttackerTarget == this.gameObject)
+                            if (CombatController.Instance.CBM.performList[i].AttackerTarget == this.gameObject)
                             {
-                                this.combatStateMachine.performList[i].AttackerTarget = this.combatStateMachine.playersInCombat[Random.Range(0, this.combatStateMachine.playersInCombat.Count)];
+                                CombatController.Instance.CBM.performList[i].AttackerTarget = CombatController.Instance.CBM.playersInCombat[Random.Range(0, CombatController.Instance.CBM.playersInCombat.Count)];
                             }
                         }
                     }
                     //animation dead
                     this.anim.SetTrigger("Dead");
                     // Không tạo action và skill panel nếu hero đã chết
-                    this.combatStateMachine.actionPanel.SetActive(false);
-                    this.combatStateMachine.skillPanel.SetActive(false);
+                    CombatController.Instance.CBM.actionPanel.SetActive(false);
+                    CombatController.Instance.CBM.skillPanel.SetActive(false);
                     //reset heroinput
-                    this.combatStateMachine.combatState = CombatStateMachine.PerformAction.CHECKALIVE;
+                    CombatController.Instance.CBM.combatState = CombatStateMachine.PerformAction.CHECKALIVE;
                     this.alive = false;
                     //deactivate the selector
                     if (this.choose == null) return;
@@ -168,9 +164,9 @@ public class HeroStateMachine : MonoBehaviour
     private void HeroPosition()
     {
         // Xác định chỉ số của hero trong playerPosition
-        for (int i = 0; i < this.combatZone.players.Length; i++)
+        for (int i = 0; i < CombatController.Instance.CBZ.players.Length; i++)
         {
-            if (this.combatZone.players[i] == this.gameObject)
+            if (CombatController.Instance.CBZ.players[i] == this.gameObject)
             {
                 this.heroIndex = i;
                 break;
@@ -185,7 +181,7 @@ public class HeroStateMachine : MonoBehaviour
     // Thay đổi cách chọn hero
     private void HandleHeroSelection()
     {
-        if (this.combatStateMachine.isSelectingEnemy || this.combatStateMachine.enemyTurn) return;
+        if (CombatController.Instance.CBM.isSelectingEnemy || CombatController.Instance.CBM.enemyTurn) return;
         if (Keyboard.current.leftArrowKey.wasPressedThisFrame || Keyboard.current.aKey.wasPressedThisFrame)
         {
             ChangeHeroSelection(-1);
@@ -199,19 +195,19 @@ public class HeroStateMachine : MonoBehaviour
 
     private void ChangeHeroSelection(int direction)
     {
-        if (this.combatZone.players.Length == 0) return;
+        if (CombatController.Instance.CBZ.players.Length == 0) return;
 
         // Tắt action panel của hero cũ nếu có
-        if (selectedHeroIndex >= 0 && selectedHeroIndex < this.combatZone.players.Length)
+        if (selectedHeroIndex >= 0 && selectedHeroIndex < CombatController.Instance.CBZ.players.Length)
         {
-            var previousHero = this.combatZone.players[selectedHeroIndex].GetComponent<HeroStateMachine>();
+            var previousHero = CombatController.Instance.CBZ.players[selectedHeroIndex].GetComponent<HeroStateMachine>();
 
             if (previousHero != null)
             {
                 this.choose.SetActive(false);
-                this.combatStateMachine.playerToManage.Remove(previousHero.gameObject);
-                this.combatStateMachine.ClearAttackPanel();
-                this.combatStateMachine.playerInput = CombatStateMachine.PlayerGUI.ACTIVATE;
+                CombatController.Instance.CBM.playerToManage.Remove(previousHero.gameObject);
+                CombatController.Instance.CBM.ClearAttackPanel();
+                CombatController.Instance.CBM.playerInput = CombatStateMachine.PlayerGUI.ACTIVATE;
             }
         }
 
@@ -222,11 +218,11 @@ public class HeroStateMachine : MonoBehaviour
             newIndex += direction;
 
             // Quay vòng nếu đi quá giới hạn
-            if (newIndex < 0) newIndex = this.combatZone.players.Length - 1;
-            if (newIndex >= this.combatZone.players.Length) newIndex = 0;
+            if (newIndex < 0) newIndex = CombatController.Instance.CBZ.players.Length - 1;
+            if (newIndex >= CombatController.Instance.CBZ.players.Length) newIndex = 0;
 
             // Nếu hero mới không chết, thì chọn nó
-            if (this.combatZone.players[newIndex].GetComponent<HeroStateMachine>().currentState != TurnState.DEAD)
+            if (CombatController.Instance.CBZ.players[newIndex].GetComponent<HeroStateMachine>().currentState != TurnState.DEAD)
             {
                 selectedHeroIndex = newIndex;
                 break;
@@ -235,10 +231,10 @@ public class HeroStateMachine : MonoBehaviour
         } while (newIndex != selectedHeroIndex); // Nếu quay lại hero cũ thì dừng lại (tất cả hero đã chết)
 
         // Thêm hero mới vào danh sách
-        var selectedHero = this.combatZone.players[selectedHeroIndex].GetComponent<HeroStateMachine>();
-        if (!this.combatStateMachine.playerToManage.Contains(selectedHero.gameObject))
+        var selectedHero = CombatController.Instance.CBZ.players[selectedHeroIndex].GetComponent<HeroStateMachine>();
+        if (!CombatController.Instance.CBM.playerToManage.Contains(selectedHero.gameObject))
         {
-            this.combatStateMachine.playerToManage.Add(selectedHero.gameObject);
+            CombatController.Instance.CBM.playerToManage.Add(selectedHero.gameObject);
         }
         // Cập nhật vị trí actionPanel & skillPanel
         this.UpdateActionPanelPosition(selectedHero);
@@ -247,8 +243,8 @@ public class HeroStateMachine : MonoBehaviour
     //Update action position
     private void UpdateActionPanelPosition(HeroStateMachine selectedHero)
     {
-        RectTransform actionPanelRect = this.combatStateMachine.actionPanel.GetComponent<RectTransform>();
-        RectTransform skillPanelRect = this.combatStateMachine.skillPanel.GetComponent<RectTransform>();
+        RectTransform actionPanelRect = CombatController.Instance.CBM.actionPanel.GetComponent<RectTransform>();
+        RectTransform skillPanelRect = CombatController.Instance.CBM.skillPanel.GetComponent<RectTransform>();
 
         // Lấy Canvas
         Canvas canvas = actionPanelRect.GetComponentInParent<Canvas>();
@@ -276,8 +272,8 @@ public class HeroStateMachine : MonoBehaviour
         skillPanelRect.anchoredPosition = localPosition + offset;
 
         // Hiển thị Panel
-        this.combatStateMachine.actionPanel.SetActive(true);
-        this.combatStateMachine.skillPanel.SetActive(false);
+        CombatController.Instance.CBM.actionPanel.SetActive(true);
+        CombatController.Instance.CBM.skillPanel.SetActive(false);
     }
 
     private IEnumerator TimeForAction()
@@ -303,7 +299,7 @@ public class HeroStateMachine : MonoBehaviour
         //animate back to start position
         this.anim.SetBool("IdleBattle", false);
         this.anim.SetTrigger("Attack_1");
-        this.combatStateMachine.UpdateEnemyTimer();
+        CombatController.Instance.CBM.UpdateEnemyTimer();
         
         StartCoroutine(MoveTowardsStart());
         
@@ -362,11 +358,11 @@ public class HeroStateMachine : MonoBehaviour
     //Do damage
     public void DoDamage()
     {
-        float calDamage = this.baseHero.curATK + combatStateMachine.performList[0].choosenAttack.attackDamage;
-        if (this.combatStateMachine.performList.Count > 0)
+        float calDamage = this.baseHero.curATK + CombatController.Instance.CBM.performList[0].choosenAttack.attackDamage;
+        if (CombatController.Instance.CBM.performList.Count > 0)
         {
             this.ManaBar();
-            this.enemyToAttack.GetComponent<EnemyStateMachine>().TakeDamage(calDamage, this.combatStateMachine.performList[0].choosenAttack.effect1, this.combatStateMachine.performList[0].choosenAttack.effect2);
+            this.enemyToAttack.GetComponent<EnemyStateMachine>().TakeDamage(calDamage, CombatController.Instance.CBM.performList[0].choosenAttack.effect1, CombatController.Instance.CBM.performList[0].choosenAttack.effect2);
             this.UpdateHeroPanel();
         }
         else
@@ -376,7 +372,7 @@ public class HeroStateMachine : MonoBehaviour
     }
     protected void ManaBar()
     {
-        if (this.combatStateMachine.performList[0].choosenAttack.attackType == BaseAttack.AttackType.NormalAttack)
+        if (CombatController.Instance.CBM.performList[0].choosenAttack.attackType == BaseAttack.AttackType.NormalAttack)
         {
             this.RestoreMana();
         }
@@ -414,7 +410,7 @@ public class HeroStateMachine : MonoBehaviour
     }
     public void DescreaseMana()
     {
-        this.baseHero.curMP -= this.combatStateMachine.performList[0].choosenAttack.attackCost;
+        this.baseHero.curMP -= CombatController.Instance.CBM.performList[0].choosenAttack.attackCost;
         float ratio = this.baseHero.curMP / this.baseHero.baseMP;
         Sequence sequence = DOTween.Sequence();
         sequence.Append(this.heroMPBarFill.DOFillAmount(ratio, 0.25f)).SetEase(Ease.InOutSine);
@@ -458,7 +454,7 @@ public class HeroStateMachine : MonoBehaviour
     IEnumerator MoveTowardsStart()
     {
         yield return new WaitForSeconds(0.25f);
-        if (this.combatStateMachine.performList[0].choosenAttack.attackType == BaseAttack.AttackType.NormalAttack)
+        if (CombatController.Instance.CBM.performList[0].choosenAttack.attackType == BaseAttack.AttackType.NormalAttack)
         {
             DamagePopup.Create(this.body.transform.position, 3f, false, true);
         }
@@ -466,29 +462,29 @@ public class HeroStateMachine : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         //do damage
         this.DoDamage();
-        Vector3 firstPosition = this.combatZone.playerPositions[this.heroIndex].position;
+        Vector3 firstPosition = CombatController.Instance.CBZ.playerPositions[this.heroIndex].position;
         while (this.MoveTowardsStart(firstPosition)) { yield return null; }
         //remvoe this performer from the list in CSM
-        this.combatStateMachine.performList.RemoveAt(0);
+        CombatController.Instance.CBM.performList.RemoveAt(0);
 
         
         //reset CSM  -> WAIT
-        if (this.combatStateMachine.combatState != CombatStateMachine.PerformAction.WIN && this.combatStateMachine.combatState != CombatStateMachine.PerformAction.LOSE)
+        if (CombatController.Instance.CBM.combatState != CombatStateMachine.PerformAction.WIN && CombatController.Instance.CBM.combatState != CombatStateMachine.PerformAction.LOSE)
         {
-            this.combatStateMachine.combatState = CombatStateMachine.PerformAction.WAIT;
+            CombatController.Instance.CBM.combatState = CombatStateMachine.PerformAction.WAIT;
             //reset this player state
             this.currentState = TurnState.WAITING;
         }
-        if (this.combatStateMachine.AreAllHeroesDone())
+        if (CombatController.Instance.CBM.AreAllHeroesDone())
         {
-            this.combatStateMachine.heroesDoneTurn.Clear();
+            CombatController.Instance.CBM.heroesDoneTurn.Clear();
 
             Debug.LogWarning("hero done");
-            if (this.combatStateMachine.AreAllEnemiesDone())
+            if (CombatController.Instance.CBM.AreAllEnemiesDone())
             {
-                this.combatStateMachine.heroesDoneTurn.Clear();
-                this.combatStateMachine.heroTurn = true;
-                this.combatStateMachine.enemyTurn = false;
+                CombatController.Instance.CBM.heroesDoneTurn.Clear();
+                CombatController.Instance.CBM.heroTurn = true;
+                CombatController.Instance.CBM.enemyTurn = false;
             }
             
         }

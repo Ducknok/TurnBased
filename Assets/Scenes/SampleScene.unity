@@ -1652,6 +1652,7 @@ GameObject:
   m_Component:
   - component: {fileID: 199924267}
   - component: {fileID: 199924268}
+  - component: {fileID: 199924269}
   m_Layer: 6
   m_Name: Movement
   m_TagString: Untagged
@@ -1686,10 +1687,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fcf163a2d58901e4b8435f8bf715201c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rb: {fileID: 0}
-  anim: {fileID: 0}
+  isLeader: 1
   moveSpeed: 5
+  rb: {fileID: 1997491454}
+  anim: {fileID: 1997491453}
   movement: {x: 0, y: 0}
+  positionHistory:
+  - {x: 0, y: 0, z: 0}
+  recordInterval: 0.1
+--- !u!114 &199924269
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 199924266}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6379408e3d2c74f4dbf5ede315c62a62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leader: {fileID: 199924268}
+  followDelay: 10
+  minFollowDistance: 0.7
+  followSpeed: 10
 --- !u!1 &228244716
 GameObject:
   m_ObjectHideFlags: 0
@@ -2431,7 +2452,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 297168707}
-  - component: {fileID: 297168706}
   - component: {fileID: 297168705}
   - component: {fileID: 297168708}
   - component: {fileID: 297168709}
@@ -2454,7 +2474,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30d004bbc980db5418080354bdcb99ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  combatZone: {fileID: 0}
   baseHero:
     theName: May
     baseHP: 40
@@ -2494,19 +2513,6 @@ MonoBehaviour:
   anim: {fileID: 0}
   playerPanel: {fileID: 7564649012260675971, guid: 9bcfed45d8695c246a43c07c9f58c182, type: 3}
   heroPanelSpacer: {fileID: 0}
---- !u!114 &297168706
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 297168704}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e3081b8bba8754c44b4b43f97eedef61, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  combatZone: {fileID: 0}
 --- !u!4 &297168707
 Transform:
   m_ObjectHideFlags: 0
@@ -2680,7 +2686,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 311194843}
-  - component: {fileID: 311194844}
   - component: {fileID: 311194845}
   - component: {fileID: 311194846}
   - component: {fileID: 311194848}
@@ -2709,19 +2714,6 @@ Transform:
   - {fileID: 1335324974}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &311194844
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 311194842}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e3081b8bba8754c44b4b43f97eedef61, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  combatZone: {fileID: 0}
 --- !u!114 &311194845
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2734,7 +2726,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30d004bbc980db5418080354bdcb99ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  combatZone: {fileID: 0}
   baseHero:
     theName: Ducknok
     baseHP: 50
@@ -3046,6 +3037,8 @@ GameObject:
   - component: {fileID: 360409424}
   - component: {fileID: 360409425}
   - component: {fileID: 360409426}
+  - component: {fileID: 360409427}
+  - component: {fileID: 360409428}
   m_Layer: 0
   m_Name: GameManger
   m_TagString: Untagged
@@ -3110,6 +3103,35 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cbz: {fileID: 0}
   cbm: {fileID: 0}
+--- !u!114 &360409427
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 360409422}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 728f058f6eb1b9940808f6e9ba1a6076, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  partyMembers:
+  - {fileID: 1073275800}
+  - {fileID: 199924268}
+--- !u!114 &360409428
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 360409422}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3081b8bba8754c44b4b43f97eedef61, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  heroSMList: []
+  combatZone: {fileID: 0}
 --- !u!1 &415784546
 GameObject:
   m_ObjectHideFlags: 0
@@ -4253,7 +4275,7 @@ Transform:
   m_GameObject: {fileID: 624175608}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 9, y: 0.25, z: 0}
+  m_LocalPosition: {x: 25.3, y: 0.25, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4503,7 +4525,7 @@ Transform:
   m_GameObject: {fileID: 665260573}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.24, y: 0.29, z: 0}
+  m_LocalPosition: {x: -9.93, y: 0.29, z: 0}
   m_LocalScale: {x: 0.29448625, y: 4.7221055, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -5442,7 +5464,7 @@ Transform:
   m_GameObject: {fileID: 748185418}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 30, y: 0, z: 0}
+  m_LocalPosition: {x: 59.5, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -7021,6 +7043,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1073275799}
   - component: {fileID: 1073275800}
+  - component: {fileID: 1073275801}
   m_Layer: 6
   m_Name: Movement
   m_TagString: Untagged
@@ -7055,10 +7078,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fcf163a2d58901e4b8435f8bf715201c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rb: {fileID: 0}
-  anim: {fileID: 0}
+  isLeader: 0
   moveSpeed: 5
+  rb: {fileID: 1848267434}
+  anim: {fileID: 1848267436}
   movement: {x: 0, y: 0}
+  positionHistory:
+  - {x: 0, y: 0, z: 0}
+  recordInterval: 0.1
+--- !u!114 &1073275801
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1073275798}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6379408e3d2c74f4dbf5ede315c62a62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leader: {fileID: 1073275800}
+  followDelay: 10
+  minFollowDistance: 0.7
+  followSpeed: 10
 --- !u!1 &1107068107
 GameObject:
   m_ObjectHideFlags: 0
@@ -23340,7 +23383,7 @@ Transform:
   m_GameObject: {fileID: 1841157365}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 30, y: 1, z: 0}
+  m_LocalPosition: {x: 59.5, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -23450,7 +23493,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -183294497
   m_SortingLayer: 3
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: -373893069, guid: a347c57d383d90c4a918188217dc263a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -23760,7 +23803,7 @@ Transform:
   m_GameObject: {fileID: 1871928499}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 30, y: -1, z: 0}
+  m_LocalPosition: {x: 59.5, y: -1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -26031,7 +26074,7 @@ Transform:
   m_GameObject: {fileID: 2140473435}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 9, y: -0.5, z: 0}
+  m_LocalPosition: {x: 30.6, y: -0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
