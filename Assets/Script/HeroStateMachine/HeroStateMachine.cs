@@ -181,7 +181,7 @@ public class HeroStateMachine : MonoBehaviour
     // Thay đổi cách chọn hero
     private void HandleHeroSelection()
     {
-        if (CombatController.Instance.CBM.isSelectingEnemy || CombatController.Instance.CBM.enemyTurn) return;
+        if (!CombatController.Instance.CBZ.isInCombat ||CombatController.Instance.CBM.isSelectingEnemy || CombatController.Instance.CBM.enemyTurn) return;
         if (Keyboard.current.leftArrowKey.wasPressedThisFrame || Keyboard.current.aKey.wasPressedThisFrame)
         {
             ChangeHeroSelection(-1);

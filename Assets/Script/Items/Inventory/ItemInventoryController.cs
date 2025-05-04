@@ -39,6 +39,7 @@ namespace Inventory
         private void Awake()
         {
             this.RefreshCurrentTab();
+            DontDestroyOnLoad(this.gameObject);
         }
         public void Update()
         {

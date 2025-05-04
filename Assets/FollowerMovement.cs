@@ -20,7 +20,7 @@ public class FollowerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (leader == null || leader.positionHistory.Count <= followDelay) return;
+        if (CombatController.Instance.CBZ.isInCombat || leader == null || leader.positionHistory.Count <= followDelay) return;
         this.Movement();
     }
 

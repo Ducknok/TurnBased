@@ -102,6 +102,7 @@ public class CombatZone : MonoBehaviour
         this.isInCombat = true;
         foreach (var hero in PlayerController.Instance.HeroSMList)
         {
+            hero.anim.SetFloat("Speed", 0);
             hero.anim.SetBool("IdleBattle", this.isInCombat);
         }
     }

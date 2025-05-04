@@ -22,6 +22,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
+        if (CombatController.Instance.CBZ.isInCombat) return;
         if (!isLeader) return; // Chỉ Leader mới nhập input
 
         movement.Set(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));

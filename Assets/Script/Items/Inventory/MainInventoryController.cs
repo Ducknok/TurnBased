@@ -124,6 +124,7 @@ public class MainInventoryController : MonoBehaviour
         this.skillMenuController = FindObjectOfType<SkillMenuController>();
     }
 
+
     //Confirm && Undo select hero
     private void ConfirmSelectHero()
     {
@@ -220,23 +221,27 @@ public class MainInventoryController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
         {
             var hero = CombatController.Instance.CBM.playersInCombat[currentHeroIndex].GetComponent<HeroStateMachine>();
-            mainManagePanel.SetActive(false); // Ẩn menu chính
+            
 
             switch (currentSelectedIndex)
             {
                 case 0:
+                    this.mainManagePanel.SetActive(false); // Ẩn menu chính
                     this.equipMenuController.isEquipMenuOpen = true;
                     ShowEquipUI(hero);
                     break;
                 case 1:
+                    this.mainManagePanel.SetActive(false);
                     this.skillMenuController.isSkillMenuOpen = true;
                     ShowSkillUI(hero);
                     break;
                 case 2:
+                    this.mainManagePanel.SetActive(false);
                     this.itemInventoryController.isItemInventoryOpen = true;
                     ShowItemUI(hero);
                     break;
                 case 3:
+                    this.mainManagePanel.SetActive(true);
                     ShowOrderUI(hero);
                     break;
                 default:
@@ -262,9 +267,8 @@ public class MainInventoryController : MonoBehaviour
     private void ShowOrderUI(HeroStateMachine hero)
     {
         Debug.Log("Hiện order cho: " + hero.name);
-        //this.currentState = UIState.OrderUI;
-        // statsUI.SetActive(true);
-        // statsUI.SetData(hero);
+        this.currentState = UIState.OrderUI;
+        this.ReorderHero(currentHeroIndex);
     }
 
     private void ShowSkillUI(HeroStateMachine hero)
@@ -288,7 +292,7 @@ public class MainInventoryController : MonoBehaviour
         // itemUI.Setup(hero);
     }
 
-    private void HighlightHero(int index)
+    public void HighlightHero(int index)
     {
         for (int i = 0; i < heroUIList.Count; i++)
         {
@@ -337,14 +341,22 @@ public class MainInventoryController : MonoBehaviour
         }
     }
 
-    private void CreateHeroUI()
+    public void CreateHeroUI()
     {
         // Clear old buttons (nếu cần)
-        foreach (Transform child in this.heroManageSpacer.Find("HeroInCombat"))
+        var heroInCombat = this.heroManageSpacer.Find("HeroInCombat");
+        var heroNotInCombat = this.heroManageSpacer.Find("HeroNotInCombat");
+        if (heroInCombat == null)
+        {
+            Debug.LogWarning("Không tìm thấy HeroInCombat trong heroManageSpacer");
+            return;
+        }
+
+        foreach (Transform child in heroInCombat)
         {
             Destroy(child.gameObject);
         }
-        foreach (Transform child in this.heroManageSpacer.Find("HeroNotInCombat"))
+        foreach (Transform child in heroNotInCombat)
         {
             Destroy(child.gameObject);
         }
@@ -363,6 +375,31 @@ public class MainInventoryController : MonoBehaviour
             this.itemDescription.SetHeroUIDescription(newHeroUINotInCombat, hero);
         }
     }
+    public void ReorderHero(int selectedIndex)
+    {
+        var cbm = CombatController.Instance.CBM;
+
+        if (selectedIndex < 0 || selectedIndex >= cbm.playersInCombat.Count) return;
+
+        var selectedHero = cbm.playersInCombat[selectedIndex];
+        cbm.playersInCombat.RemoveAt(selectedIndex);
+        cbm.playersInCombat.Insert(0, selectedHero);
+
+        Debug.Log("Đã đưa " + selectedHero.name + " lên đầu danh sách CBM.");
+
+        // Đồng bộ lại PartyManager (nếu dùng hệ thống riêng)
+        PartyManager.Instance.SyncWithCBM(cbm.playersInCombat);
+
+        // Cập nhật leader
+        PartyManager.Instance.SetLeader(selectedHero.GetComponent<HeroStateMachine>());
+
+        Debug.Log("Leader mới: " + selectedHero.name);
+
+        this.CreateHeroUI();
+        currentHeroIndex = 0;
+        this.HighlightHero(currentHeroIndex);
+    }
+
     private void OpenMainMenu()
     {
         if (Input.GetKeyDown(KeyCode.Tab))

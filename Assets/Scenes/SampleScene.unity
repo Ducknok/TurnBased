@@ -1687,7 +1687,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fcf163a2d58901e4b8435f8bf715201c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isLeader: 1
+  isLeader: 0
   moveSpeed: 5
   rb: {fileID: 1997491454}
   anim: {fileID: 1997491453}
@@ -3116,8 +3116,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   partyMembers:
-  - {fileID: 1073275800}
   - {fileID: 199924268}
+  - {fileID: 1073275800}
 --- !u!114 &360409428
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4556,8 +4556,8 @@ MonoBehaviour:
   - {fileID: 1871928500}
   - {fileID: 1841157366}
   players:
-  - {fileID: 311194842}
   - {fileID: 297168704}
+  - {fileID: 311194842}
   enemies:
   - {fileID: 1014924936}
   - {fileID: 1850771632}
@@ -24445,6 +24445,7 @@ GameObject:
   - component: {fileID: 1997491454}
   - component: {fileID: 1997491453}
   - component: {fileID: 1997491452}
+  - component: {fileID: 1997491456}
   m_Layer: 6
   m_Name: Body
   m_TagString: Body
@@ -24613,6 +24614,19 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 1
+--- !u!114 &1997491456
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1997491450}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a0d10cab2ad98c41a631ece34ec0ba7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inventoryData: {fileID: 11400000, guid: 69dc70cf8db98de41ac5061a68454af7, type: 2}
 --- !u!1 &2000191096
 GameObject:
   m_ObjectHideFlags: 0
