@@ -11,4 +11,5 @@ public class Slash : BaseAttack
         this.attackDamage = 10f;
         this.attackCost = 0;
     }
+
 }

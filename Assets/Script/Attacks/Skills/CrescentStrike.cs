@@ -11,4 +11,9 @@ public class CrescentStrike : BaseAttack
         this.attackDamage = 20f;
         this.attackCost = 3f;
     }
+
+    //public override IEnumerator Activate(HeroStateMachine hero, GameObject target)
+    //{
+    //    throw new System.NotImplementedException();
+    //}
 }

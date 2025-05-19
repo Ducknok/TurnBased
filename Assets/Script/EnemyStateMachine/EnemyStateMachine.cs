@@ -25,6 +25,7 @@ public class EnemyStateMachine : MonoBehaviour
     //this gameobject
     private CinemachineImpulseSource impulseSource;
     public GameObject choose;
+
     public Image enemyHPBarFill;
     public TextMeshProUGUI curHpNumber;
     private float trailDelay;
@@ -141,6 +142,9 @@ public class EnemyStateMachine : MonoBehaviour
         myAttack.AttackerTarget = this.combatStateMachine.playersInCombat[Random.Range(0, combatStateMachine.playersInCombat.Count)];
         int num = Random.Range(0, this.baseEnemy.attacks.Count);
         myAttack.choosenAttack = this.baseEnemy.attacks[num];
+        //Debug.LogWarning(myAttack.choosenAttack);
+        //Debug.LogWarning(BaseAttack.AttackType.SpecialAttack);
+        if (myAttack == null) return;
         if (myAttack.choosenAttack.attackType == BaseAttack.AttackType.SpecialAttack)
         {
             this.timer = Random.Range(2, 4);
@@ -175,9 +179,6 @@ public class EnemyStateMachine : MonoBehaviour
 
         //wait abit
         yield return new WaitForSeconds(0.5f);
-
-        //do damage
-        this.DoDamage();
         //animate back to start position
         this.anim.Play("Attack1");
         this.combatStateMachine.enemiesAttacked.Add(this.gameObject);
@@ -199,7 +200,7 @@ public class EnemyStateMachine : MonoBehaviour
     }
 
     //Damage for player
-    private void DoDamage()
+    public void DoDamage()
     {
         float calDamage = this.baseEnemy.curATK + this.combatStateMachine.performList[0].choosenAttack.attackDamage;
         this.playerToAttack.GetComponent<HeroStateMachine>().TakeDamage(calDamage);

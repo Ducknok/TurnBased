@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7904670462677150126}
-  - component: {fileID: -2144737715399610006}
+  - component: {fileID: -3038129253088275487}
   m_Layer: 0
-  m_Name: Fire Ball
+  m_Name: ShadowTriangle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -32,7 +32,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &-2144737715399610006
+--- !u!114 &-3038129253088275487
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -44,11 +44,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb5ad2a7e5601824886d1b7ef502f7b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackImage: {fileID: 1116726303, guid: fb051ba9df7a2724e99ecb3019809887, type: 3}
-  attackName: Fire Ball
-  attackDescription: Shoot a fire ball forward enemy
-  attackDamage: 20
-  attackCost: 4
-  attackType: 1
-  effect1: 0
-  effect2: 3
+  skillData: {fileID: 11400000, guid: 858202e01b4d30d46b199e0f1e5c71c0, type: 2}

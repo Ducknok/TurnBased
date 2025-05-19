@@ -90,7 +90,7 @@ public class SkillMenuController : MonoBehaviour
         this.currentSkills.Clear(); // đảm bảo bạn có danh sách currentSkills
         this.currentSkillIndex = 0;
 
-        foreach (var skill in hero.baseHero.skills)
+        foreach (var skill in hero.baseHero.attacks)
         {
             GameObject newSkillUI = Instantiate(this.skillUI, this.skillUISpacer);
             Image skillImage = newSkillUI.transform.Find("Button").Find("SkillImage").GetComponent<Image>();

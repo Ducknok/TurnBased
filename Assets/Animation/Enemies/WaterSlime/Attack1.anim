@@ -43,18 +43,18 @@ AnimationClip:
     curve:
     - time: 0
       value: {fileID: 338551185, guid: 57644c526acd6b2429533ce8ef5cf3c4, type: 3}
-    - time: 0.016666668
-      value: {fileID: 518101510, guid: 57644c526acd6b2429533ce8ef5cf3c4, type: 3}
     - time: 0.05
+      value: {fileID: 518101510, guid: 57644c526acd6b2429533ce8ef5cf3c4, type: 3}
+    - time: 0.15
       value: {fileID: 1834511561, guid: 57644c526acd6b2429533ce8ef5cf3c4, type: 3}
-    - time: 0.06666667
+    - time: 0.2
       value: {fileID: -1795488498, guid: 57644c526acd6b2429533ce8ef5cf3c4, type: 3}
     attribute: m_Sprite
     path: 
     classID: 212
     script: {fileID: 0}
     flags: 2
-  m_SampleRate: 60
+  m_SampleRate: 20
   m_WrapMode: 0
   m_Bounds:
     m_Center: {x: 0, y: 0, z: 0}
@@ -89,7 +89,7 @@ AnimationClip:
     m_AdditiveReferencePoseClip: {fileID: 0}
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
-    m_StopTime: 0.083333336
+    m_StopTime: 0.25
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0
@@ -129,4 +129,11 @@ AnimationClip:
   m_EulerEditorCurves: []
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
-  m_Events: []
+  m_Events:
+  - time: 0.2
+    functionName: DoDamage
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0

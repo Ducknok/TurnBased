@@ -6,11 +6,13 @@ using UnityEngine.UI;
 using DG.Tweening;
 using Cinemachine;
 using Inventory;
+using System.Linq;
 
 public class HeroStateMachine : MonoBehaviour
 {
     public BaseHero baseHero;
     public ItemInventoryController inventoryController;
+    public SkillBehaviour currentAttack;
 
     public enum TurnState
     {
@@ -95,7 +97,6 @@ public class HeroStateMachine : MonoBehaviour
         switch (this.currentState)
         {
             case (TurnState.PROCESSING):
-                
                 this.HandleHeroSelection();
                 break;
             case (TurnState.ADDTOLIST):
@@ -106,8 +107,11 @@ public class HeroStateMachine : MonoBehaviour
                 this.currentState = TurnState.WAITING;
                 break;
             case (TurnState.WAITING):
-
-                if (CombatController.Instance.CBM.heroTurn && !CombatController.Instance.CBM.heroesDoneTurn.Contains(this.gameObject) &&  CombatController.Instance.CBZ.isInCombat) this.currentState = TurnState.PROCESSING;
+                if (CombatController.Instance.CBM.heroTurn && !CombatController.Instance.CBM.heroesDoneTurn.Contains(this.gameObject) && CombatController.Instance.CBZ.isInCombat) 
+                {
+                    this.HandleHeroSelection();
+                    this.currentState = TurnState.PROCESSING;
+                }
                 break;
             case (TurnState.DEAD):
                 if (!this.alive)
@@ -182,6 +186,7 @@ public class HeroStateMachine : MonoBehaviour
     private void HandleHeroSelection()
     {
         if (!CombatController.Instance.CBZ.isInCombat ||CombatController.Instance.CBM.isSelectingEnemy || CombatController.Instance.CBM.enemyTurn) return;
+        //this.ChangeHeroSelection(1);
         if (Keyboard.current.leftArrowKey.wasPressedThisFrame || Keyboard.current.aKey.wasPressedThisFrame)
         {
             ChangeHeroSelection(-1);
@@ -298,13 +303,9 @@ public class HeroStateMachine : MonoBehaviour
 
         //animate back to start position
         this.anim.SetBool("IdleBattle", false);
-        this.anim.SetTrigger("Attack_1");
+        StartCoroutine(this.currentAttack.Activate(this, this.enemyToAttack));
         CombatController.Instance.CBM.UpdateEnemyTimer();
-        
         StartCoroutine(MoveTowardsStart());
-        
-
-        
     }
     private bool MoveTowardsEnemy(Vector3 target)
     {
@@ -355,6 +356,8 @@ public class HeroStateMachine : MonoBehaviour
         heroMPBarFill = mpFill;
         //this.DescreaseMana();
     }
+
+    //TODO: Tach toan bo ham gay st, hoi mana, mau, tao panel ra 1 class rieng xong goi lai trong class hero hoac 1 class moi 
     //Do damage
     public void DoDamage()
     {
@@ -435,12 +438,10 @@ public class HeroStateMachine : MonoBehaviour
         this.heroHPBarTrail = this.stats.hpBarTrail;
         this.heroHPBarFill.fillAmount = 1f;
         this.heroHPBarTrail.fillAmount = 1f;
-        this.heroMPBarFill = this.stats.hpBarFill;
-        this.heroMPBarTrail = this.stats.hpBarTrail;
-        this.heroMPBarFill.fillAmount = 1f;
-        this.heroMPBarTrail.fillAmount = 1f;
         this.heroMPBarFill = this.stats.mpBarFill;
         this.heroMPBarTrail = this.stats.mpBarTrail;
+        this.heroMPBarFill.fillAmount = 1f;
+        this.heroMPBarTrail.fillAmount = 1f;
        
         this.playerPanel.transform.SetParent(this.heroPanelSpacer, false);
     }
@@ -460,8 +461,6 @@ public class HeroStateMachine : MonoBehaviour
         }
         this.anim.SetBool("IdleBattle", true);
         yield return new WaitForSeconds(0.5f);
-        //do damage
-        this.DoDamage();
         Vector3 firstPosition = CombatController.Instance.CBZ.playerPositions[this.heroIndex].position;
         while (this.MoveTowardsStart(firstPosition)) { yield return null; }
         //remvoe this performer from the list in CSM
@@ -489,5 +488,36 @@ public class HeroStateMachine : MonoBehaviour
             
         }
         this.actionStarted = false;
+    }
+    public SkillBehaviour GetSkillBehaviourForAttack(BaseAttack baseAttack)
+    {
+        // Kiểm tra xem có skill behaviour nào đã được tạo cho skill này chưa
+        Debug.LogWarning(baseAttack);
+        SkillBehaviour existingSkill = GetComponentsInChildren<SkillBehaviour>()
+            .FirstOrDefault(s => s.skillData.attackName == baseAttack.attackName);
+       //Debug.LogWarning(existingSkill);
+        if (existingSkill != null)
+        {
+            return existingSkill;
+        }
+
+        // Nếu chưa có, tạo mới
+        string skillPrefabPath = "Skills/" + baseAttack.attackName.Replace(" ", "");
+        GameObject skillPrefab = Resources.Load<GameObject>(skillPrefabPath);
+        //Debug.LogWarning(skillPrefabPath);
+        Transform skillSpacer = this.transform.Find("Skills");
+        if (skillPrefab != null)
+        {
+            GameObject skillObj = Instantiate(skillPrefab, skillSpacer);
+            SkillBehaviour newSkill = skillObj.GetComponent<SkillBehaviour>();
+            if (newSkill != null)
+            {
+                newSkill.skillData = baseAttack;
+                return newSkill;
+            }
+        }
+
+        Debug.LogWarning("Không tìm thấy prefab cho skill: " + baseAttack.attackName);
+        return null;
     }
 }

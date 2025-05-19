@@ -45,7 +45,7 @@ namespace Inventory
         {
             if (!this.isItemInventoryOpen)
             {
-                Debug.LogWarning("Item inventory dang dong");
+                //Debug.LogWarning("Item inventory dang dong");
                 return;
             }
             this.SwitchButtonInput();

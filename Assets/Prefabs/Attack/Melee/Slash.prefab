@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8341418930114618885}
-  - component: {fileID: 9061598816579145641}
   m_Layer: 0
   m_Name: Slash
   m_TagString: Untagged
@@ -32,23 +31,3 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &9061598816579145641
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1099395359250299782}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b3127fca482cb1746a1e9286212d17ad, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  attackImage: {fileID: 845128245, guid: b66d1bbd6ca38954d83ef330e39cb070, type: 3}
-  attackName: Slash
-  attackDescription: Fast Slash Attack with Your Weapon
-  attackDamage: 10
-  attackCost: 0
-  attackType: 0
-  effect1: 0
-  effect2: 0
