@@ -338,7 +338,7 @@ public class CombatStateMachine : MonoBehaviour
         this.playerChoice.Attacker = playerToManage[0].name;
         this.playerChoice.AttacksGameObject = playerToManage[0];
         this.playerChoice.Type = "Hero";
-        this.playerChoice.choosenAttack = playerToManage[0].GetComponent<HeroStateMachine>().baseHero.attacks[0];
+        this.playerChoice.choosenAttack = playerToManage[0].GetComponent<HeroStateMachine>().baseHero.normalAttacks[0];
         this.CreateAttackTypeInfoPanel(this.playerChoice.choosenAttack);
         this.isSelectingEnemy = true;
         this.actionPanel.SetActive(false);
@@ -352,7 +352,6 @@ public class CombatStateMachine : MonoBehaviour
         this.selectedIndex = 0;
         if (this.skillsButtons.Count > 0)
         {
-
             EventSystem.current.SetSelectedGameObject(this.skillsButtons[selectedIndex]);
         }
     }
@@ -434,7 +433,23 @@ public class CombatStateMachine : MonoBehaviour
     {
         GameObject attackButton = Instantiate(this.actionButton) as GameObject;
         TextMeshProUGUI attackButtonText = attackButton.transform.Find("Text").gameObject.GetComponent<TextMeshProUGUI>();
-        attackButtonText.text = "Attack";
+        HeroStateMachine hero = this.playerToManage[0].GetComponent<HeroStateMachine>();
+        attackButtonText.text = hero.baseHero.normalAttacks[0].attackName;
+        Debug.LogWarning(attackButtonText.text);
+        SkillBehaviour skillBehaviour = hero.GetSkillBehaviourForAttack(hero.baseHero.normalAttacks[0]);
+        AttackButton atb = skillsButton.GetComponent<AttackButton>();
+        if (atb != null)
+        {
+            atb.skillAttackToPerform = skillBehaviour;
+        }
+        attackButton.GetComponent<Button>().onClick.AddListener(() =>
+        {
+            if (atb != null && atb.skillAttackToPerform != null)
+            {
+                hero.currentAttack = atb.skillAttackToPerform;
+                //Debug.LogWarning(heroStateMachine.currentAttack);
+            }
+        });
         attackButton.GetComponent<Button>().onClick.AddListener(() => NormalAttack());
         attackButton.transform.SetParent(this.actionSpacer, false);
         this.attackButtons.Add(attackButton);
@@ -452,12 +467,12 @@ public class CombatStateMachine : MonoBehaviour
             this.playerToManage[0] != null &&
             this.playerToManage[0].GetComponent<HeroStateMachine>() != null &&
             this.playerToManage[0].GetComponent<HeroStateMachine>().baseHero != null &&
-            this.playerToManage[0].GetComponent<HeroStateMachine>().baseHero.attacks != null &&
-            this.playerToManage[0].GetComponent<HeroStateMachine>().baseHero.attacks.Count > 0)
+            this.playerToManage[0].GetComponent<HeroStateMachine>().baseHero.specialAttacks != null &&
+            this.playerToManage[0].GetComponent<HeroStateMachine>().baseHero.specialAttacks.Count > 0)
         {
             HeroStateMachine heroStateMachine = this.playerToManage[0].GetComponent<HeroStateMachine>();
 
-            foreach (BaseAttack baseSkill in heroStateMachine.baseHero.attacks)
+            foreach (BaseAttack baseSkill in heroStateMachine.baseHero.specialAttacks)
             {
                 if (baseSkill != null && baseSkill.attackType == BaseAttack.AttackType.SpecialAttack)
                 {

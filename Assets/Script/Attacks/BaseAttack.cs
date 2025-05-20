@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DG.Tweening;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -34,46 +35,30 @@ public abstract class SkillBehaviour : MonoBehaviour
 {
     public BaseAttack skillData;
 
-    // Kích hoạt kỹ năng
-    public virtual IEnumerator Activate(HeroStateMachine hero, GameObject target)
+    // Kích hoạt kỹ năng: 1: Animation -> 2: Sound effect -> 3: VFX
+    public virtual IEnumerator Activate(GameObject attacker, GameObject target)
     {
-        // Kiểm tra mana và các điều kiện khác
-        if (hero.baseHero.curMP < skillData.attackCost)
-        {
-            yield break;
-        }
-        // Trừ mana
-        hero.baseHero.curMP -= skillData.attackCost;
-
-        // Kích hoạt animation
-        Animator animator = hero.GetComponent<Animator>();
-        if (animator != null)
-        {
-            animator.Play(skillData.attackName);
-        }
-
-        //// Phát âm thanh
-        //if (skillData.skillSound != null)
-        //{
-        //    AudioSource.PlayClipAtPoint(skillData.skillSound, hero.transform.position);
-        //}
-
-        // Đợi animation hoàn thành
-        float animationDuration = GetAnimationDuration(animator, skillData.attackName);
-        yield return new WaitForSeconds(animationDuration);
-
-        // Áp dụng các hiệu ứng của kỹ năng (damage, buff, debuff, v.v.)
-        ApplySkillEffects(hero, target);
+        yield return new WaitForSeconds(0f);
     }
 
     // Phương thức để áp dụng các hiệu ứng của kỹ năng
-    protected abstract void ApplySkillEffects(HeroStateMachine hero, GameObject target);
+    protected abstract void ApplySkillEffects(GameObject hero, GameObject target);
 
-    // Lấy thời gian của animation
-    private float GetAnimationDuration(Animator animator, string triggerName)
+    //// Lấy thời gian của animation
+    protected virtual float GetAnimationDuration(Animator animator, string triggerName)
     {
         // Thực hiện logic để lấy thời gian của animation
         // Hoặc đơn giản hơn, bạn có thể lưu trữ thời gian trong SkillData
         return 1.0f; // Giá trị mặc định
     }
+    protected virtual bool MoveTowardsEnemy(HeroStateMachine hero, Vector3 target)
+    {
+        Transform body = hero.transform.Find("Body");
+        if (body == null) return false;
+
+        body.DOMove(target, 0.5f).SetEase(Ease.Linear);
+        return Vector3.Distance(body.position, target) > 0.1f;
+        //return target != (this.transform.Find("Body").position = Vector3.MoveTowards(this.transform.Find("Body").position, target, this.animSpeed * Time.deltaTime));
+    }
+   
 }

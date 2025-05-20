@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class ShadowTriangle : SkillBehaviour
 {
-    protected override void ApplySkillEffects(HeroStateMachine hero, GameObject target)
+    protected override void ApplySkillEffects(GameObject attacker, GameObject target)
     {
+        HeroStateMachine hero = attacker.transform.GetComponent<HeroStateMachine>();
         // T赤nh to芍n damage d?a tr那n c芍c thu?c t赤nh c?a hero v角 target
         float damage = skillData.attackDamage * hero.baseHero.baseATK;
 
@@ -24,10 +25,15 @@ public class ShadowTriangle : SkillBehaviour
     }
 
     // B?n c車 th? ghi ?豕 ph??ng th?c Activate ?? th那m logic ??c bi?t
-    public override IEnumerator Activate(HeroStateMachine hero, GameObject target)
+    public override IEnumerator Activate(GameObject attacker, GameObject target)
     {
-        Transform enemy = hero.enemyToAttack.transform.Find("Body");
-
+        HeroStateMachine hero = attacker.transform.GetComponent<HeroStateMachine>();
+        Transform enemy = target.transform.Find("Body");
+        Animator anim = hero.transform.Find("Body").GetComponent<Animator>();
+        if (anim != null)
+        {
+            anim.Play(hero.currentAttack.skillData.attackName);
+        }
         if (enemy == null)
         {
             Debug.LogError("Kh?ng c車 enemy ?? t?n c?ng.");

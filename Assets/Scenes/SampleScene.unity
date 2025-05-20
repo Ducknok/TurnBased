@@ -2602,8 +2602,9 @@ MonoBehaviour:
     curDEF: 10
     baseMDEF: 7
     curMDEF: 7
-    attacks:
+    normalAttacks:
     - {fileID: 11400000, guid: abb63d0e13900874aa554de502ab6287, type: 2}
+    specialAttacks:
     - {fileID: 11400000, guid: 6885eb27464694844bb7495099e16d6c, type: 2}
     - {fileID: 11400000, guid: 858202e01b4d30d46b199e0f1e5c71c0, type: 2}
     heroImage: {fileID: 1258090235, guid: 21a6fb2b8e744d3439f09248ad82c8ee, type: 3}
@@ -2854,8 +2855,9 @@ MonoBehaviour:
     curDEF: 10
     baseMDEF: 5
     curMDEF: 5
-    attacks:
+    normalAttacks:
     - {fileID: 11400000, guid: a76a2463fe15396438f665ce4910ff73, type: 2}
+    specialAttacks:
     - {fileID: 11400000, guid: 6885eb27464694844bb7495099e16d6c, type: 2}
     - {fileID: 11400000, guid: 858202e01b4d30d46b199e0f1e5c71c0, type: 2}
     heroImage: {fileID: 752369692, guid: a347c57d383d90c4a918188217dc263a, type: 3}
@@ -20596,6 +20598,18 @@ PrefabInstance:
       propertyPath: baseEnemy.attacks.Array.data[1]
       value: 
       objectReference: {fileID: 11400000, guid: 6885eb27464694844bb7495099e16d6c, type: 2}
+    - target: {fileID: 2991846600636949869, guid: 5043c953e33a893479dc46a5057f4f2c, type: 3}
+      propertyPath: baseEnemy.normalAttacks.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2991846600636949869, guid: 5043c953e33a893479dc46a5057f4f2c, type: 3}
+      propertyPath: baseEnemy.normalAttacks.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: 6885eb27464694844bb7495099e16d6c, type: 2}
+    - target: {fileID: 2991846600636949869, guid: 5043c953e33a893479dc46a5057f4f2c, type: 3}
+      propertyPath: baseEnemy.normalAttacks.Array.data[1]
+      value: 
+      objectReference: {fileID: 11400000, guid: abb63d0e13900874aa554de502ab6287, type: 2}
     - target: {fileID: 3024651085888802613, guid: 5043c953e33a893479dc46a5057f4f2c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 7.05
@@ -25293,6 +25307,18 @@ PrefabInstance:
       propertyPath: baseEnemy.attacks.Array.data[1]
       value: 
       objectReference: {fileID: 11400000, guid: 6885eb27464694844bb7495099e16d6c, type: 2}
+    - target: {fileID: 2991846600636949869, guid: 5043c953e33a893479dc46a5057f4f2c, type: 3}
+      propertyPath: baseEnemy.normalAttacks.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2991846600636949869, guid: 5043c953e33a893479dc46a5057f4f2c, type: 3}
+      propertyPath: baseEnemy.normalAttacks.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: abb63d0e13900874aa554de502ab6287, type: 2}
+    - target: {fileID: 2991846600636949869, guid: 5043c953e33a893479dc46a5057f4f2c, type: 3}
+      propertyPath: baseEnemy.normalAttacks.Array.data[1]
+      value: 
+      objectReference: {fileID: 11400000, guid: 6885eb27464694844bb7495099e16d6c, type: 2}
     - target: {fileID: 3024651085888802613, guid: 5043c953e33a893479dc46a5057f4f2c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 11.57
@@ -26701,6 +26727,18 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: a76a2463fe15396438f665ce4910ff73, type: 2}
     - target: {fileID: 2991846600636949869, guid: 5043c953e33a893479dc46a5057f4f2c, type: 3}
       propertyPath: baseEnemy.attacks.Array.data[1]
+      value: 
+      objectReference: {fileID: 11400000, guid: 6885eb27464694844bb7495099e16d6c, type: 2}
+    - target: {fileID: 2991846600636949869, guid: 5043c953e33a893479dc46a5057f4f2c, type: 3}
+      propertyPath: baseEnemy.normalAttacks.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2991846600636949869, guid: 5043c953e33a893479dc46a5057f4f2c, type: 3}
+      propertyPath: baseEnemy.normalAttacks.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: abb63d0e13900874aa554de502ab6287, type: 2}
+    - target: {fileID: 2991846600636949869, guid: 5043c953e33a893479dc46a5057f4f2c, type: 3}
+      propertyPath: baseEnemy.normalAttacks.Array.data[1]
       value: 
       objectReference: {fileID: 11400000, guid: 6885eb27464694844bb7495099e16d6c, type: 2}
     - target: {fileID: 3024651085888802613, guid: 5043c953e33a893479dc46a5057f4f2c, type: 3}

@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Sword
   m_EditorClassIdentifier: 
   attackImage: {fileID: -717719559, guid: fb051ba9df7a2724e99ecb3019809887, type: 3}
-  attackName: Attack
-  attackDescription: Simple Attack
+  attackName: Sword
+  attackDescription: Normal attack
   attackDamage: 10
   attackCost: 0
   attackType: 0

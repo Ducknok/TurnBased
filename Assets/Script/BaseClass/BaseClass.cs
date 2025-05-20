@@ -23,5 +23,6 @@ public class BaseClass
     public float baseMDEF;
     public float curMDEF;
 
-    public List<BaseAttack> attacks = new List<BaseAttack>();
+    public List<BaseAttack> normalAttacks = new List<BaseAttack>();
+    public List<BaseAttack> specialAttacks = new List<BaseAttack>();
 }

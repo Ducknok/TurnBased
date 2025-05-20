@@ -288,42 +288,13 @@ public class HeroStateMachine : MonoBehaviour
             yield break;
         }
         this.actionStarted = true;
-
-        //animate the enemy near the player to attack
-        Vector3 enemyPosition = new Vector3(this.enemyToAttack.transform.Find("Body").position.x - 1f, this.enemyToAttack.transform.Find("Body").position.y, this.enemyToAttack.transform.Find("Body").position.z);
-        //Debug.LogWarning( enemyPosition);
-        while (MoveTowardsEnemy(enemyPosition))
-        {
-            yield return null;
-        }
-
-
         //wait abit
-        yield return new WaitForSeconds(0.5f);
-
         //animate back to start position
-        this.anim.SetBool("IdleBattle", false);
-        StartCoroutine(this.currentAttack.Activate(this, this.enemyToAttack));
+        
+        StartCoroutine(this.currentAttack.Activate(this.gameObject, this.enemyToAttack));
+        yield return new WaitForSeconds(2f);
         CombatController.Instance.CBM.UpdateEnemyTimer();
         StartCoroutine(MoveTowardsStart());
-    }
-    private bool MoveTowardsEnemy(Vector3 target)
-    {
-        Transform body = this.transform.Find("Body");
-        if (body == null) return false;
-
-        body.DOMove(target, 0.5f).SetEase(Ease.Linear);
-        return Vector3.Distance(body.position, target) > 0.1f;
-        //return target != (this.transform.Find("Body").position = Vector3.MoveTowards(this.transform.Find("Body").position, target, this.animSpeed * Time.deltaTime));
-    }
-    private bool MoveTowardsStart(Vector3 target)
-    {
-        Transform body = this.transform.Find("Body");
-        if (body == null) return false;
-
-        body.DOMove(target, 0.5f).SetEase(Ease.Linear);
-        return Vector3.Distance(body.position, target) > 0.1f;
-        //return target != (this.transform.Find("Body").position = Vector3.MoveTowards(this.transform.Find("Body").position, target, animSpeed * Time.deltaTime));
     }
     public void TakeDamage(float getDamageAmount)
     {
@@ -452,6 +423,15 @@ public class HeroStateMachine : MonoBehaviour
         this.stats.heroMP.text = this.baseHero.curMP.ToString();
     }
 
+    protected virtual bool MoveTowardsStart(Vector3 target)
+    {
+        Transform body = this.transform.Find("Body");
+        if (body == null) return false;
+
+        body.DOMove(target, 0.5f).SetEase(Ease.Linear);
+        return Vector3.Distance(body.position, target) > 0.1f;
+        //return target != (this.transform.Find("Body").position = Vector3.MoveTowards(this.transform.Find("Body").position, target, animSpeed * Time.deltaTime));
+    }
     IEnumerator MoveTowardsStart()
     {
         yield return new WaitForSeconds(0.25f);
@@ -459,7 +439,7 @@ public class HeroStateMachine : MonoBehaviour
         {
             DamagePopup.Create(this.body.transform.position, 3f, false, true);
         }
-        this.anim.SetBool("IdleBattle", true);
+        this.anim.Play("IdleBattle");
         yield return new WaitForSeconds(0.5f);
         Vector3 firstPosition = CombatController.Instance.CBZ.playerPositions[this.heroIndex].position;
         while (this.MoveTowardsStart(firstPosition)) { yield return null; }
@@ -495,7 +475,7 @@ public class HeroStateMachine : MonoBehaviour
         Debug.LogWarning(baseAttack);
         SkillBehaviour existingSkill = GetComponentsInChildren<SkillBehaviour>()
             .FirstOrDefault(s => s.skillData.attackName == baseAttack.attackName);
-       //Debug.LogWarning(existingSkill);
+       Debug.LogWarning(existingSkill);
         if (existingSkill != null)
         {
             return existingSkill;

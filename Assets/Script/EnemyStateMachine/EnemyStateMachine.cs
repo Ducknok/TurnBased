@@ -140,8 +140,8 @@ public class EnemyStateMachine : MonoBehaviour
         myAttack.Type = "Enemy";
         myAttack.AttacksGameObject = this.gameObject;
         myAttack.AttackerTarget = this.combatStateMachine.playersInCombat[Random.Range(0, combatStateMachine.playersInCombat.Count)];
-        int num = Random.Range(0, this.baseEnemy.attacks.Count);
-        myAttack.choosenAttack = this.baseEnemy.attacks[num];
+        int num = Random.Range(0, this.baseEnemy.normalAttacks.Count);
+        myAttack.choosenAttack = this.baseEnemy.normalAttacks[num];
         //Debug.LogWarning(myAttack.choosenAttack);
         //Debug.LogWarning(BaseAttack.AttackType.SpecialAttack);
         if (myAttack == null) return;
@@ -180,7 +180,7 @@ public class EnemyStateMachine : MonoBehaviour
         //wait abit
         yield return new WaitForSeconds(0.5f);
         //animate back to start position
-        this.anim.Play("Attack1");
+        
         this.combatStateMachine.enemiesAttacked.Add(this.gameObject);
         this.StartCoroutine(MoveTowardsStart());
         

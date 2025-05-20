@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class LightningStrike : SkillBehaviour
 {
-    protected override void ApplySkillEffects(HeroStateMachine hero, GameObject target)
+    protected override void ApplySkillEffects(GameObject attacker, GameObject target)
     {
+        HeroStateMachine hero = attacker.transform.GetComponent<HeroStateMachine>();
         // Tính toán damage dựa trên các thuộc tính của hero và target
         float damage = skillData.attackDamage * hero.baseHero.baseATK;
 
@@ -24,16 +25,21 @@ public class LightningStrike : SkillBehaviour
     }
 
     // Bạn có thể ghi đè phương thức Activate để thêm logic đặc biệt
-    public override IEnumerator Activate(HeroStateMachine hero, GameObject target)
+    public override IEnumerator Activate(GameObject attacker, GameObject target)
     {
+        HeroStateMachine hero = attacker.transform.GetComponent<HeroStateMachine>();
         // Gọi logic cơ bản từ lớp cha
-        yield return StartCoroutine(base.Activate(hero, target));
-        
-        Vector2 enemyPosition = new Vector2(hero.enemyToAttack.transform.position.x,
-                                            hero.enemyToAttack.transform.position.y + 3f);
-        // Thêm logic đặc biệt cho Fireball
-        // Ví dụ: tạo một quả cầu lửa di chuyển từ hero đến target
-        Transform newLightning = VFXSpawner.Instance.Spawn(VFXSpawner.lightningtStrike, enemyPosition, Quaternion.identity);
-        newLightning.gameObject.SetActive(true);
+        Animator anim = attacker.transform.Find("Body").GetComponent<Animator>();
+        if(anim != null)
+        {
+            anim.Play(hero.currentAttack.skillData.attackName);
+        }
+        float animationDuration = GetAnimationDuration(anim, skillData.attackName);
+        yield return new WaitForSeconds(animationDuration);
+        this.ApplySkillEffects(hero.gameObject, target);
+    }
+    protected override float GetAnimationDuration(Animator animator, string triggerName)
+    {
+        return base.GetAnimationDuration(animator, triggerName);
     }
 }
