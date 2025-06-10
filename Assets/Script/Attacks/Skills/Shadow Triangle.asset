@@ -17,6 +17,7 @@ MonoBehaviour:
   attackDescription: 'Tao 3 shadow tao thanh hinh tam giac '
   attackDamage: 20
   attackCost: 4
+  maxEnemyCount: 0
   attackType: 1
   effect1: 3
   effect2: 0

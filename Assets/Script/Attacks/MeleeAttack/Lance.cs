@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Lance : SkillBehaviour
 {
-    public override IEnumerator Activate(GameObject attacker, GameObject target)
+    public override IEnumerator Activate(HeroStateMachine attacker, GameObject target)
     {
         HeroStateMachine hero = attacker.transform.GetComponent<HeroStateMachine>();
         Animator anim = hero.transform.Find("Body").GetComponent<Animator>();
@@ -18,7 +18,7 @@ public class Lance : SkillBehaviour
         anim.Play(hero.currentAttack.skillData.attackName);
     }
 
-    protected override void ApplySkillEffects(GameObject hero, GameObject target)
+    protected override void ApplySkillEffects(HeroStateMachine hero)
     {
         throw new System.NotImplementedException();
     }

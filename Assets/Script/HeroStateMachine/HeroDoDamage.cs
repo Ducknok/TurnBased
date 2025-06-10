@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using DG.Tweening;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class HeroDoDamage : MonoBehaviour
@@ -53,7 +55,46 @@ public class HeroDoDamage : MonoBehaviour
 
         SpawnEffect(VFXSpawner.lightningtStrike, enemyPosition);
     }
+    public void LightningTrail()
+    {
+        Transform body = hsm.transform.Find("Body");
+        
+        // Spawn hiệu ứng tại vị trí hiện tại của body
+        Transform effect = VFXSpawner.Instance.Spawn(VFXSpawner.lightningTrail, new Vector3(hsm.transform.Find("Body").position.x + 4f, hsm.transform.Find("Body").position.y,0), Quaternion.identity);
+        effect.gameObject.SetActive(true);
+        // Gắn hiệu ứng làm con của body => sẽ di chuyển theo hero
+        if (effect != null)
+        {
+            effect.SetParent(body);
+        }
+    }
+    public void GroundSlash()
+    {
+        Transform origin = this.hsm.transform.Find("Body").Find("GroundSlashPosition");
+        if (origin == null) return;
 
+            Vector3 startPos = origin.position;
+            Vector3 targetPos = this.hsm.enemyToAttack.transform.Find("Body").position;
+
+            Transform effect = VFXSpawner.Instance.Spawn(VFXSpawner.groundSlash, startPos, Quaternion.identity);
+            if (effect != null)
+            {
+                effect.gameObject.SetActive(true);
+
+                // Hướng effect về phía enemy
+                Vector3 dir = (targetPos - startPos).normalized;
+                effect.right = dir; // Giả định VFX xoay theo trục right
+
+                // Di chuyển tới enemy
+                effect.DOMove(targetPos, 0.4f)
+                      .SetEase(Ease.InQuad)
+                      .OnComplete(() =>
+                      {
+                      // Gây damage hoặc hiệu ứng tại enemy
+                      VFXSpawner.Instance.Despawn(effect);
+                      });
+            }
+    }
     private void SpawnEffect(string prefab, Vector3 position)
     {
         Transform newVFX = VFXSpawner.Instance.Spawn(prefab, position, Quaternion.identity);
@@ -62,8 +103,5 @@ public class HeroDoDamage : MonoBehaviour
         newVFX.gameObject.SetActive(true);
     }
 
-    public void CloneTriangle()
-    {
-        StartCoroutine(new CloneTriangleSkill(hsm).Execute());
-    }
+    
 }

@@ -10,6 +10,7 @@ using Inventory;
 public class CombatStateMachine : MonoBehaviour
 {
     public CombatZone combatZone;
+    private ButtonController butCtrl;
     public enum PerformAction
     {
         WAIT,
@@ -38,17 +39,16 @@ public class CombatStateMachine : MonoBehaviour
     public PlayerGUI playerInput;
 
     public List<GameObject> playerToManage = new List<GameObject>();
-    private HandleTurn playerChoice;
+    public HandleTurn playerChoice;
 
-    [Header("Panel")]
-    public GameObject actionPanel;
-    public GameObject skillPanel;
-    public GameObject attackTypeInfoPanel;
+    
     //public GameObject ememySelectPanel;
     [Header("Select enemy")]
     private int selectedEnemyIndex = 0;
     public bool isSelectingEnemy = false; // Biến cờ để kiểm tra trạng thái
     public bool isEnemyActing = false;
+    private int maxSelectableEnemies;
+    private List<GameObject> selectedEnemies = new List<GameObject>();
     private GameObject enemySelected;
 
     [Header("Enemy panel")]
@@ -58,23 +58,7 @@ public class CombatStateMachine : MonoBehaviour
     private List<GameObject> enemyInfoList = new List<GameObject>();
     public List<GameObject> enemiesAttacked = new List<GameObject>(); // Lưu enemy đã tấn công
 
-
-    [Header("Player Panel")]
-    public Transform actionSpacer;
-    public Transform skillSpacer;
-    public Transform attackTypeInfoSpacer;
-    public GameObject actionButton;
-    public GameObject skillsBarButton;
-    public GameObject skillsButton;
-    public GameObject itemButton;
-    public GameObject swapButton;
-    public AttackInfoPanel attackInfo;
-    private List<GameObject> attackButtons = new List<GameObject>();
-    private List<GameObject> skillsButtons = new List<GameObject>();
-    private List<GameObject> attackTypeInfoList = new List<GameObject>(); 
-
-    [Header("Select action")]
-    private int selectedIndex = 0; // Lưu index của button đang được chọn
+    
 
     [Header("Turn")]
     public bool heroTurn;
@@ -88,8 +72,8 @@ public class CombatStateMachine : MonoBehaviour
         this.combatState = PerformAction.WAIT;
         this.combatZone = GameObject.FindObjectOfType<CombatZone>();
         
-        this.actionPanel.SetActive(false);
-        this.skillPanel.SetActive(false);
+        this.butCtrl.actionPanel.SetActive(false);
+        this.butCtrl.skillPanel.SetActive(false);
         this.heroTurn = true;
         playerInput = PlayerGUI.ACTIVATE;
     }
@@ -99,6 +83,22 @@ public class CombatStateMachine : MonoBehaviour
         this.enemiesInCombat.AddRange(GameObject.FindGameObjectsWithTag("Enemy"));
         //if (this.playersInCombat != null) return;
         this.playersInCombat.AddRange(GameObject.FindGameObjectsWithTag("Player"));
+        this.LoadButCtrl();
+    }
+    private void LoadButCtrl()
+    {
+        if (this.butCtrl != null) return;
+        this.butCtrl = FindObjectOfType<ButtonController>();
+    }
+    public void StartEnemySelection(BaseAttack skillData)
+    {
+        if (enemiesInCombat.Count == 0) return;
+        isSelectingEnemy = true;
+        selectedEnemies.Clear();
+        selectedEnemyIndex = 0;
+
+        maxSelectableEnemies = skillData.maxEnemyCount;
+        HighlightEnemy(); // Highlight ban đầu
     }
     // Update is called once per frame
     [System.Obsolete]
@@ -227,21 +227,21 @@ public class CombatStateMachine : MonoBehaviour
                     while (this.playerToManage.Count > 0 && this.heroesDoneTurn.Contains(this.playerToManage[0]))
                     {
                         this.playerToManage.RemoveAt(0);
-                        this.actionPanel.SetActive(false);
+                        this.butCtrl.actionPanel.SetActive(false);
                     }
 
                     if (playerToManage.Count > 0)
                     {
                         playerToManage[0].transform.Find("Body").transform.Find("Choose").gameObject.SetActive(true);
                         this.playerChoice = new HandleTurn();
-                        this.actionPanel.SetActive(true);
-                        this.CreateButton();
+                        this.butCtrl.actionPanel.SetActive(true);
+                        this.butCtrl.CreateButton();
                         this.playerInput = PlayerGUI.WAITING;
                     }
                 }
                 break;
             case (PlayerGUI.WAITING):
-                this.CheckState();
+                this.butCtrl.CheckState();
                 
                 break;
             case (PlayerGUI.DONE):
@@ -249,7 +249,6 @@ public class CombatStateMachine : MonoBehaviour
                 break;
         }
     }
-
     //Collect action
     public void CollectAction(HandleTurn input)
     {
@@ -282,7 +281,7 @@ public class CombatStateMachine : MonoBehaviour
     }
 
     // Hiển thị highlight kẻ địch được chọn
-    private void HighlightEnemy()
+    public void HighlightEnemy()
     {
         // Không có enemy nào trong danh sách
         if (enemiesInCombat == null || enemiesInCombat.Count == 0)
@@ -331,51 +330,7 @@ public class CombatStateMachine : MonoBehaviour
     }
 
     //--------------------------------------------Hero-----------------------------------------
-    //Attack button (Input)
-    public void NormalAttack()
-    {
-        this.skillPanel.SetActive(false);
-        this.playerChoice.Attacker = playerToManage[0].name;
-        this.playerChoice.AttacksGameObject = playerToManage[0];
-        this.playerChoice.Type = "Hero";
-        this.playerChoice.choosenAttack = playerToManage[0].GetComponent<HeroStateMachine>().baseHero.normalAttacks[0];
-        this.CreateAttackTypeInfoPanel(this.playerChoice.choosenAttack);
-        this.isSelectingEnemy = true;
-        this.actionPanel.SetActive(false);
-    }
-
-    //Open skill panel
-    public void OpenSkillPanel()
-    {
-        this.actionPanel.SetActive(false);
-        this.skillPanel.SetActive(true);
-        this.selectedIndex = 0;
-        if (this.skillsButtons.Count > 0)
-        {
-            EventSystem.current.SetSelectedGameObject(this.skillsButtons[selectedIndex]);
-        }
-    }
-
-    //Skill attack
-    public void SkillAttack(SkillBehaviour choosenSkill)
-    {
-        //Choose skills
-        this.playerChoice.Attacker = this.playerToManage[0].name;
-        this.playerChoice.AttacksGameObject = this.playerToManage[0];
-        this.playerChoice.Type = "Hero";
-        HeroStateMachine hsm = this.playerToManage[0].GetComponent<HeroStateMachine>();
-        // Check curMP
-        if (hsm.baseHero.curMP < choosenSkill.skillData.attackCost)
-        {
-            Debug.Log("Không đủ mana!");
-            return;
-        }
-        this.playerChoice.choosenAttack = choosenSkill.skillData;
-        this.CreateAttackTypeInfoPanel(this.playerChoice.choosenAttack);
-        this.skillPanel.SetActive(false);
-        this.isSelectingEnemy = true;
-        this.actionPanel.SetActive(false);
-    }
+    
 
 
     //Player input done
@@ -384,7 +339,7 @@ public class CombatStateMachine : MonoBehaviour
     {
         this.performList.Add(this.playerChoice);
         this.ClearAttackPanel();
-        this.ClearAttackTypeInfoPanel();
+        this.butCtrl.ClearAttackTypeInfoPanel();
         if (this.playerToManage.Count > 0)
         {
             GameObject currentHero = playerToManage[0];
@@ -399,222 +354,21 @@ public class CombatStateMachine : MonoBehaviour
         }
     }
 
-
     //Clear attack panel
     public void ClearAttackPanel()
     {
-        this.actionPanel.SetActive(false);
-        foreach (GameObject attackButton in attackButtons)
+        this.butCtrl.actionPanel.SetActive(false);
+        foreach (GameObject attackButton in this.butCtrl.actionButtons)
         {
             DestroyImmediate(attackButton, true);
         }
-        foreach(GameObject skillsButton in skillsButtons)
+        foreach(GameObject skillsButton in this.butCtrl.skillsButtons)
         {
             DestroyImmediate(skillsButton, true);
         }
-        this.skillsButtons.Clear();
-        this.attackButtons.Clear();
+        this.butCtrl.skillsButtons.Clear();
+        this.butCtrl.actionButtons.Clear();
     }
-
-    //Create actionButtons
-    public void CreateButton()
-    {
-        this.CreateAttackButton();
-        this.CreateSkillButton();
-        this.CreateSwapButton();
-        this.CreateItemButton();
-        if (this.attackButtons.Count > 0)
-        {
-            selectedIndex = 0; // Đặt lại index khi tạo mới
-            SelectButton(selectedIndex);
-        }
-    }
-    public void CreateAttackButton()
-    {
-        GameObject attackButton = Instantiate(this.actionButton) as GameObject;
-        TextMeshProUGUI attackButtonText = attackButton.transform.Find("Text").gameObject.GetComponent<TextMeshProUGUI>();
-        HeroStateMachine hero = this.playerToManage[0].GetComponent<HeroStateMachine>();
-        attackButtonText.text = hero.baseHero.normalAttacks[0].attackName;
-        Debug.LogWarning(attackButtonText.text);
-        SkillBehaviour skillBehaviour = hero.GetSkillBehaviourForAttack(hero.baseHero.normalAttacks[0]);
-        AttackButton atb = skillsButton.GetComponent<AttackButton>();
-        if (atb != null)
-        {
-            atb.skillAttackToPerform = skillBehaviour;
-        }
-        attackButton.GetComponent<Button>().onClick.AddListener(() =>
-        {
-            if (atb != null && atb.skillAttackToPerform != null)
-            {
-                hero.currentAttack = atb.skillAttackToPerform;
-                //Debug.LogWarning(heroStateMachine.currentAttack);
-            }
-        });
-        attackButton.GetComponent<Button>().onClick.AddListener(() => NormalAttack());
-        attackButton.transform.SetParent(this.actionSpacer, false);
-        this.attackButtons.Add(attackButton);
-    }
-    public void CreateSkillButton()
-    {
-        GameObject skillButton = Instantiate(this.skillsBarButton) as GameObject;
-        TextMeshProUGUI skillButtonText = skillButton.transform.Find("Text").gameObject.GetComponent<TextMeshProUGUI>();
-        skillButtonText.text = "Skills";
-        skillButton.GetComponent<Button>().onClick.AddListener(() => OpenSkillPanel());
-        skillButton.transform.SetParent(this.actionSpacer, false);
-        this.attackButtons.Add(skillButton);
-
-        if (this.playerToManage != null && this.playerToManage.Count > 0 &&
-            this.playerToManage[0] != null &&
-            this.playerToManage[0].GetComponent<HeroStateMachine>() != null &&
-            this.playerToManage[0].GetComponent<HeroStateMachine>().baseHero != null &&
-            this.playerToManage[0].GetComponent<HeroStateMachine>().baseHero.specialAttacks != null &&
-            this.playerToManage[0].GetComponent<HeroStateMachine>().baseHero.specialAttacks.Count > 0)
-        {
-            HeroStateMachine heroStateMachine = this.playerToManage[0].GetComponent<HeroStateMachine>();
-
-            foreach (BaseAttack baseSkill in heroStateMachine.baseHero.specialAttacks)
-            {
-                if (baseSkill != null && baseSkill.attackType == BaseAttack.AttackType.SpecialAttack)
-                {
-                    // Lấy hoặc tạo SkillBehaviour cho skill này
-                    SkillBehaviour skillBehaviour = heroStateMachine.GetSkillBehaviourForAttack(baseSkill);
-
-                    if (skillBehaviour != null)
-                    {
-                        GameObject skillsButton = Instantiate(this.skillsButton) as GameObject;
-                        TextMeshProUGUI skillsName = skillsButton.transform.Find("Text").gameObject.GetComponent<TextMeshProUGUI>();
-                        TextMeshProUGUI mpCost = skillsButton.transform.Find("MpCost").gameObject.GetComponent<TextMeshProUGUI>();
-
-                        skillsName.text = baseSkill.attackName.ToString();
-                        mpCost.text = baseSkill.attackCost.ToString();
-
-                        AttackButton atb = skillsButton.GetComponent<AttackButton>();
-                        if (atb != null)
-                        {
-                            atb.skillAttackToPerform = skillBehaviour;
-                        }
-
-                        // Kiểm tra nếu hero không đủ MP
-                        if (heroStateMachine.baseHero.curMP < baseSkill.attackCost)
-                        {
-                            skillsName.color = Color.gray;
-                            skillsButton.GetComponent<Button>().interactable = false; // Vô hiệu hóa nếu không đủ MP
-                        }
-                        else
-                        {
-                            skillsButton.GetComponent<Button>().onClick.AddListener(() =>
-                            {
-                                if (atb != null && atb.skillAttackToPerform != null)
-                                {
-                                    heroStateMachine.currentAttack = atb.skillAttackToPerform;
-                                    //Debug.LogWarning(heroStateMachine.currentAttack);
-                                    SkillAttack(atb.skillAttackToPerform);
-                                }
-                            });
-                        }
-
-                        skillsButton.transform.SetParent(this.skillSpacer, false);
-                        this.skillsButtons.Add(skillsButton);
-                    }
-                }
-            }
-        }
-        else
-        {
-            skillButton.GetComponent<Button>().interactable = false;
-        }
-    }
-
-    public void CreateItemButton()
-    {
-        GameObject itemButton = Instantiate(this.itemButton) as GameObject;
-        TextMeshProUGUI itemButtonText = itemButton.transform.Find("Text").gameObject.GetComponent<TextMeshProUGUI>();
-        itemButtonText.text = "Items";
-        //itemButton.GetComponent<Button>().onClick.AddListener(() => NormalAttack());
-        itemButton.transform.SetParent(this.actionSpacer, false);
-        this.attackButtons.Add(itemButton);
-    }
-    public void CreateSwapButton()
-    {
-        GameObject swapButton = Instantiate(this.swapButton) as GameObject;
-        TextMeshProUGUI swapButtonText = swapButton.transform.Find("Text").gameObject.GetComponent<TextMeshProUGUI>();
-        swapButtonText.text = "Swap";
-        //itemButton.GetComponent<Button>().onClick.AddListener(() => NormalAttack());
-        swapButton.transform.SetParent(this.actionSpacer, false);
-        this.attackButtons.Add(swapButton);
-    }
-    private void CheckState()
-    {
-        if (playerInput == PlayerGUI.WAITING)
-        {
-            if (skillPanel.activeSelf) // Nếu đang ở skill panel
-            {
-                if (skillsButtons.Count > 0)
-                {
-                    if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S))
-                    {
-                        selectedIndex = (selectedIndex + 1) % skillsButtons.Count;
-                        //Debug.Log(selectedIndex);
-                        SelectSkillButton(selectedIndex);
-                    }
-                    else if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W))
-                    {
-                        selectedIndex = (selectedIndex - 1 + skillsButtons.Count) % skillsButtons.Count;
-                        SelectSkillButton(selectedIndex);
-                    }
-                    else if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space))
-                    {
-                        ExecuteEvents.Execute(skillsButtons[selectedIndex], new BaseEventData(EventSystem.current), ExecuteEvents.submitHandler);
-                    }
-                    else if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A) ||
-                             Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D))
-                    {
-                        skillPanel.SetActive(false);
-                        actionPanel.SetActive(true);
-                        selectedIndex = 0;
-                        SelectButton(selectedIndex);
-                    }
-                }
-            }
-            else if (attackButtons.Count > 0) // Nếu đang ở action panel
-            {
-                if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S))
-                {
-                    selectedIndex = (selectedIndex + 1) % attackButtons.Count;
-                    SelectButton(selectedIndex);
-                }
-                else if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W))
-                {
-                    selectedIndex = (selectedIndex - 1 + attackButtons.Count) % attackButtons.Count;
-                    SelectButton(selectedIndex);
-                }
-                else if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space))
-                {
-                    ExecuteEvents.Execute(attackButtons[selectedIndex], new BaseEventData(EventSystem.current), ExecuteEvents.submitHandler);
-                    string btnName = attackButtons[selectedIndex].transform.GetComponentInChildren<TextMeshProUGUI>().text;
-                    //Debug.LogWarning(btnName);
-                    if (btnName == "Attack") // hoặc so sánh text nếu cần
-                    {
-                        this.HighlightEnemy();
-                    }
-                }
-            }
-        }
-    }
-
-    private void SelectSkillButton(int index)
-    {
-        
-        EventSystem.current.SetSelectedGameObject(null);
-        EventSystem.current.SetSelectedGameObject(skillsButtons[index]);
-        EventSystem.current.firstSelectedGameObject = skillsButtons[index];
-    }
-
-    private void SelectButton(int index)
-    {
-        EventSystem.current.SetSelectedGameObject(attackButtons[index]);
-    }
-
     public bool AreAllHeroesDone()
     {
         foreach (GameObject hero in playersInCombat)
@@ -634,57 +388,6 @@ public class CombatStateMachine : MonoBehaviour
             return this.enemiesAttacked.Contains(enemy);
         });
     }
-
-    //Create attack type info panel
-    public void CreateAttackTypeInfoPanel(BaseAttack chooseSkill)
-    {
-        GameObject attackTypeInfo = Instantiate(this.attackTypeInfoPanel) as GameObject;
-        this.attackInfo = attackTypeInfo.transform.GetComponent<AttackInfoPanel>();
-        this.attackInfo.attackName.text = chooseSkill.attackName;
-        this.attackInfo.attackTypeInfo.text = chooseSkill.attackDescription;
-        this.SetAttackTypes(chooseSkill.effect1, this.attackInfo.attackTypeIconSpacer.transform);
-        this.SetAttackTypes(chooseSkill.effect2, this.attackInfo.attackTypeIconSpacer.transform);
-        //Debug.LogWarning(enemyStat.enemyHPBarFill);
-        attackTypeInfo.transform.SetParent(this.attackTypeInfoSpacer, false);
-        this.attackTypeInfoList.Add(attackTypeInfo);
-    }
-    public void ClearAttackTypeInfoPanel()
-    {
-        foreach (GameObject attackTypeInfo in attackTypeInfoList)
-        {
-            DestroyImmediate(attackTypeInfo);
-        }
-        this.attackTypeInfoList.Clear();
-    }
-
-    public void SetAttackTypes(BaseAttack.Effect attackType, Transform spawnPosition)
-    {
-        // Kiểm tra xem attackType đã tồn tại chưa
-        foreach (Transform child in spawnPosition)
-        {
-            if (child.name == $"{attackType}Icon") // So sánh với tên icon
-            {
-                //Debug.Log($"Attack type {attackType} đã tồn tại, không tạo mới.");
-                return; // Không tạo lại nếu đã có
-            }
-        }
-
-        // Tải prefab của icon từ Resources
-        GameObject attackPrefab = Resources.Load<GameObject>($"AttackTypeIconImage/{attackType}Icon");
-
-        if (attackPrefab != null)
-        {
-            GameObject attackIcon = Instantiate(attackPrefab); // Tạo icon và đặt vào vị trí
-            attackIcon.transform.SetParent(spawnPosition);
-            attackIcon.name = $"{attackType}Icon"; // Đặt tên để kiểm tra sau này
-        }
-        else
-        {
-            //Debug.LogWarning($"Không tìm thấy icon cho {attackType}");
-            return;
-        }
-    }
-
 
     //Create Enemy info panel
     public void CreateEnemyInfoPanel(GameObject enemy)
@@ -731,6 +434,4 @@ public class CombatStateMachine : MonoBehaviour
             }
         }
     }
-
-
 }

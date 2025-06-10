@@ -430,7 +430,7 @@ GameObject:
   - component: {fileID: 4123460276536485817}
   - component: {fileID: 9106144164174982220}
   - component: {fileID: 82410764708118101}
-  - component: {fileID: 7419586481649543986}
+  - component: {fileID: 2992644736538563856}
   m_Layer: 5
   m_Name: AttackInfoPanel
   m_TagString: Untagged
@@ -499,7 +499,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &7419586481649543986
+--- !u!114 &2992644736538563856
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

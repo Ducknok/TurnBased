@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 457705508506569389}
   - component: {fileID: 531486656316729110}
-  - component: {fileID: 695588676403355532}
+  - component: {fileID: -8156232347834283858}
   m_Layer: 0
   m_Name: DucknokClone
   m_TagString: Untagged
@@ -85,7 +85,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &695588676403355532
+--- !u!114 &-8156232347834283858
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -97,5 +97,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 810f2bc8beed2b8449a2e5cdb16a5fa0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  delay: 1.5
+  delay: 2
   timer: 0

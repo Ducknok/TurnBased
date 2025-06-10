@@ -216,7 +216,7 @@ GameObject:
   - component: {fileID: 1004493688341345134}
   - component: {fileID: 1429724861363933679}
   m_Layer: 0
-  m_Name: LightIcon
+  m_Name: WindIcon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -284,7 +284,7 @@ SpriteRenderer:
   m_SortingLayerID: -183294497
   m_SortingLayer: 3
   m_SortingOrder: 0
-  m_Sprite: {fileID: 1263514809, guid: fb051ba9df7a2724e99ecb3019809887, type: 3}
+  m_Sprite: {fileID: 756673776, guid: fb051ba9df7a2724e99ecb3019809887, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

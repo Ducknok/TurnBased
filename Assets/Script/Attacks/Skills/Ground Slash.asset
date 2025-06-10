@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8c5cd8b2141e4f941a2210d29baea2ce, type: 3}
-  m_Name: Lightning Strike
+  m_Name: Ground Slash
   m_EditorClassIdentifier: 
-  attackImage: {fileID: -2092929413, guid: fb051ba9df7a2724e99ecb3019809887, type: 3}
-  attackName: Lightning Strike
-  attackDescription: Tao 1 tia sam set
-  attackDamage: 20
+  attackImage: {fileID: 849125311, guid: fb051ba9df7a2724e99ecb3019809887, type: 3}
+  attackName: Ground Slash
+  attackDescription: Slash on ground
+  attackDamage: 10
   attackCost: 3
   maxEnemyCount: 0
   attackType: 1
-  effect1: 3
-  effect2: 3
+  effect1: 1
+  effect2: 2

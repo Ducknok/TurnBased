@@ -12,7 +12,7 @@ public class BaseAttack : ScriptableObject
     {
         Sword,
         Lance,
-        Light,
+        Wind,
         Thunder
     }
     public enum AttackType
@@ -25,6 +25,7 @@ public class BaseAttack : ScriptableObject
     public string attackDescription;
     public float attackDamage;  //Base Damage 15, lvl 10, stamina 35 = basedmg + lvl + stamina = 60
     public float attackCost;    //Mana cost
+    public int maxEnemyCount;
     public AttackType attackType;
     public Effect effect1;
     public Effect effect2;
@@ -36,13 +37,13 @@ public abstract class SkillBehaviour : MonoBehaviour
     public BaseAttack skillData;
 
     // Kích hoạt kỹ năng: 1: Animation -> 2: Sound effect -> 3: VFX
-    public virtual IEnumerator Activate(GameObject attacker, GameObject target)
+    public virtual IEnumerator Activate(HeroStateMachine hsm, GameObject target)
     {
         yield return new WaitForSeconds(0f);
     }
 
     // Phương thức để áp dụng các hiệu ứng của kỹ năng
-    protected abstract void ApplySkillEffects(GameObject hero, GameObject target);
+    protected abstract void ApplySkillEffects(HeroStateMachine hsm);
 
     //// Lấy thời gian của animation
     protected virtual float GetAnimationDuration(Animator animator, string triggerName)

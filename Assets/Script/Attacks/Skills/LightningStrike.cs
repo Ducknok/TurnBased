@@ -4,19 +4,9 @@ using UnityEngine;
 
 public class LightningStrike : SkillBehaviour
 {
-    protected override void ApplySkillEffects(GameObject attacker, GameObject target)
+    protected override void ApplySkillEffects(HeroStateMachine hsm)
     {
-        HeroStateMachine hero = attacker.transform.GetComponent<HeroStateMachine>();
-        // Tính toán damage dựa trên các thuộc tính của hero và target
-        float damage = skillData.attackDamage * hero.baseHero.baseATK;
-
-        // Áp dụng damage vào target
-        EnemyStateMachine enemy = target.GetComponent<EnemyStateMachine>();
-        if (enemy != null)
-        {
-            enemy.TakeDamage(damage, skillData.effect1, skillData.effect2);
-        }
-
+        hsm.DoDamage();
         //// Tạo hiệu ứng va chạm
         //if (impactEffectPrefab != null)
         //{
@@ -25,18 +15,17 @@ public class LightningStrike : SkillBehaviour
     }
 
     // Bạn có thể ghi đè phương thức Activate để thêm logic đặc biệt
-    public override IEnumerator Activate(GameObject attacker, GameObject target)
+    public override IEnumerator Activate(HeroStateMachine hsm, GameObject target)
     {
-        HeroStateMachine hero = attacker.transform.GetComponent<HeroStateMachine>();
         // Gọi logic cơ bản từ lớp cha
-        Animator anim = attacker.transform.Find("Body").GetComponent<Animator>();
+        Animator anim = hsm.transform.Find("Body").GetComponent<Animator>();
         if(anim != null)
         {
-            anim.Play(hero.currentAttack.skillData.attackName);
+            anim.Play(hsm.currentAttack.skillData.attackName);
         }
         float animationDuration = GetAnimationDuration(anim, skillData.attackName);
         yield return new WaitForSeconds(animationDuration);
-        this.ApplySkillEffects(hero.gameObject, target);
+        this.ApplySkillEffects(hsm);
     }
     protected override float GetAnimationDuration(Animator animator, string triggerName)
     {

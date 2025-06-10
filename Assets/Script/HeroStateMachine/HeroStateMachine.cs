@@ -13,6 +13,7 @@ public class HeroStateMachine : MonoBehaviour
     public BaseHero baseHero;
     public ItemInventoryController inventoryController;
     public SkillBehaviour currentAttack;
+    public ButtonController butCtrl;
 
     public enum TurnState
     {
@@ -86,7 +87,13 @@ public class HeroStateMachine : MonoBehaviour
     private void Awake()
     {
         this.baseHero.curHP = this.baseHero.baseHP;
+        this.LoadButCtrl();
         
+    }
+    private void LoadButCtrl()
+    {
+        if (this.butCtrl != null) return;
+        this.butCtrl = FindObjectOfType<ButtonController>();
     }
     // Update is called once per frame
     private void Update()
@@ -128,7 +135,7 @@ public class HeroStateMachine : MonoBehaviour
                     CombatController.Instance.CBM.playerToManage.Remove(this.gameObject);
 
                     //reset gui
-                    CombatController.Instance.CBM.actionPanel.SetActive(false);
+                    this.butCtrl.actionPanel.SetActive(false);
                     //remove item from performList
                     if (CombatController.Instance.CBM.playersInCombat.Count > 0)
                     {
@@ -148,8 +155,8 @@ public class HeroStateMachine : MonoBehaviour
                     //animation dead
                     this.anim.SetTrigger("Dead");
                     // Không tạo action và skill panel nếu hero đã chết
-                    CombatController.Instance.CBM.actionPanel.SetActive(false);
-                    CombatController.Instance.CBM.skillPanel.SetActive(false);
+                    this.butCtrl.actionPanel.SetActive(false);
+                    this.butCtrl.skillPanel.SetActive(false);
                     //reset heroinput
                     CombatController.Instance.CBM.combatState = CombatStateMachine.PerformAction.CHECKALIVE;
                     this.alive = false;
@@ -248,8 +255,8 @@ public class HeroStateMachine : MonoBehaviour
     //Update action position
     private void UpdateActionPanelPosition(HeroStateMachine selectedHero)
     {
-        RectTransform actionPanelRect = CombatController.Instance.CBM.actionPanel.GetComponent<RectTransform>();
-        RectTransform skillPanelRect = CombatController.Instance.CBM.skillPanel.GetComponent<RectTransform>();
+        RectTransform actionPanelRect = this.butCtrl.actionPanel.GetComponent<RectTransform>();
+        RectTransform skillPanelRect = this.butCtrl.skillPanel.GetComponent<RectTransform>();
 
         // Lấy Canvas
         Canvas canvas = actionPanelRect.GetComponentInParent<Canvas>();
@@ -277,8 +284,8 @@ public class HeroStateMachine : MonoBehaviour
         skillPanelRect.anchoredPosition = localPosition + offset;
 
         // Hiển thị Panel
-        CombatController.Instance.CBM.actionPanel.SetActive(true);
-        CombatController.Instance.CBM.skillPanel.SetActive(false);
+        this.butCtrl.actionPanel.SetActive(true);
+        this.butCtrl.skillPanel.SetActive(false);
     }
 
     private IEnumerator TimeForAction()
@@ -290,8 +297,8 @@ public class HeroStateMachine : MonoBehaviour
         this.actionStarted = true;
         //wait abit
         //animate back to start position
-        
-        StartCoroutine(this.currentAttack.Activate(this.gameObject, this.enemyToAttack));
+
+        StartCoroutine(this.currentAttack.Activate(this, this.enemyToAttack)) ;
         yield return new WaitForSeconds(2f);
         CombatController.Instance.CBM.UpdateEnemyTimer();
         StartCoroutine(MoveTowardsStart());
@@ -472,10 +479,10 @@ public class HeroStateMachine : MonoBehaviour
     public SkillBehaviour GetSkillBehaviourForAttack(BaseAttack baseAttack)
     {
         // Kiểm tra xem có skill behaviour nào đã được tạo cho skill này chưa
-        Debug.LogWarning(baseAttack);
+        //Debug.LogWarning(baseAttack);
         SkillBehaviour existingSkill = GetComponentsInChildren<SkillBehaviour>()
             .FirstOrDefault(s => s.skillData.attackName == baseAttack.attackName);
-       Debug.LogWarning(existingSkill);
+       //Debug.LogWarning(existingSkill);
         if (existingSkill != null)
         {
             return existingSkill;

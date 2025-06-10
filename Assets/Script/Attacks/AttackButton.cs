@@ -9,6 +9,6 @@ public class AttackButton : MonoBehaviour
     public void CastSkillAttack()
     {
         //Debug.LogWarning(skillAttackToPerform);
-        GameObject.Find("StartCombat").GetComponent<CombatStateMachine>().SkillAttack(skillAttackToPerform);
+        GameObject.Find("StartCombat").GetComponent<ButtonController>().SkillAttack(skillAttackToPerform);
     }
 }

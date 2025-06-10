@@ -1,22 +1,13 @@
+ï»¿using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class ShadowTriangle : SkillBehaviour
 {
-    protected override void ApplySkillEffects(GameObject attacker, GameObject target)
+    protected override void ApplySkillEffects(HeroStateMachine hsm)
     {
-        HeroStateMachine hero = attacker.transform.GetComponent<HeroStateMachine>();
-        // T¨ªnh to¨¢n damage d?a tr¨ºn c¨¢c thu?c t¨ªnh c?a hero v¨¤ target
-        float damage = skillData.attackDamage * hero.baseHero.baseATK;
-
-        // ?p d?ng damage v¨¤o target
-        EnemyStateMachine enemy = target.GetComponent<EnemyStateMachine>();
-        if (enemy != null)
-        {
-            enemy.TakeDamage(damage, skillData.effect1, skillData.effect2);
-        }
-
+        hsm.DoDamage();
         //// T?o hi?u ?ng va ch?m
         //if (impactEffectPrefab != null)
         //{
@@ -24,20 +15,22 @@ public class ShadowTriangle : SkillBehaviour
         //}
     }
 
-    // B?n c¨® th? ghi ?¨¨ ph??ng th?c Activate ?? th¨ºm logic ??c bi?t
-    public override IEnumerator Activate(GameObject attacker, GameObject target)
+    // B?n cÃ³ th? ghi ?Ã¨ ph??ng th?c Activate ?? thÃªm logic ??c bi?t
+    public override IEnumerator Activate(HeroStateMachine hsm, GameObject target)
     {
-        HeroStateMachine hero = attacker.transform.GetComponent<HeroStateMachine>();
+        GameObject body = hsm.transform.Find("Body").gameObject;
         Transform enemy = target.transform.Find("Body");
-        Animator anim = hero.transform.Find("Body").GetComponent<Animator>();
-        if (anim != null)
-        {
-            anim.Play(hero.currentAttack.skillData.attackName);
-        }
+        Animator anim = hsm.transform.Find("Body").GetComponent<Animator>();
+
         if (enemy == null)
         {
-            Debug.LogError("Kh?ng c¨® enemy ?? t?n c?ng.");
+            Debug.LogError("KhÃ´ng cÃ³ enemy Ä‘á»ƒ táº¥n cÃ´ng.");
             yield break;
+        }
+
+        if (anim != null)
+        {
+            anim.Play(hsm.currentAttack.skillData.attackName); // animation chuáº©n bá»‹
         }
 
         Vector3 enemyPos = enemy.position;
@@ -54,7 +47,8 @@ public class ShadowTriangle : SkillBehaviour
 
         for (int i = 0; i < positions.Length; i++)
         {
-            yield return MoveToPosition(hero.transform, positions[i], 0.25f);
+            // Di chuyá»ƒn tá»›i vá»‹ trÃ­
+            yield return body.transform.DOMove(positions[i], 0.25f).SetEase(Ease.InOutSine).WaitForCompletion();
 
             Transform clone = VFXSpawner.Instance.Spawn(VFXSpawner.ducknokClone, positions[i], Quaternion.identity);
             if (clone != null)
@@ -64,44 +58,28 @@ public class ShadowTriangle : SkillBehaviour
             }
         }
 
-        // Quay l?i v? tr¨ª ban ??u
-        yield return MoveToPosition(hero.transform, hero.transform.position, 0.3f);
+        // Quay láº¡i vá»‹ trÃ­ ban Ä‘áº§u
+        Vector3 originalPos = body.transform.position; // hoáº·c lÆ°u tá»« Ä‘áº§u
+        yield return body.transform.DOMove(originalPos, 0.2f).SetEase(Ease.InOutSine).WaitForCompletion();
 
         yield return new WaitForSeconds(1f);
 
         foreach (Transform clone in clones)
         {
             if (clone != null)
-                CoroutineHelper.Start(MoveAndDestroy(clone, enemyPos, 0.2f));
+            {
+                clone.DOMove(enemyPos, 0.2f)
+                     .SetEase(Ease.InQuad)
+                     .OnComplete(() =>
+                     {
+                         // ThÃªm VFX, damage, hoáº·c destroy clone á»Ÿ Ä‘Ã¢y
+                         
+                         VFXSpawner.Instance.Despawn(clone.transform);
+                        
+
+                     });
+            }
         }
-    }
-    private IEnumerator MoveToPosition(Transform obj, Vector3 target, float duration)
-    {
-        Vector3 start = obj.position;
-        float elapsed = 0f;
-
-        while (elapsed < duration)
-        {
-            elapsed += Time.deltaTime;
-            obj.position = Vector3.Lerp(start, target, elapsed / duration);
-            yield return null;
-        }
-
-        obj.position = target;
-    }
-
-    private IEnumerator MoveAndDestroy(Transform clone, Vector3 target, float duration)
-    {
-        Vector3 start = clone.position;
-        float elapsed = 0f;
-
-        while (elapsed < duration)
-        {
-            elapsed += Time.deltaTime;
-            clone.position = Vector3.Lerp(start, target, elapsed / duration);
-            yield return null;
-        }
-
-        // Add impact VFX if needed
+        this.ApplySkillEffects(hsm);
     }
 }
