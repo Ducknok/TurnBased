@@ -95,6 +95,18 @@ public class HeroDoDamage : MonoBehaviour
                       });
             }
     }
+    public void Tornado()
+    {
+        Vector2 enemyPosition = new Vector2(this.hsm.enemyToAttack.transform.position.x,
+                                           this.hsm.enemyToAttack.transform.position.y - 1f);
+        if (float.IsNaN(enemyPosition.x) || float.IsNaN(enemyPosition.y))
+        {
+            Debug.LogError("enemyToAttack đang có position NaN!");
+            return;
+        }
+
+        SpawnEffect(VFXSpawner.tonardo, enemyPosition);
+    }
     private void SpawnEffect(string prefab, Vector3 position)
     {
         Transform newVFX = VFXSpawner.Instance.Spawn(prefab, position, Quaternion.identity);

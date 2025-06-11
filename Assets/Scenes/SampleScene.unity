@@ -2606,6 +2606,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: abb63d0e13900874aa554de502ab6287, type: 2}
     specialAttacks:
     - {fileID: 11400000, guid: 2c11521ece3505a4ea80a519ebc58315, type: 2}
+    - {fileID: 11400000, guid: 2639164949270b949abafb3c0653adb8, type: 2}
     heroImage: {fileID: 1258090235, guid: 21a6fb2b8e744d3439f09248ad82c8ee, type: 3}
     stamina: 10
     intellect: 10
@@ -3249,6 +3250,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   heroSMList: []
   combatZone: {fileID: 0}
+--- !u!4 &398863777 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6199064480678682493, guid: 7fd99f932372f0647867c451a59ea14c, type: 3}
+  m_PrefabInstance: {fileID: 8373889830312647354}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &415784546
 GameObject:
   m_ObjectHideFlags: 0
@@ -19773,6 +19779,7 @@ Transform:
   - {fileID: 561910943}
   - {fileID: 1028652028}
   - {fileID: 1129988820}
+  - {fileID: 398863777}
   m_Father: {fileID: 2008172879}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1405818977
@@ -28472,6 +28479,71 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f1be9bf41df41794ca22dc1378eb1e22, type: 3}
+--- !u!1001 &8373889830312647354
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1402380690}
+    m_Modifications:
+    - target: {fileID: 44153301351438084, guid: 7fd99f932372f0647867c451a59ea14c, type: 3}
+      propertyPath: m_Name
+      value: Tornado
+      objectReference: {fileID: 0}
+    - target: {fileID: 44153301351438084, guid: 7fd99f932372f0647867c451a59ea14c, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4344967696442060314, guid: 7fd99f932372f0647867c451a59ea14c, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6199064480678682493, guid: 7fd99f932372f0647867c451a59ea14c, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6199064480678682493, guid: 7fd99f932372f0647867c451a59ea14c, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6199064480678682493, guid: 7fd99f932372f0647867c451a59ea14c, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6199064480678682493, guid: 7fd99f932372f0647867c451a59ea14c, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6199064480678682493, guid: 7fd99f932372f0647867c451a59ea14c, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6199064480678682493, guid: 7fd99f932372f0647867c451a59ea14c, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6199064480678682493, guid: 7fd99f932372f0647867c451a59ea14c, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6199064480678682493, guid: 7fd99f932372f0647867c451a59ea14c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6199064480678682493, guid: 7fd99f932372f0647867c451a59ea14c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6199064480678682493, guid: 7fd99f932372f0647867c451a59ea14c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 7fd99f932372f0647867c451a59ea14c, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
