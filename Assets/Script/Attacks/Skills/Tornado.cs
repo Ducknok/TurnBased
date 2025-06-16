@@ -5,20 +5,16 @@ using UnityEngine;
 
 public class Tornado : SkillBehaviour
 {
-    protected override void ApplySkillEffects(HeroStateMachine hsm)
+    protected override void ApplySkillEffects(GameObject attacker)
     {
-        hsm.DoDamage();
-        //// T?o hi?u ?ng va ch?m
-        //if (impactEffectPrefab != null)
-        //{
-        //    Instantiate(impactEffectPrefab, target.transform.position, Quaternion.identity);
-        //}
+        DamageOverTime.Instance.DoDamage(attacker);
     }
 
     // B?n có th? ghi ?è ph??ng th?c Activate ?? thêm logic ??c bi?t
-    public override IEnumerator Activate(HeroStateMachine hsm, GameObject target)
+    public override IEnumerator Activate(GameObject attacker, GameObject target)
     {
-        // Gọi logic cơ bản từ lớp cha
+
+        HeroStateMachine hsm = attacker.GetComponent<HeroStateMachine>();
         Animator anim = hsm.transform.Find("Body").GetComponent<Animator>();
         if (anim != null)
         {
@@ -26,6 +22,6 @@ public class Tornado : SkillBehaviour
         }
         float animationDuration = GetAnimationDuration(anim, skillData.attackName);
         yield return new WaitForSeconds(animationDuration);
-        this.ApplySkillEffects(hsm);
+        this.ApplySkillEffects(attacker);
     }
 }

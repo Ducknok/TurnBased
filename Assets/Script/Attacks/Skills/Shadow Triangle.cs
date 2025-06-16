@@ -5,19 +5,14 @@ using UnityEngine;
 
 public class ShadowTriangle : SkillBehaviour
 {
-    protected override void ApplySkillEffects(HeroStateMachine hsm)
+    protected override void ApplySkillEffects(GameObject attacker)
     {
-        hsm.DoDamage();
-        //// T?o hi?u ?ng va ch?m
-        //if (impactEffectPrefab != null)
-        //{
-        //    Instantiate(impactEffectPrefab, target.transform.position, Quaternion.identity);
-        //}
+        base.ApplySkillEffects(attacker);
     }
 
-    // B?n có th? ghi ?è ph??ng th?c Activate ?? thêm logic ??c bi?t
-    public override IEnumerator Activate(HeroStateMachine hsm, GameObject target)
+    public override IEnumerator Activate(GameObject attacker, GameObject target)
     {
+        HeroStateMachine hsm = attacker.GetComponent<HeroStateMachine>();
         GameObject body = hsm.transform.Find("Body").gameObject;
         Transform enemy = target.transform.Find("Body");
         Animator anim = hsm.transform.Find("Body").GetComponent<Animator>();
@@ -80,6 +75,6 @@ public class ShadowTriangle : SkillBehaviour
                      });
             }
         }
-        this.ApplySkillEffects(hsm);
+        this.ApplySkillEffects(attacker);
     }
 }

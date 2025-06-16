@@ -1,24 +1,18 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyDoDamage : MonoBehaviour
+public class EnemyDoDamage : DealDamageController
 {
-    [SerializeField] private EnemyStateMachine esm;
-    public EnemyStateMachine ESM => esm;
-    
-    private void Awake()
+    private static EnemyDoDamage instance;
+    public static EnemyDoDamage Instance => instance;
+    protected void Awake()
     {
-        this.LoadEnemySM();
+        if (instance != null) return;
+        instance = this;
     }
-    protected void LoadEnemySM()
+    public override void DoDamage(GameObject attacker)
     {
-        if (this.esm != null) return; // N?u ?? c¨® heroSMList r?i th¨¬ kh?ng c?n t¨¬m l?i
-        this.esm = this.transform.parent.GetComponent<EnemyStateMachine>();
+        EnemyStateMachine esm = attacker.GetComponent<EnemyStateMachine>();
+        float calDamage = esm.baseEnemy.curATK + esm.currentAttack.skillData.attackDamage;
+        esm.playerToAttack.GetComponent<HeroTakeDamage>().TakeDamage(esm.playerToAttack.gameObject, calDamage);
     }
-    public void DoDamage()
-    {
-        this.esm.DoDamage();
-    }
-    
 }

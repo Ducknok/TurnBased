@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c5cd8b2141e4f941a2210d29baea2ce, type: 3}
   m_Name: Tornado
   m_EditorClassIdentifier: 
-  attackImage: {fileID: 0}
+  attackImage: {fileID: 756673776, guid: fb051ba9df7a2724e99ecb3019809887, type: 3}
   attackName: Tornado
   attackDescription: Creates a tornado that deals continuous damage for 3 seconds.
   attackDamage: 15

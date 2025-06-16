@@ -137,6 +137,68 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!1 &3003476571263100986
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1168878446091702414}
+  m_Layer: 0
+  m_Name: Skills
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1168878446091702414
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3003476571263100986}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3024651085888802613}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4053308984533806181
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 875027752313880410}
+  m_Layer: 0
+  m_Name: SkillPosition
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &875027752313880410
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4053308984533806181}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.01, y: -0.64, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5250727285660817246}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6426753507620981047
 GameObject:
   m_ObjectHideFlags: 0
@@ -151,6 +213,7 @@ GameObject:
   - component: {fileID: 6107060438092440208}
   - component: {fileID: 7384152831364537805}
   - component: {fileID: 4729928080192093633}
+  - component: {fileID: 8942142690041362521}
   m_Layer: 0
   m_Name: Body
   m_TagString: Untagged
@@ -170,7 +233,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 875027752313880410}
   m_Father: {fileID: 3024651085888802613}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &5222932191707679278
@@ -333,6 +397,20 @@ MonoBehaviour:
   targetPosition: {fileID: 0}
   jumpHeight: 1
   jumpDuration: 0.5
+--- !u!114 &8942142690041362521
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6426753507620981047}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 261fc77a759c545499aed0ebac705d3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  esm: {fileID: 0}
+  position: {fileID: 0}
 --- !u!1 &8075015674674520003
 GameObject:
   m_ObjectHideFlags: 0
@@ -407,6 +485,7 @@ GameObject:
   - component: {fileID: 2991846600636949869}
   - component: {fileID: 5826533145399632571}
   - component: {fileID: 3468509149680871524}
+  - component: {fileID: 8184352183484721710}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -432,6 +511,7 @@ Transform:
   - {fileID: 561793110583759179}
   - {fileID: 456949372782958824}
   - {fileID: 1670911796101893341}
+  - {fileID: 1168878446091702414}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2991846600636949869
@@ -446,6 +526,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e3e1d9a58a100c46b34c2089e0b7b13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  combatStateMachine: {fileID: 0}
   baseEnemy:
     theName: Enemy
     baseHP: 0
@@ -454,21 +535,37 @@ MonoBehaviour:
     curMP: 0
     baseATK: 0
     curATK: 0
+    baseMATK: 0
+    curMATK: 0
     baseDEF: 0
     curDEF: 0
-    attacks: []
+    baseMDEF: 0
+    curMDEF: 0
+    normalAttacks: []
+    specialAttacks: []
     enemyType: 1
     rarity: 0
+  currentAttack: {fileID: 0}
   enemyMoveToCombat: {fileID: 0}
   currentState: 0
   choose: {fileID: 0}
   enemyHPBarFill: {fileID: 0}
   curHpNumber: {fileID: 0}
+  savedAttack:
+    Attacker: 
+    Type: 
+    AttacksGameObject: {fileID: 0}
+    AttackerTarget: {fileID: 0}
+    choosenAttack: {fileID: 0}
   anim: {fileID: 0}
   playerToAttack: {fileID: 0}
+  actionStarted: 0
+  enemyAttacked: 0
   enemyUI: {fileID: 0}
   activeLocks: []
   maxAttackType: 2
+  timer: 0
+  isLockBrokenOnce: 0
 --- !u!114 &5826533145399632571
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -536,4 +633,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attacktypesIconPosition: {fileID: 456949372782958824}
   timerIconPosition: {fileID: 1670911796101893341}
+  timerIcon: {fileID: 0}
   iconsToDestroy: []
+  timerIconToDestroy: []
+--- !u!114 &8184352183484721710
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9096737307871136221}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a66571b7226eb7b468ad7228fedce785, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

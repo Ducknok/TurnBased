@@ -4,20 +4,14 @@ using UnityEngine;
 
 public class LightningStrike : SkillBehaviour
 {
-    protected override void ApplySkillEffects(HeroStateMachine hsm)
+    protected override void ApplySkillEffects(GameObject attacker)
     {
-        hsm.DoDamage();
-        //// Tạo hiệu ứng va chạm
-        //if (impactEffectPrefab != null)
-        //{
-        //    Instantiate(impactEffectPrefab, target.transform.position, Quaternion.identity);
-        //}
+        base.ApplySkillEffects(attacker);
     }
 
-    // Bạn có thể ghi đè phương thức Activate để thêm logic đặc biệt
-    public override IEnumerator Activate(HeroStateMachine hsm, GameObject target)
+    public override IEnumerator Activate(GameObject attacker, GameObject target)
     {
-        // Gọi logic cơ bản từ lớp cha
+        HeroStateMachine hsm = attacker.GetComponent<HeroStateMachine>();
         Animator anim = hsm.transform.Find("Body").GetComponent<Animator>();
         if(anim != null)
         {
@@ -25,7 +19,7 @@ public class LightningStrike : SkillBehaviour
         }
         float animationDuration = GetAnimationDuration(anim, skillData.attackName);
         yield return new WaitForSeconds(animationDuration);
-        this.ApplySkillEffects(hsm);
+        this.ApplySkillEffects(hsm.gameObject);
     }
     protected override float GetAnimationDuration(Animator animator, string triggerName)
     {

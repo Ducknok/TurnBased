@@ -111,7 +111,7 @@ public class ButtonController : MonoBehaviour
                     {
                         ExecuteEvents.Execute(actionButtons[selectedIndex], new BaseEventData(EventSystem.current), ExecuteEvents.submitHandler);
                         string btnName = actionButtons[selectedIndex].GetComponentInChildren<TextMeshProUGUI>().text;
-                        Debug.Log($"Kích hoạt action: {btnName}");
+                        ///Debug.Log($"Kích hoạt action: {btnName}");
                         if (btnName == "Attack")
                         {
                             this.combatCtrl.CBM.HighlightEnemy();

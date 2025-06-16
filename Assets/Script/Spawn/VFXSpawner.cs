@@ -19,7 +19,11 @@ public class VFXSpawner : Spawner
     //May's VFX
     public static string groundSlash = "GroundSlash";
     public static string tonardo = "Tornado";
-    
+
+    //Enemy
+    public static string fireBall = "FireBall";
+    public static string waterBall = "WaterBall";
+    public static string grass = "Grass";
 
     protected void Awake()
     {

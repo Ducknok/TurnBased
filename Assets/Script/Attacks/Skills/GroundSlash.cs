@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class GroundSlash : SkillBehaviour
 {
-    public override IEnumerator Activate(HeroStateMachine hsm, GameObject target)
+    public override IEnumerator Activate(GameObject attacker, GameObject target)
     {
-        // G?i logic c? b?n t? l?p cha
+        HeroStateMachine hsm = attacker.GetComponent<HeroStateMachine>();
         Animator anim = hsm.transform.Find("Body").GetComponent<Animator>();
         if (anim != null)
         {
@@ -14,11 +14,12 @@ public class GroundSlash : SkillBehaviour
         }
         float animationDuration = GetAnimationDuration(anim, skillData.attackName);
         yield return new WaitForSeconds(animationDuration);
-        this.ApplySkillEffects(hsm);
+        this.ApplySkillEffects(attacker);
     }
 
-    protected override void ApplySkillEffects(HeroStateMachine hsm)
+    protected override void ApplySkillEffects(GameObject attacker)
     {
-        hsm.DoDamage();
+        base.ApplySkillEffects(attacker);
+
     }
 }

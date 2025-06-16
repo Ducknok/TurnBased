@@ -13,7 +13,7 @@ public class BaseAttack : ScriptableObject
         Sword,
         Lance,
         Wind,
-        Thunder
+        Thunder,
     }
     public enum AttackType
     {
@@ -37,13 +37,16 @@ public abstract class SkillBehaviour : MonoBehaviour
     public BaseAttack skillData;
 
     // Kích hoạt kỹ năng: 1: Animation -> 2: Sound effect -> 3: VFX
-    public virtual IEnumerator Activate(HeroStateMachine hsm, GameObject target)
+    public virtual IEnumerator Activate(GameObject attacker, GameObject target)
     {
         yield return new WaitForSeconds(0f);
     }
 
     // Phương thức để áp dụng các hiệu ứng của kỹ năng
-    protected abstract void ApplySkillEffects(HeroStateMachine hsm);
+    protected virtual void ApplySkillEffects(GameObject attacker)
+    {
+        BurstDamage.Instance.DoDamage(attacker);
+    }
 
     //// Lấy thời gian của animation
     protected virtual float GetAnimationDuration(Animator animator, string triggerName)
@@ -52,7 +55,7 @@ public abstract class SkillBehaviour : MonoBehaviour
         // Hoặc đơn giản hơn, bạn có thể lưu trữ thời gian trong SkillData
         return 1.0f; // Giá trị mặc định
     }
-    protected virtual bool MoveTowardsEnemy(HeroStateMachine hero, Vector3 target)
+    protected virtual bool MoveTowardsTarget(GameObject hero, Vector3 target)
     {
         Transform body = hero.transform.Find("Body");
         if (body == null) return false;

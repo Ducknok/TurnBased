@@ -12,7 +12,6 @@ public class EnemyMoveToCombat : MonoBehaviour
     // H¨¤m g?i khi combat b?t ??u
     public void StartCombat()
     {
-        // T?o tween nh?y
 
         if (this.targetPosition != null)
         {

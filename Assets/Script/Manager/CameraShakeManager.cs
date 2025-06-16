@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
+using System;
 
 public class CameraShakeManager : MonoBehaviour
 {
@@ -17,5 +18,10 @@ public class CameraShakeManager : MonoBehaviour
     public void CameraShake(CinemachineImpulseSource impulseSource)
     {
         impulseSource.GenerateImpulseWithForce(shakeForce);
+    }
+
+    internal void CameraShake(object impulseSource)
+    {
+        throw new NotImplementedException();
     }
 }
