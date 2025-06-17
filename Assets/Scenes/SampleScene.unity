@@ -2604,8 +2604,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   baseHero:
     theName: May
-    baseHP: 40
-    curHP: 40
+    baseHP: 500
+    curHP: 500
     baseMP: 10
     curMP: 10
     baseATK: 5
@@ -2877,8 +2877,8 @@ MonoBehaviour:
     curHP: 500
     baseMP: 10
     curMP: 10
-    baseATK: 5
-    curATK: 5
+    baseATK: 7.5
+    curATK: 7.5
     baseMATK: 10
     curMATK: 10
     baseDEF: 10
@@ -20822,7 +20822,7 @@ PrefabInstance:
       objectReference: {fileID: 4311423044102133566, guid: 1894da2eecb9f7f489deca0fa9cc6736, type: 3}
     - target: {fileID: 2991846600636949869, guid: 5043c953e33a893479dc46a5057f4f2c, type: 3}
       propertyPath: baseEnemy.curHP
-      value: 40
+      value: 500
       objectReference: {fileID: 0}
     - target: {fileID: 2991846600636949869, guid: 5043c953e33a893479dc46a5057f4f2c, type: 3}
       propertyPath: baseEnemy.curMP
@@ -20830,7 +20830,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2991846600636949869, guid: 5043c953e33a893479dc46a5057f4f2c, type: 3}
       propertyPath: baseEnemy.baseHP
-      value: 40
+      value: 500
       objectReference: {fileID: 0}
     - target: {fileID: 2991846600636949869, guid: 5043c953e33a893479dc46a5057f4f2c, type: 3}
       propertyPath: baseEnemy.baseMP
@@ -25599,7 +25599,7 @@ PrefabInstance:
       objectReference: {fileID: 4311423044102133566, guid: 1894da2eecb9f7f489deca0fa9cc6736, type: 3}
     - target: {fileID: 2991846600636949869, guid: 5043c953e33a893479dc46a5057f4f2c, type: 3}
       propertyPath: baseEnemy.curHP
-      value: 40
+      value: 500
       objectReference: {fileID: 0}
     - target: {fileID: 2991846600636949869, guid: 5043c953e33a893479dc46a5057f4f2c, type: 3}
       propertyPath: baseEnemy.curMP
@@ -25607,7 +25607,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2991846600636949869, guid: 5043c953e33a893479dc46a5057f4f2c, type: 3}
       propertyPath: baseEnemy.baseHP
-      value: 40
+      value: 500
       objectReference: {fileID: 0}
     - target: {fileID: 2991846600636949869, guid: 5043c953e33a893479dc46a5057f4f2c, type: 3}
       propertyPath: baseEnemy.baseMP
@@ -27022,7 +27022,7 @@ PrefabInstance:
       objectReference: {fileID: 8227125732485122443, guid: 1894da2eecb9f7f489deca0fa9cc6736, type: 3}
     - target: {fileID: 2991846600636949869, guid: 5043c953e33a893479dc46a5057f4f2c, type: 3}
       propertyPath: baseEnemy.curHP
-      value: 40
+      value: 500
       objectReference: {fileID: 0}
     - target: {fileID: 2991846600636949869, guid: 5043c953e33a893479dc46a5057f4f2c, type: 3}
       propertyPath: baseEnemy.curMP
@@ -27030,7 +27030,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2991846600636949869, guid: 5043c953e33a893479dc46a5057f4f2c, type: 3}
       propertyPath: baseEnemy.baseHP
-      value: 40
+      value: 500
       objectReference: {fileID: 0}
     - target: {fileID: 2991846600636949869, guid: 5043c953e33a893479dc46a5057f4f2c, type: 3}
       propertyPath: baseEnemy.baseMP

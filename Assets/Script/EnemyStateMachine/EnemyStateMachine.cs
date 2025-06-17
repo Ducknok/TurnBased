@@ -24,7 +24,6 @@ public class EnemyStateMachine : MonoBehaviour
     public TurnState currentState;
 
     // This gameobject
-    private CinemachineImpulseSource impulseSource;
     public GameObject choose;
     public Image enemyHPBarFill;
     public TextMeshProUGUI curHpNumber;
@@ -33,7 +32,6 @@ public class EnemyStateMachine : MonoBehaviour
     public HandleTurn savedAttack;
     public Animator anim;
     public GameObject playerToAttack;
-    private float animSpeed = 10f;
     public bool actionStarted = false;
     public bool enemyAttacked;
 
@@ -56,7 +54,6 @@ public class EnemyStateMachine : MonoBehaviour
         DOTween.SetTweensCapacity(500, 50);
         this.combatStateMachine = GameObject.Find("StartCombat").GetComponent<CombatStateMachine>();
         this.enemyMoveToCombat = this.transform.GetComponentInChildren<EnemyMoveToCombat>();
-        this.impulseSource = this.transform.GetComponent<CinemachineImpulseSource>();
         this.anim = this.transform.Find("Body").GetComponent<Animator>();
         this.enemyUI = this.transform.GetComponent<EnemyUI>();
         this.timer = Random.Range(1, this.combatStateMachine.playersInCombat.Count + 1);
@@ -103,7 +100,7 @@ public class EnemyStateMachine : MonoBehaviour
         }
         if (this.combatStateMachine.enemyTurn && this.timer == 0 && !this.enemyAttacked &&
              !this.combatStateMachine.enemiesAttacked.Contains(this.gameObject) &&
-                this.currentState != TurnState.DEAD) // Check DEAD state
+                this.currentState != TurnState.DEAD)
         {
             this.enemyAttacked = true;
             this.combatStateMachine.CollectAction(savedAttack);
@@ -113,6 +110,7 @@ public class EnemyStateMachine : MonoBehaviour
     {
         if (!this.alive)
         {
+
             return;
         }
         else
@@ -179,7 +177,7 @@ public class EnemyStateMachine : MonoBehaviour
     // Attack
     private IEnumerator TimeForAction()
     {
-        if (this.actionStarted || !this.enemyAttacked)
+        if (this.actionStarted || !this.enemyAttacked || this.isLockBrokenOnce)
         {
             yield break;
         }
@@ -208,7 +206,6 @@ public class EnemyStateMachine : MonoBehaviour
 
         // Wait for attack animation to finish
         yield return new WaitForSecondsRealtime(0.6f);
-
         // Play Idle animation
         if (this.anim != null && !this.anim.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
         {
@@ -225,67 +222,73 @@ public class EnemyStateMachine : MonoBehaviour
             .SetEase(Ease.OutQuad);
             //.OnComplete(() => Debug.Log($"Move completed for {gameObject.name} at position: {this.transform.position}"));
 
-        yield return new WaitForSecondsRealtime(0.5f);
-
-        // Update combat state and remove action from performList
-        if (this.combatStateMachine.performList.Count > 0 && this.combatStateMachine.performList[0].AttacksGameObject == this.gameObject)
-        {
-            this.combatStateMachine.performList.RemoveAt(0);
-        }
+        yield return new WaitForSecondsRealtime(1f);
+        this.CheckCombatState();
+       
+    }
+    public void CheckCombatState()
+    {
+        this.RemoveInPerformList();
         this.combatStateMachine.combatState = CombatStateMachine.PerformAction.WAIT;
-
         // Reset action flags
-        //Debug.Log($"Before reset: actionStarted = {actionStarted}, enemyAttacked = {enemyAttacked}");
         this.actionStarted = false;
         this.enemyAttacked = false;
-        //Debug.Log($"After reset: actionStarted = {actionStarted}, enemyAttacked = {enemyAttacked}");
-
+        this.isLockBrokenOnce = false;
         // Update enemiesAttacked list
         if (!this.combatStateMachine.enemiesAttacked.Contains(this.gameObject))
         {
             this.combatStateMachine.enemiesAttacked.Add(this.gameObject);
         }
-
-        // Check for remaining players
-        List<GameObject> readyPlayers = this.combatStateMachine.playersInCombat
-            .FindAll(player => !this.combatStateMachine.heroesDoneTurn.Contains(player));
-
-        if (readyPlayers.Count > 0 && this.timer != 0)
-        {
-            this.combatStateMachine.heroTurn = true;
-            this.combatStateMachine.enemyTurn = false;
-        }
-        else
-        {
-            if (this.combatStateMachine.AreAllEnemiesDone())
-            {
-                this.combatStateMachine.enemiesAttacked.Clear();
-                this.combatStateMachine.heroTurn = true;
-                this.combatStateMachine.enemyTurn = false;
-                foreach (var enemy in this.combatStateMachine.enemiesInCombat)
-                {
-                    EnemyStateMachine esm = enemy.GetComponent<EnemyStateMachine>();
-                    esm.timer = Random.Range(1, this.combatStateMachine.playersInCombat.Count + 1);
-                    esm.ChooseAction();
-                }
-            }
-            else
-            {
-                this.combatStateMachine.heroTurn = true;
-                this.combatStateMachine.enemyTurn = false;
-            }
-        }
-
+        this.CheckTurn();
         // Set state back to WAITING
         this.currentState = TurnState.WAITING;
         //Debug.Log($"State changed to WAITING for {gameObject.name}");
     }
+    public void RemoveInPerformList()
+    {
+        // Update combat state and remove action from performList
+        if (this.combatStateMachine.performList.Count > 0 && this.combatStateMachine.performList[0].AttacksGameObject == this.gameObject)
+        {
+            this.combatStateMachine.performList.RemoveAt(0);
+        }
 
+    }
+    private void CheckTurn()
+    {
+        bool allHeroesDone = this.combatStateMachine.AreAllHeroesDone();
+        bool allEnemiesDone = this.combatStateMachine.AreAllEnemiesDone();
+
+        if (allHeroesDone && allEnemiesDone)
+        {
+            // Reset enemy state, bắt đầu lượt mới cho hero
+            this.ChooseActionAfterDone();
+        }
+        else if (allHeroesDone)
+        {
+            // Hero đã xong, chuyển lượt cho enemy
+            this.combatStateMachine.enemiesAttacked.Clear();
+            this.combatStateMachine.heroTurn = false;
+            this.combatStateMachine.enemyTurn = true;
+        }
+        else
+        {
+            // Reset enemy state, bắt đầu lượt mới cho hero
+            this.ChooseActionAfterDone(); 
+        }
+    }
+    private void ChooseActionAfterDone()
+    {
+        this.combatStateMachine.enemiesAttacked.Clear();
+        this.combatStateMachine.heroTurn = true;
+        this.combatStateMachine.enemyTurn = false;
+        this.timer = Random.Range(1, this.combatStateMachine.playersInCombat.Count + 1);
+        this.ChooseAction();
+    }
+    
     //-----------------------------GENERATE-------------------------
     public void GenerateLocks()
     {
         this.activeLocks.Clear();
-
         for (int i = 0; i < 1; i++)
         {
             int numTypes = 3; // Each Lock has 1 or 2 Effects
@@ -300,12 +303,10 @@ public class EnemyStateMachine : MonoBehaviour
             activeLocks.Add(new LockSystem(types));
         }
     }
-
     public void GenerateTimerIcon()
     {
         this.enemyUI.SetTimerIcon(this.timer);
     }
-
     public SkillBehaviour GetSkillBehaviourForAttack(BaseAttack baseAttack)
     {
         SkillBehaviour existingSkill = GetComponentsInChildren<SkillBehaviour>()

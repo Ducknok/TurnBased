@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Random = UnityEngine.Random;
 
 [Serializable]
 public class EnemyUI : MonoBehaviour
@@ -128,6 +129,7 @@ public class EnemyUI : MonoBehaviour
         yield return new WaitForSeconds(1.3f);
         foreach (var icon in iconsToDestroy)
         {
+            //Debug.LogError("destroy lock");
             Destroy(icon);
         }
 
@@ -156,9 +158,9 @@ public class EnemyUI : MonoBehaviour
         foreach (var icon in timerIconToDestroy)
         {
             Destroy(icon);
-            
         }
         this.timerIconToDestroy.Clear();
+        
     }
 
 }

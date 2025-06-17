@@ -140,26 +140,47 @@ public class CombatStateMachine : MonoBehaviour
     }
     private void CheckEnemyAction()
     {
+        if (performList == null || performList.Count == 0)
+        {
+            Debug.LogWarning("performList is empty!");
+            return;
+        }
+
+        if (playersInCombat == null || playersInCombat.Count == 0)
+        {
+            Debug.LogWarning("playersInCombat is empty!");
+            return;
+        }
+
         GameObject enemyPerformer = GameObject.Find(performList[0].Attacker);
-        if (this.performList[0].Type == "Enemy")
+
+        if (performList[0].Type == "Enemy")
         {
             EnemyStateMachine esm = enemyPerformer.GetComponent<EnemyStateMachine>();
-            for (int i = 0; i < this.playersInCombat.Count; i++)
+            if (esm.isLockBrokenOnce)
             {
-                if (this.performList[0].AttackerTarget == this.playersInCombat[i])
+                this.performList.RemoveAt(0);
+                esm.CheckCombatState();
+            }
+
+            bool foundTarget = false;
+            for (int i = 0; i < playersInCombat.Count; i++)
+            {
+                if (performList[0].AttackerTarget == playersInCombat[i])
                 {
-                    esm.playerToAttack = this.performList[0].AttackerTarget;
-                    esm.currentState = EnemyStateMachine.TurnState.ACTION;
-                    break;
-                }
-                else
-                {
-                    this.performList[0].AttackerTarget = this.playersInCombat[Random.Range(0, this.playersInCombat.Count)];
                     esm.playerToAttack = performList[0].AttackerTarget;
                     esm.currentState = EnemyStateMachine.TurnState.ACTION;
+                    foundTarget = true;
+                    break;
                 }
             }
 
+            if (!foundTarget)
+            {
+                performList[0].AttackerTarget = playersInCombat[Random.Range(0, playersInCombat.Count)];
+                esm.playerToAttack = performList[0].AttackerTarget;
+                esm.currentState = EnemyStateMachine.TurnState.ACTION;
+            }
         }
 
         combatState = PerformAction.PERFORMACTION;
@@ -265,6 +286,7 @@ public class CombatStateMachine : MonoBehaviour
     //Collect action
     public void CollectAction(HandleTurn input)
     {
+        
         performList.Add(input);
     }
     //-----------------------------------Enemy------------------------------------
@@ -375,24 +397,12 @@ public class CombatStateMachine : MonoBehaviour
     }
     public bool AreAllHeroesDone()
     {
-        foreach (GameObject hero in playersInCombat)
-        {
-            HeroStateMachine heroSM = hero.GetComponent<HeroStateMachine>();
-            if (heroSM != null && heroSM.currentState != HeroStateMachine.TurnState.WAITING && heroSM.currentState != HeroStateMachine.TurnState.DEAD)
-            {
-                return false; // Còn hero chưa xong lượt
-            }
-        }
-        return true; // Tất cả hero đã xong lượt
+        return this.heroesDoneTurn.Count == this.playersInCombat.Count;
     }
     public bool AreAllEnemiesDone()
     {
-        return this.enemiesInCombat.TrueForAll(enemy =>
-        {
-            return this.enemiesAttacked.Contains(enemy);
-        });
+        return this.enemiesAttacked.Count == this.enemiesInCombat.Count;
     }
-
     //Create Enemy info panel
     public void CreateEnemyInfoPanel(GameObject enemy)
     {
@@ -426,7 +436,7 @@ public class CombatStateMachine : MonoBehaviour
             // Giảm timer
             enemySM.timer--;
             // Nếu timer đạt 0, thực hiện xử lý
-            if (enemySM.timer == 0)
+            if (enemySM.timer <= 0)
             {
                 // Xóa toàn bộ danh sách enemy đã tấn công
                 this.enemyTurn = true;

@@ -50,13 +50,13 @@ public class ButtonController : MonoBehaviour
                     if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S))
                     {
                         selectedIndex = (selectedIndex + 1) % skillsButtons.Count;
-                        Debug.Log($"Chọn skill index: {selectedIndex}, Tên: {skillsButtons[selectedIndex].GetComponentInChildren<TextMeshProUGUI>().text}");
+                        //Debug.Log($"Chọn skill index: {selectedIndex}, Tên: {skillsButtons[selectedIndex].GetComponentInChildren<TextMeshProUGUI>().text}");
                         SelectSkillButton(selectedIndex);
                     }
                     else if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W))
                     {
                         selectedIndex = (selectedIndex - 1 + skillsButtons.Count) % skillsButtons.Count;
-                        Debug.Log($"Chọn skill index: {selectedIndex}, Tên: {skillsButtons[selectedIndex].GetComponentInChildren<TextMeshProUGUI>().text}");
+                        //Debug.Log($"Chọn skill index: {selectedIndex}, Tên: {skillsButtons[selectedIndex].GetComponentInChildren<TextMeshProUGUI>().text}");
                         SelectSkillButton(selectedIndex);
                     }
                     else if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space))

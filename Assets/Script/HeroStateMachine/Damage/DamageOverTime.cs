@@ -40,17 +40,17 @@ public class DamageOverTime : DealDamageController
                 {
                     enemy.GetComponent<EnemyTakeDamage>().TakeDamage(enemy.gameObject, calDamage, attack.effect1, attack.effect2);
                     hsm.UpdateHeroPanel();
-                    Debug.Log($"[DOT] Tick {tickCount + 1}: Gây {calDamage} sát thương");
+                   // Debug.Log($"[DOT] Tick {tickCount + 1}: Gây {calDamage} sát thương");
                 }
                 else
                 {
-                    Debug.LogWarning("Không tìm thấy EnemyStateMachine.");
+                    //Debug.LogWarning("Không tìm thấy EnemyStateMachine.");
                     yield break;
                 }
             }
             else
             {
-                Debug.LogWarning("enemyToAttack null.");
+                //Debug.LogWarning("enemyToAttack null.");
                 yield break;
             }
 

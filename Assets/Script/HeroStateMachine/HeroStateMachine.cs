@@ -375,7 +375,7 @@ public class HeroStateMachine : MonoBehaviour
         //remvoe this performer from the list in CSM
         CombatController.Instance.CBM.performList.RemoveAt(0);
 
-        
+
         //reset CSM  -> WAIT
         if (CombatController.Instance.CBM.combatState != CombatStateMachine.PerformAction.WIN && CombatController.Instance.CBM.combatState != CombatStateMachine.PerformAction.LOSE)
         {
