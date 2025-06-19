@@ -29,6 +29,7 @@ public class BaseAttack : ScriptableObject
     public AttackType attackType;
     public Effect effect1;
     public Effect effect2;
+    public string hitParticleName;
 
 }
 

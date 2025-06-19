@@ -21,3 +21,4 @@ MonoBehaviour:
   attackType: 0
   effect1: 0
   effect2: 0
+  hitParticleName: SlashHitParticle

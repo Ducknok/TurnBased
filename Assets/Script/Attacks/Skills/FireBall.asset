@@ -21,3 +21,4 @@ MonoBehaviour:
   attackType: 1
   effect1: 3
   effect2: 3
+  hitParticleName: FireHitParticle

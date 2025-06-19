@@ -22,7 +22,7 @@ public class EnemyTakeDamage : TakeDamageController
         CameraShakeManager.instance.CameraShake(impulseSource);
         EnemyStateMachine esm = target.GetComponent<EnemyStateMachine>();
         this.CheckLock(esm, getDamageAmount, attackType1, attackType2);
-        this.DamagePop(esm, getDamageAmount);
+        this.DamagePop(esm, getDamageAmount);   
         //TODO: Viet 1 ham hp rieng cho enemy
         // C?p nh?t thanh m¨¢u
         float ratio = esm.baseEnemy.curHP /  esm.baseEnemy.baseHP;
@@ -66,7 +66,7 @@ public class EnemyTakeDamage : TakeDamageController
             esm.isLockBrokenOnce = true;
             StartCoroutine(esm.enemyUI.ClearTimerIcon());
             StartCoroutine(esm.enemyUI.ClearAllAttackTypeIcons());
-            
+            esm.currentState = EnemyStateMachine.TurnState.WAITING;
         }
     }
     private void DamagePop(EnemyStateMachine esm, float getDamageAmount)

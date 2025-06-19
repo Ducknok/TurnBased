@@ -21,3 +21,4 @@ MonoBehaviour:
   attackType: 1
   effect1: 1
   effect2: 2
+  hitParticleName: WindHitParticle

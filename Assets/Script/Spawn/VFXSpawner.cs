@@ -25,6 +25,14 @@ public class VFXSpawner : Spawner
     public static string waterBall = "WaterBall";
     public static string grass = "Grass";
 
+    //Hit particle
+    public static string blueHitParticle = "BlueHitParticle";
+    public static string yellowHitParticle = "YellowHitParticle";
+    public static string greenHitParticle = "GreenHitParticle";
+    public static string fireHitParticle = "FireHitParticle";
+    public static string windHitParticle = "WindHitParticle";
+    public static string slashHitParticle = "SlashHitParticle";
+
     protected void Awake()
     {
         if (VFXSpawner.instance != null) Debug.LogError("Only 1 FXSpawner allow to exist");

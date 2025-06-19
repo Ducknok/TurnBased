@@ -33,9 +33,8 @@ public class EnemySkillManager : SkillManager
         {
             effect.gameObject.SetActive(true);
 
-            // H??ng effect v? ph¨ªa enemy
             Vector3 dir = (targetPos - startPos).normalized;
-            effect.right = dir; // Gi? ??nh VFX xoay theo tr?c right
+            effect.right = dir;
 
             // Di chuy?n t?i enemy
             effect.DOMove(targetPos, 0.4f)

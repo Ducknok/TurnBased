@@ -104,6 +104,7 @@ public class EnemyStateMachine : MonoBehaviour
         {
             this.enemyAttacked = true;
             this.combatStateMachine.CollectAction(savedAttack);
+            ///this.currentState = TurnState.ACTION;
         }
     }
     private void CheckAlive()
@@ -205,7 +206,7 @@ public class EnemyStateMachine : MonoBehaviour
         //Debug.Log($"MoveTowardsStart started for {gameObject.name}");
 
         // Wait for attack animation to finish
-        yield return new WaitForSecondsRealtime(0.6f);
+        yield return new WaitForSeconds(0.6f);
         // Play Idle animation
         if (this.anim != null && !this.anim.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
         {
@@ -222,8 +223,10 @@ public class EnemyStateMachine : MonoBehaviour
             .SetEase(Ease.OutQuad);
             //.OnComplete(() => Debug.Log($"Move completed for {gameObject.name} at position: {this.transform.position}"));
 
-        yield return new WaitForSecondsRealtime(1f);
+        yield return new WaitForSeconds(1f);
         this.CheckCombatState();
+        yield return new WaitForSeconds(1f);
+        this.currentState = TurnState.WAITING;
        
     }
     public void CheckCombatState()

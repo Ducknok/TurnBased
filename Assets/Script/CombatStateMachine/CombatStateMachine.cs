@@ -159,10 +159,9 @@ public class CombatStateMachine : MonoBehaviour
             EnemyStateMachine esm = enemyPerformer.GetComponent<EnemyStateMachine>();
             if (esm.isLockBrokenOnce)
             {
-                this.performList.RemoveAt(0);
                 esm.CheckCombatState();
+                return;
             }
-
             bool foundTarget = false;
             for (int i = 0; i < playersInCombat.Count; i++)
             {

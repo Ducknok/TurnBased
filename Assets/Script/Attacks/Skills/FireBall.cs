@@ -9,7 +9,6 @@ public class FireBall : SkillBehaviour
     {
         EnemyDoDamage.Instance.DoDamage(attacker);
     }
-
     // B?n có th? ghi ?è ph??ng th?c Activate ?? thêm logic ??c bi?t
     public override IEnumerator Activate(GameObject attacker, GameObject target)
     {

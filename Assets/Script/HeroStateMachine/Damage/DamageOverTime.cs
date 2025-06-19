@@ -35,10 +35,13 @@ public class DamageOverTime : DealDamageController
         {
             if (hsm.enemyToAttack != null)
             {
-                EnemyStateMachine enemy = hsm.enemyToAttack.GetComponent<EnemyStateMachine>();
-                if (enemy != null)
+                EnemyStateMachine esm = hsm.enemyToAttack.GetComponent<EnemyStateMachine>();
+                Vector3 targetPosition = esm.transform.Find("Body").position;
+                if (esm != null)
                 {
-                    enemy.GetComponent<EnemyTakeDamage>().TakeDamage(enemy.gameObject, calDamage, attack.effect1, attack.effect2);
+                    Transform hitParticle = VFXSpawner.Instance.Spawn(hsm.currentAttack.skillData.hitParticleName, targetPosition, Quaternion.identity);
+                    hitParticle.gameObject.SetActive(true);
+                    esm.GetComponent<EnemyTakeDamage>().TakeDamage(esm.gameObject, calDamage, attack.effect1, attack.effect2);
                     hsm.UpdateHeroPanel();
                    // Debug.Log($"[DOT] Tick {tickCount + 1}: Gây {calDamage} sát thương");
                 }
