@@ -4,23 +4,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HealController : MonoBehaviour
+public class HealController : Singleton<HealController>
 {
-    private static HealController instance;
-    public static HealController Instance => instance;
     private float trailDelay = 0.4f;
-    protected void Awake()
+    protected override void Awake()
     {
-        if (instance != null) return;
-        instance = this;
+        base.Awake();
     }
     public void HPBar(HeroStateMachine hsm)
     {
         float ratio = hsm.baseHero.curHP / hsm.baseHero.baseHP;
         Sequence sequence = DOTween.Sequence();
-        sequence.Append(hsm.heroHPBarFill.DOFillAmount(ratio, 0.25f)).SetEase(Ease.InOutSine);
+        sequence.Append(hsm.heroPanelHandler.heroHPBarFill.DOFillAmount(ratio, 0.25f)).SetEase(Ease.InOutSine);
         sequence.AppendInterval(this.trailDelay);
-        sequence.Append(hsm.heroHPBarTrail.DOFillAmount(ratio, 0.3f)).SetEase(Ease.InOutSine);
+        sequence.Append(hsm.heroPanelHandler.heroHPBarTrail.DOFillAmount(ratio, 0.3f)).SetEase(Ease.InOutSine);
         sequence.Play();
 
         if (hsm.baseHero.curHP <= 0)
@@ -45,9 +42,11 @@ public class HealController : MonoBehaviour
 
         // T?o Sequence ?? l¨¤m animation
         Sequence sequence = DOTween.Sequence();
-        sequence.Append(hsm.heroHPBarFill.DOFillAmount(ratio, 0.25f)).SetEase(Ease.InOutSine);
+        sequence.Append(hsm.heroPanelHandler.heroHPBarFill.DOFillAmount(ratio, 0.25f)).SetEase(Ease.InOutSine);
         sequence.AppendInterval(this.trailDelay);
-        sequence.Append(hsm.heroHPBarTrail.DOFillAmount(ratio, 0.3f)).SetEase(Ease.InOutSine);
+        sequence.Append(hsm.heroPanelHandler.heroHPBarTrail.DOFillAmount(ratio, 0.3f)).SetEase(Ease.InOutSine);
         sequence.Play();
     }
+
+    
 }

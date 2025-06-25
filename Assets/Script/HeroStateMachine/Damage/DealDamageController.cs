@@ -6,7 +6,7 @@ using UnityEngine;
 
 public abstract class DealDamageController : MonoBehaviour
 {
-    
     public abstract void DoDamage(GameObject attacker);
-   
+
+    
 }

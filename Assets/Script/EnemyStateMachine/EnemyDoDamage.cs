@@ -6,8 +6,9 @@ public class EnemyDoDamage : DealDamageController
     public static EnemyDoDamage Instance => instance;
     protected void Awake()
     {
-        if (instance != null) return;
+        if (instance != null && this.gameObject != null) Destroy(this.gameObject);
         instance = this;
+        DontDestroyOnLoad(this);
     }
     public override void DoDamage(GameObject attacker)
     {

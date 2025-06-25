@@ -2,35 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : Singleton<PlayerController>
 {
-    private static PlayerController instance;
-    public static PlayerController Instance => instance;
 
     [SerializeField] private List<HeroStateMachine> heroSMList;  // Danh s¨¢ch ch?a t?t c? HeroStateMachine
     public List<HeroStateMachine> HeroSMList => heroSMList;
 
-    [SerializeField] private CombatZone combatZone;
-    public CombatZone CombatZone => combatZone;
-
-    protected void Awake()
+    protected override void Awake()
     {
-        if (instance != null && instance != this)
-        {
-            Destroy(this.gameObject);
-            return;
-        }
-
-        instance = this;
-        DontDestroyOnLoad(this.gameObject); // Gi? PlayerController gi?a c¨¢c scene
-        this.LoadCombatZone();
-        this.LoadHeroSM();
+        base.Awake();
+        this.LoadComponent();
     }
 
-    protected void LoadCombatZone()
+    public void LoadComponent()
     {
-        if (this.combatZone != null) return;
-        this.combatZone = GameObject.FindObjectOfType<CombatZone>();
+        this.LoadHeroSM();
     }
 
     protected void LoadHeroSM()
@@ -38,4 +24,6 @@ public class PlayerController : MonoBehaviour
         if (this.heroSMList != null && this.heroSMList.Count > 0) return; // N?u ?? c¨® heroSMList r?i th¨¬ kh?ng c?n t¨¬m l?i
         this.heroSMList = new List<HeroStateMachine>(GameObject.FindObjectsOfType<HeroStateMachine>());
     }
+
+    
 }

@@ -5,9 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - Enemy
-  - CombatZone
   - Body
-  - DeadPlayer
+  - CombatZone
   - BattleCanvas
   layers:
   - Default
@@ -16,8 +15,9 @@ TagManager:
   - 
   - Water
   - UI
-  - Player
-  - PlayerImage
+  - Hero
+  - Enemy
+  - Platform
   - 
   - 
   - 
@@ -29,10 +29,9 @@ TagManager:
   - 
   - 
   - 
-  - 
-  - 
-  - 
-  - 
+  - Layer 1
+  - Layer 2
+  - Layer 3
   - 
   - 
   - 
@@ -46,12 +45,24 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: PlayerImage
-    uniqueID: 3855552667
+  - name: Layer 1
+    uniqueID: 2425651459
+    locked: 0
+  - name: Layer 2
+    uniqueID: 4250941897
+    locked: 0
+  - name: Layer 3
+    uniqueID: 4189426099
     locked: 0
   - name: Platform
-    uniqueID: 1361980605
+    uniqueID: 4271592443
+    locked: 0
+  - name: Enemy
+    uniqueID: 1665767259
     locked: 0
   - name: Player
-    uniqueID: 4111672799
+    uniqueID: 3639368869
+    locked: 0
+  - name: Enviroment
+    uniqueID: 1367689039
     locked: 0

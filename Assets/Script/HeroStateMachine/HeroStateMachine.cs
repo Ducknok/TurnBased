@@ -8,12 +8,13 @@ using Cinemachine;
 using Inventory;
 using System.Linq;
 
+
 public class HeroStateMachine : MonoBehaviour
 {
     public BaseHero baseHero;
     public ItemInventoryController inventoryController;
     public SkillBehaviour currentAttack;
-    public ButtonController butCtrl;
+    public HeroPanelHandler heroPanelHandler;
 
     public enum TurnState
     {
@@ -26,12 +27,7 @@ public class HeroStateMachine : MonoBehaviour
     }
 
     public TurnState currentState;
-    //For the Player Bar
     public GameObject choose;
-    public Image heroHPBarFill;
-    public Image heroHPBarTrail;
-    public Image heroMPBarFill;
-    public Image heroMPBarTrail;
     //Choose Player for action
     private int selectedHeroIndex = 0; // Hero đang được chọn
     //IENUMERATOR
@@ -44,10 +40,7 @@ public class HeroStateMachine : MonoBehaviour
     public GameObject body;
     public Animator anim;
     private bool alive = true;
-    //Hero Panel;
-    private HeroPanelStats stats;
-    public GameObject playerPanel;
-    public Transform heroPanelSpacer;
+    
     //Revive hero
     public int turnsToRevive = 0;
     public int reviveTurnThreshold = 3;
@@ -55,15 +48,6 @@ public class HeroStateMachine : MonoBehaviour
     void Start()
     {
         DOTween.SetTweensCapacity(500, 50);
-        //Find spacer
-        this.heroPanelSpacer = GameObject.Find("BattleCanvas").transform.Find("Panel").transform.Find("HeroPanel").transform.Find("HeroPanelSpacer");
-        if (heroPanelSpacer == null)
-        {
-            Debug.LogError("Không tìm thấy BattleCanvas!");
-            return;
-        }
-        //Create panel, fill in info
-        this.CreateHeroPanel();
         this.choose.SetActive(false);
         this.body = this.transform.Find("Body").gameObject;
         this.anim = this.body.GetComponent<Animator>();
@@ -73,19 +57,15 @@ public class HeroStateMachine : MonoBehaviour
     }
     private void Awake()
     {
+        this.heroPanelHandler = this.transform.GetComponent<HeroPanelHandler>();
         this.baseHero.curHP = this.baseHero.baseHP;
-        this.LoadButCtrl();
+        DontDestroyOnLoad(this.gameObject);
         
     }
     // Update is called once per frame
     private void Update()
     {
         this.HandleCurrentState();
-    }
-    private void LoadButCtrl()
-    {
-        if (this.butCtrl != null) return;
-        this.butCtrl = FindObjectOfType<ButtonController>();
     }
     // Handle current state and check state
     private void HandleCurrentState()
@@ -133,7 +113,7 @@ public class HeroStateMachine : MonoBehaviour
             CombatController.Instance.CBM.playerToManage.Remove(this.gameObject);
 
             //reset gui
-            this.butCtrl.actionPanel.SetActive(false);
+            ButtonController.Instance.actionPanel.SetActive(false);
             //remove item from performList
             if (CombatController.Instance.CBM.playersInCombat.Count > 0)
             {
@@ -153,8 +133,8 @@ public class HeroStateMachine : MonoBehaviour
             //animation dead
             this.anim.SetTrigger("Dead");
             // Không tạo action và skill panel nếu hero đã chết
-            this.butCtrl.actionPanel.SetActive(false);
-            this.butCtrl.skillPanel.SetActive(false);
+            ButtonController.Instance.actionPanel.SetActive(false);
+            ButtonController.Instance.skillPanel.SetActive(false);
             //reset heroinput
             CombatController.Instance.CBM.combatState = CombatStateMachine.PerformAction.CHECKALIVE;
             this.alive = false;
@@ -176,9 +156,9 @@ public class HeroStateMachine : MonoBehaviour
     private void HeroPosition()
     {
         // Xác định chỉ số của hero trong playerPosition
-        for (int i = 0; i < CombatController.Instance.CBZ.players.Length; i++)
+        for (int i = 0; i < CombatController.Instance.CBZ.heros.Length; i++)
         {
-            if (CombatController.Instance.CBZ.players[i] == this.gameObject)
+            if (CombatController.Instance.CBZ.heros[i] == this.gameObject)
             {
                 this.heroIndex = i;
                 break;
@@ -207,12 +187,12 @@ public class HeroStateMachine : MonoBehaviour
     }
     private void ChangeHeroSelection(int direction)
     {
-        if (CombatController.Instance.CBZ.players.Length == 0) return;
+        if (CombatController.Instance.CBZ.heros.Length == 0) return;
 
         // Tắt action panel của hero cũ nếu có
-        if (selectedHeroIndex >= 0 && selectedHeroIndex < CombatController.Instance.CBZ.players.Length)
+        if (selectedHeroIndex >= 0 && selectedHeroIndex < CombatController.Instance.CBZ.heros.Length)
         {
-            var previousHero = CombatController.Instance.CBZ.players[selectedHeroIndex].GetComponent<HeroStateMachine>();
+            var previousHero = CombatController.Instance.CBZ.heros[selectedHeroIndex].GetComponent<HeroStateMachine>();
 
             if (previousHero != null)
             {
@@ -230,11 +210,11 @@ public class HeroStateMachine : MonoBehaviour
             newIndex += direction;
 
             // Quay vòng nếu đi quá giới hạn
-            if (newIndex < 0) newIndex = CombatController.Instance.CBZ.players.Length - 1;
-            if (newIndex >= CombatController.Instance.CBZ.players.Length) newIndex = 0;
+            if (newIndex < 0) newIndex = CombatController.Instance.CBZ.heros.Length - 1;
+            if (newIndex >= CombatController.Instance.CBZ.heros.Length) newIndex = 0;
 
             // Nếu hero mới không chết, thì chọn nó
-            if (CombatController.Instance.CBZ.players[newIndex].GetComponent<HeroStateMachine>().currentState != TurnState.DEAD)
+            if (CombatController.Instance.CBZ.heros[newIndex].GetComponent<HeroStateMachine>().currentState != TurnState.DEAD)
             {
                 selectedHeroIndex = newIndex;
                 break;
@@ -243,7 +223,7 @@ public class HeroStateMachine : MonoBehaviour
         } while (newIndex != selectedHeroIndex); // Nếu quay lại hero cũ thì dừng lại (tất cả hero đã chết)
 
         // Thêm hero mới vào danh sách
-        var selectedHero = CombatController.Instance.CBZ.players[selectedHeroIndex].GetComponent<HeroStateMachine>();
+        var selectedHero = CombatController.Instance.CBZ.heros[selectedHeroIndex].GetComponent<HeroStateMachine>();
         if (!CombatController.Instance.CBM.playerToManage.Contains(selectedHero.gameObject))
         {
             CombatController.Instance.CBM.playerToManage.Add(selectedHero.gameObject);
@@ -254,8 +234,8 @@ public class HeroStateMachine : MonoBehaviour
     //Update action position
     private void UpdateActionPanelPosition(HeroStateMachine selectedHero)
     {
-        RectTransform actionPanelRect = this.butCtrl.actionPanel.GetComponent<RectTransform>();
-        RectTransform skillPanelRect = this.butCtrl.skillPanel.GetComponent<RectTransform>();
+        RectTransform actionPanelRect = ButtonController.Instance.actionPanel.GetComponent<RectTransform>();
+        RectTransform skillPanelRect = ButtonController.Instance.skillPanel.GetComponent<RectTransform>();
 
         // Lấy Canvas
         Canvas canvas = actionPanelRect.GetComponentInParent<Canvas>();
@@ -283,8 +263,8 @@ public class HeroStateMachine : MonoBehaviour
         skillPanelRect.anchoredPosition = localPosition + offset;
 
         // Hiển thị Panel
-        this.butCtrl.actionPanel.SetActive(true);
-        this.butCtrl.skillPanel.SetActive(false);
+        ButtonController.Instance.actionPanel.SetActive(true);
+        ButtonController.Instance.skillPanel.SetActive(false);
     }
     private IEnumerator TimeForAction()
     {
@@ -301,43 +281,8 @@ public class HeroStateMachine : MonoBehaviour
         CombatController.Instance.CBM.UpdateEnemyTimer();
         StartCoroutine(MoveTowardsStart());
     }
-    public void BindHeroUI(Image hpFill, Image mpFill)
-    {
-        heroHPBarFill = hpFill;
-        heroMPBarFill = mpFill;
-        //this.DescreaseMana();
-    }
-    //TODO: Tach toan bo ham gay st, hoi mana, mau, tao panel ra 1 class rieng xong goi lai trong class hero hoac 1 class moi 
-    //Create a player panel
-    public void CreateHeroPanel()
-    {
-        this.playerPanel = Instantiate(this.playerPanel) as GameObject;
-        this.stats = this.playerPanel.GetComponent<HeroPanelStats>();
-        this.InitializeStatHero();
-        
-    }
-    public void InitializeStatHero()
-    {
-        this.stats.heroName.text = this.baseHero.theName;
-        this.stats.heroHP.text = this.baseHero.curHP.ToString();
-        this.stats.heroMP.text = this.baseHero.curMP.ToString();
-        this.heroHPBarFill = this.stats.hpBarFill;
-        this.heroHPBarTrail = this.stats.hpBarTrail;
-        this.heroHPBarFill.fillAmount = 1f;
-        this.heroHPBarTrail.fillAmount = 1f;
-        this.heroMPBarFill = this.stats.mpBarFill;
-        this.heroMPBarTrail = this.stats.mpBarTrail;
-        this.heroMPBarFill.fillAmount = 1f;
-        this.heroMPBarTrail.fillAmount = 1f;
-       
-        this.playerPanel.transform.SetParent(this.heroPanelSpacer, false);
-    }
-    //Update stats hp, mp, heal
-    public void UpdateHeroPanel()
-    {
-        this.stats.heroHP.text = this.baseHero.curHP.ToString();
-        this.stats.heroMP.text = this.baseHero.curMP.ToString();
-    }
+    
+   
     public void ReviveHero()
     {
         HealController.Instance.RestoreHPAfterRevive(this);
@@ -345,7 +290,7 @@ public class HeroStateMachine : MonoBehaviour
         this.alive = true;
         this.currentState = TurnState.WAITING;
 
-        this.UpdateHeroPanel();
+        this.heroPanelHandler.UpdateHeroPanel();
         this.anim.Play("IdleBattle");
 
         CombatController.Instance.CBM.playersInCombat.Add(this.gameObject);

@@ -15,7 +15,7 @@ MonoBehaviour:
   attackImage: {fileID: 756673776, guid: fb051ba9df7a2724e99ecb3019809887, type: 3}
   attackName: Grass
   attackDescription: Shoot a grass ball towards target
-  attackDamage: 20
+  attackDamage: 6
   attackCost: 0
   maxEnemyCount: 1
   attackType: 1

@@ -1,33 +1,69 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
-public class PartyManager : MonoBehaviour
+public class PartyManager : Singleton<PartyManager>
 {
-    private static PartyManager instance;
-    public static PartyManager Instance => instance;
 
     public List<PlayerMovement> partyMembers = new List<PlayerMovement>();
     private int currentLeaderIndex = 0;
 
-    private void Awake()
+    protected override void Awake()
     {
-        if (instance == null)
-        {
-            instance = this;
-            // Nếu bạn muốn giữ PartyManager khi load scene mới:
-            DontDestroyOnLoad(this.gameObject);
-        }
-        else
-        {
-            Destroy(this.gameObject); // Chỉ destroy bản clone thôi
-        }
+        base.Awake();
+        
     }
-
 
     private void Start()
     {
         SetLeader(this.currentLeaderIndex);
     }
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+    }
+
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+    }
+    protected override void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        base.OnSceneLoaded(scene, mode);
+        this.LoadPlayerMove();
+    }
+    public void LoadPlayerMove()
+    {
+        //Debug.LogError("LoadComponent of " + this.gameObject);
+        foreach (var hero in CombatController.Instance.CBM.playersInCombat)
+        {
+            if (hero == null)
+            {
+                //Debug.LogWarning("Hero is null, có thể đã bị destroy.");
+                continue;
+            }
+
+            Transform movement = hero.transform.Find("Movement");
+            if (movement == null)
+            {
+               // Debug.LogWarning($"Không tìm thấy child 'Movement' trong {hero.name}");
+                continue;
+            }
+
+            PlayerMovement plMove = movement.GetComponent<PlayerMovement>();
+            if (plMove == null)
+            {
+                //Debug.LogWarning($"Không tìm thấy component PlayerMovement trên {movement.name}");
+                continue;
+            }
+
+            if (!this.partyMembers.Contains(plMove))
+            {
+                this.partyMembers.Add(plMove);
+            }
+        }
+    }
+
 
     // Switch leader theo vòng tròn (nếu bạn vẫn muốn dùng nút để xoay vòng)
     public void SwitchLeader()
@@ -99,4 +135,6 @@ public class PartyManager : MonoBehaviour
             }
         }
     }
+
+    
 }

@@ -7,13 +7,16 @@ using UnityEngine;
 using System.Text;
 using Unity.VisualScripting;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 //Controller (C) in MVC
 namespace Inventory
 {
-    public class ItemInventoryController : MonoBehaviour
+    public class ItemInventoryController : Singleton<ItemInventoryController>
     {
+
         public bool isItemInventoryOpen = false;
+        [SerializeField] private Transform inventory;
         [SerializeField] public UIInventoryPage inventoryUI;
 
         [SerializeField] private InventorySO inventoryData;
@@ -33,13 +36,17 @@ namespace Inventory
         //private AudioSource audioSource;
         private void Start()
         {
+            
             PrepareUI();
             PrepareInventoryData(); 
         }
-        private void Awake()
+        protected override void Awake()
         {
+            base.Awake();
+            this.inventory = GameObject.Find("BattleCanvas").transform.Find("MainInventory").transform.Find("InventoryMenu");
+            this.inventoryUI = this.inventory.GetComponent<UIInventoryPage>();
             this.RefreshCurrentTab();
-            DontDestroyOnLoad(this.gameObject);
+            
         }
         public void Update()
         {
@@ -49,6 +56,23 @@ namespace Inventory
                 return;
             }
             this.SwitchButtonInput();
+        }
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+        }
+
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+        }
+
+        protected override void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            base.OnSceneLoaded(scene, mode);
+            this.inventory = GameObject.Find("BattleCanvas").transform.Find("MainInventory").transform.Find("InventoryMenu");
+            this.inventoryUI = this.inventory.GetComponent<UIInventoryPage>();
+            this.RefreshCurrentTab();
         }
         private void PrepareInventoryData()
         {
@@ -329,7 +353,7 @@ namespace Inventory
         }
         private void RefreshCurrentTab()
         {
-            
+
             this.inventoryTabs[currentButtonIndex].transform.Find("Background").gameObject.gameObject.GetComponent<Image>().enabled = true;
             UpdateFilteredInventoryUI(currentButtonIndex);
         }
@@ -340,5 +364,7 @@ namespace Inventory
             this.inventoryUI.Show();
             this.RefreshCurrentTab();
         }
+
+        
     }
 }

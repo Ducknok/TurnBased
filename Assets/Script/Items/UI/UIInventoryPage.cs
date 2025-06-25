@@ -11,7 +11,6 @@ namespace Inventory.UI
     public class UIInventoryPage : MonoBehaviour
     {
         [Header("LinkClass")]
-        [SerializeField] private CombatStateMachine cbm;
         [SerializeField] private UIInventoryItem itemPrefab;
         [SerializeField] private RectTransform contentPanel;
         [SerializeField] public UIInventoryDescription itemDescription;
@@ -90,7 +89,7 @@ namespace Inventory.UI
                 this.isSelectingHero = false;
                 this.UnHighlightHeroButton(this.currentHeroIndex);
                 this.SetSelectedIndex(0);
-                HeroStateMachine selectedHero = this.cbm.playersInCombat[currentHeroIndex].GetComponent<HeroStateMachine>();
+                HeroStateMachine selectedHero = CombatController.Instance.CBM.playersInCombat[currentHeroIndex].GetComponent<HeroStateMachine>();
                 this.onHeroSelectedCallback?.Invoke(selectedHero);
             }
             else if (Input.GetKeyDown(KeyCode.LeftControl)) // 👈 quay về chọn item
@@ -203,9 +202,9 @@ namespace Inventory.UI
                 this.heroButtons.Clear();
 
                 // Instantiate button và fill dữ liệu
-                for (int i = 0; i < this.cbm.playersInCombat.Count; i++)
+                for (int i = 0; i < CombatController.Instance.CBM.playersInCombat.Count; i++)
                 {
-                    HeroStateMachine hero = this.cbm.playersInCombat[i].GetComponent<HeroStateMachine>();
+                    HeroStateMachine hero = CombatController.Instance.CBM.playersInCombat[i].GetComponent<HeroStateMachine>();
                     Image newImage = Instantiate(this.heroImagePrefab, this.heroButtonSpacer);
                     this.heroButtons.Add(newImage);
 
@@ -225,9 +224,9 @@ namespace Inventory.UI
             }
             this.heroPanel.Clear();
 
-            for (int i = 0; i < this.cbm.playersInCombat.Count; i++)
+            for (int i = 0; i < CombatController.Instance.CBM.playersInCombat.Count; i++)
             {
-                HeroStateMachine hero = this.cbm.playersInCombat[i].GetComponent<HeroStateMachine>();
+                HeroStateMachine hero = CombatController.Instance.CBM.playersInCombat[i].GetComponent<HeroStateMachine>();
                 foreach (var bar in this.heroInfoPanelPrefab)
                 {
                     Image newBar = Instantiate(bar, this.infoHeroPanelSpacer);

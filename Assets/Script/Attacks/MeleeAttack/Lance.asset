@@ -15,7 +15,7 @@ MonoBehaviour:
   attackImage: {fileID: -119211084, guid: fb051ba9df7a2724e99ecb3019809887, type: 3}
   attackName: Lance
   attackDescription: Normal attack
-  attackDamage: 5
+  attackDamage: 10
   attackCost: 0
   maxEnemyCount: 0
   attackType: 0

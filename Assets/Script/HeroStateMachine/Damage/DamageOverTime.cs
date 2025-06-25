@@ -10,8 +10,9 @@ public class DamageOverTime : DealDamageController
     public int totalTicks = 3;
     protected void Awake()
     {
-        if (instance != null) return;
+        if (instance != null && this.gameObject != null) return;
         instance = this;
+        DontDestroyOnLoad(this);
     }
     public override void DoDamage(GameObject attacker)
     {
@@ -29,7 +30,7 @@ public class DamageOverTime : DealDamageController
         // Cache thông tin một lần
         var attack = CombatController.Instance.CBM.performList[0].choosenAttack;
         float calDamage = hsm.baseHero.curATK + attack.attackDamage;
-
+        ManaController.Instance.ManaBar(hsm);
         int tickCount = 0;
         while (tickCount < totalTicks)
         {
@@ -39,11 +40,12 @@ public class DamageOverTime : DealDamageController
                 Vector3 targetPosition = esm.transform.Find("Body").position;
                 if (esm != null)
                 {
+                    
                     Transform hitParticle = VFXSpawner.Instance.Spawn(hsm.currentAttack.skillData.hitParticleName, targetPosition, Quaternion.identity);
                     hitParticle.gameObject.SetActive(true);
                     esm.GetComponent<EnemyTakeDamage>().TakeDamage(esm.gameObject, calDamage, attack.effect1, attack.effect2);
-                    hsm.UpdateHeroPanel();
-                   // Debug.Log($"[DOT] Tick {tickCount + 1}: Gây {calDamage} sát thương");
+                    hsm.heroPanelHandler.UpdateHeroPanel();
+                    // Debug.Log($"[DOT] Tick {tickCount + 1}: Gây {calDamage} sát thương");
                 }
                 else
                 {
@@ -59,6 +61,8 @@ public class DamageOverTime : DealDamageController
 
             tickCount++;
             yield return new WaitForSeconds(interval);
+            
+            
         }
     }
 

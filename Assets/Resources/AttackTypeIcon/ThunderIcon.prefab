@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5899232471395729131}
   - component: {fileID: 5428348335874369916}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -70,9 +70,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -183294497
-  m_SortingLayer: 3
-  m_SortingOrder: -1
+  m_SortingLayerID: 1665767259
+  m_SortingLayer: 5
+  m_SortingOrder: 1
   m_Sprite: {fileID: -887420655, guid: fb051ba9df7a2724e99ecb3019809887, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -95,9 +95,9 @@ GameObject:
   - component: {fileID: 863330402793071937}
   - component: {fileID: 795138295684534775}
   - component: {fileID: 4453819471212887945}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: ThunderIcon
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -161,9 +161,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -183294497
-  m_SortingLayer: 3
-  m_SortingOrder: 0
+  m_SortingLayerID: 1665767259
+  m_SortingLayer: 5
+  m_SortingOrder: 2
   m_Sprite: {fileID: 2086871339, guid: fb051ba9df7a2724e99ecb3019809887, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -207,7 +207,7 @@ GameObject:
   - component: {fileID: 6709508795962846483}
   - component: {fileID: 3684481267994162286}
   - component: {fileID: 7115842246927964867}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Break
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -267,9 +267,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -183294497
-  m_SortingLayer: 3
-  m_SortingOrder: 1
+  m_SortingLayerID: 1665767259
+  m_SortingLayer: 5
+  m_SortingOrder: 3
   m_Sprite: {fileID: 783868130, guid: fb051ba9df7a2724e99ecb3019809887, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

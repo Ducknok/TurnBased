@@ -2,15 +2,12 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ManaController : MonoBehaviour
+public class ManaController : Singleton<ManaController>
 {
-    private static ManaController instance;
-    public static ManaController Instance => instance;
     private float trailDelay = 0.4f;
-    protected void Awake()
+    protected override void Awake()
     {
-        if (instance != null) return;
-        instance = this;
+        base.Awake();
     }
     public void ManaBar(HeroStateMachine hsm)
     {
@@ -55,9 +52,9 @@ public class ManaController : MonoBehaviour
         float ratio = hsm.baseHero.curMP / hsm.baseHero.baseMP;
 
         Sequence sequence = DOTween.Sequence();
-        sequence.Append(hsm.heroMPBarFill.DOFillAmount(ratio, 0.25f)).SetEase(Ease.InOutSine);
+        sequence.Append(hsm.heroPanelHandler.heroMPBarFill.DOFillAmount(ratio, 0.25f)).SetEase(Ease.InOutSine);
         sequence.AppendInterval(this.trailDelay);
-        sequence.Append(hsm.heroMPBarTrail.DOFillAmount(ratio, 0.3f)).SetEase(Ease.InOutSine);
+        sequence.Append(hsm.heroPanelHandler.heroMPBarTrail.DOFillAmount(ratio, 0.3f)).SetEase(Ease.InOutSine);
         sequence.Play();
     }
     public void DescreaseMana(HeroStateMachine hsm)
@@ -65,9 +62,11 @@ public class ManaController : MonoBehaviour
         hsm.baseHero.curMP -= CombatController.Instance.CBM.performList[0].choosenAttack.attackCost;
         float ratio = hsm.baseHero.curMP / hsm.baseHero.baseMP;
         Sequence sequence = DOTween.Sequence();
-        sequence.Append(hsm.heroMPBarFill.DOFillAmount(ratio, 0.25f)).SetEase(Ease.InOutSine);
+        sequence.Append(hsm.heroPanelHandler.heroMPBarFill.DOFillAmount(ratio, 0.25f)).SetEase(Ease.InOutSine);
         sequence.AppendInterval(this.trailDelay);
-        sequence.Append(hsm.heroMPBarTrail.DOFillAmount(ratio, 0.3f)).SetEase(Ease.InOutSine);
+        sequence.Append(hsm.heroPanelHandler.heroMPBarTrail.DOFillAmount(ratio, 0.3f)).SetEase(Ease.InOutSine);
         sequence.Play();
     }
+
+    
 }

@@ -23,31 +23,36 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
         if (CombatController.Instance.CBZ.isInCombat) return;
-        if (!isLeader) return; // Chỉ Leader mới nhập input
-
-        movement.Set(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-
-        anim.SetFloat("Horizontal", movement.x);
-        anim.SetFloat("Vertical", movement.y);
-        anim.SetFloat("Speed", movement.sqrMagnitude);
-
-        if (movement != Vector2.zero)
+        else
         {
-            anim.SetFloat("LastHorizontal", movement.x);
-            anim.SetFloat("LastVertical", movement.y);
+            if (!isLeader) return; // Chỉ Leader mới nhập input
+
+            movement.Set(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+
+            anim.SetFloat("Horizontal", movement.x);
+            anim.SetFloat("Vertical", movement.y);
+            anim.SetFloat("Speed", movement.sqrMagnitude);
+
+            if (movement != Vector2.zero)
+            {
+                anim.SetFloat("LastHorizontal", movement.x);
+                anim.SetFloat("LastVertical", movement.y);
+            }
         }
+        
     }
 
     private void FixedUpdate()
     {
-            // Nếu đang combat thì không cho di chuyển
-            if (PlayerController.Instance.CombatZone.isInCombat)
-            {
-                rb.velocity = Vector2.zero;
-                return;
-            }
-
-            if (isLeader)
+        // Nếu đang combat thì không cho di chuyển
+        if (CombatController.Instance.CBZ.isInCombat)
+        {
+            rb.velocity = Vector2.zero;
+            return;
+        }
+        else
+        {
+            if (this.isLeader)
             {
                 rb.velocity = movement.normalized * moveSpeed;
 
@@ -58,6 +63,8 @@ public class PlayerMovement : MonoBehaviour
                     recordTimer = 0f;
                 }
             }
+        }
+        
     }
 
     public void ClearHistory()

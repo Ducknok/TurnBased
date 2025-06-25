@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class ButtonController : MonoBehaviour
+public class ButtonController : Singleton<ButtonController>
 {
     private CombatController combatCtrl;
     [Header("Player Panel")]
+    public Transform panel;
     public Transform actionSpacer;
     public Transform skillSpacer;
     public Transform attackTypeInfoSpacer;
@@ -27,14 +29,42 @@ public class ButtonController : MonoBehaviour
     public GameObject actionPanel;
     public GameObject skillPanel;
     public GameObject attackTypeInfoPanel;
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         this.LoadCBM();
+        this.LoadTransform();
+    }
+
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+    }
+
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+    }
+
+    protected override void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        base.OnSceneLoaded(scene, mode);
+        this.LoadCBM();
+        this.LoadTransform();
     }
     private void LoadCBM()
     {
         if (this.combatCtrl != null) return;
         this.combatCtrl = FindObjectOfType<CombatController>();
+    }
+    private void LoadTransform()
+    {
+        this.panel = GameObject.Find("BattleCanvas").transform.Find("Panel");
+        this.actionPanel = this.panel.Find("ActionPanel").gameObject;
+        this.skillPanel = this.panel.Find("SkillBarPanel").gameObject;
+        this.actionSpacer = this.actionPanel.transform.Find("ActionSpacer");
+        this.skillSpacer = this.skillPanel.transform.Find("SkillBarSpacer");
+        this.attackTypeInfoSpacer = this.panel.Find("AttackTypeInfoPanel").transform.Find("AttackTypeInfoPanelSpacer");
     }
     public void CheckState()
     {
@@ -63,13 +93,15 @@ public class ButtonController : MonoBehaviour
                     {
                         if (skillsButtons[selectedIndex] != null)
                         {
+                            ExecuteEvents.Execute(skillsButtons[selectedIndex], new BaseEventData(EventSystem.current), ExecuteEvents.submitHandler);
                             var attackButton = skillsButtons[selectedIndex].GetComponent<AttackButton>();
                             if (attackButton != null && attackButton.skillAttackToPerform != null)
                             {
                                 Debug.Log($"Kích hoạt skill: {attackButton.skillAttackToPerform.name}");
-                                //Debug.Log(selectedIndex);
+                                
+                                Debug.Log(selectedIndex);
                             }
-                            ExecuteEvents.Execute(skillsButtons[selectedIndex], new BaseEventData(EventSystem.current), ExecuteEvents.submitHandler);
+                            
                         }
                         else
                         {
@@ -424,4 +456,5 @@ public class ButtonController : MonoBehaviour
         }
     }
 
+    
 }

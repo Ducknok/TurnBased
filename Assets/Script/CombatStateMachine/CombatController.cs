@@ -1,29 +1,39 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
-public class CombatController : MonoBehaviour
+public class CombatController : Singleton<CombatController>
 {
-    protected static CombatController instance;
-    public static CombatController Instance => instance;
     [SerializeField] protected CombatZone cbz;
     public CombatZone CBZ => cbz;
     [SerializeField] protected CombatStateMachine cbm;
     public CombatStateMachine CBM => cbm;
 
-    private void Awake()
+    protected override void Awake()
     {
-        if (instance != null && instance != this)
-        {
-            Destroy(this.gameObject);
-            return;
-        }
+        base.Awake();
+        this.LoadComponent();
+    }
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+    }
 
-        instance = this;
-        DontDestroyOnLoad(this.gameObject); // giữ nó giữa các scene
-
-        this.LoadCombatZone();
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+    }
+    protected override void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        base.OnSceneLoaded(scene, mode);
+        this.LoadComponent();
+    }
+    public void LoadComponent()
+    {
+        //Debug.LogError("LoadComponent of " + this.gameObject);
         this.LoadCombatStateMachine();
+        this.LoadCombatZone();
     }
     private void LoadCombatZone()
     {

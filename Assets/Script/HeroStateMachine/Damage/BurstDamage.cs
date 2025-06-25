@@ -8,8 +8,9 @@ public class BurstDamage : DealDamageController
     public static BurstDamage Instance => instance;
     protected void Awake()
     {
-        if (instance != null) return;
+        if (instance != null && this.gameObject != null) Destroy(this.gameObject);
         instance = this;
+        DontDestroyOnLoad(this);
     }
     public override void DoDamage(GameObject attacker)
     {
@@ -23,7 +24,7 @@ public class BurstDamage : DealDamageController
             Transform hitParticle = VFXSpawner.Instance.Spawn(hsm.currentAttack.skillData.hitParticleName, targetPosition, Quaternion.identity);
             hitParticle.gameObject.SetActive(true);
             hsm.enemyToAttack.GetComponent<EnemyTakeDamage>().TakeDamage(hsm.enemyToAttack.gameObject,calDamage, CombatController.Instance.CBM.performList[0].choosenAttack.effect1, CombatController.Instance.CBM.performList[0].choosenAttack.effect2);
-            hsm.UpdateHeroPanel();
+            hsm.heroPanelHandler.UpdateHeroPanel();
         }
         else
         {

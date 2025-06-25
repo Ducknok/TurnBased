@@ -6,11 +6,10 @@ using System.Collections;
 using TMPro;
 using UnityEngine.EventSystems;
 using Inventory;
+using UnityEngine.SceneManagement;
 
 public class CombatStateMachine : MonoBehaviour
 {
-    public CombatZone combatZone;
-    private ButtonController butCtrl;
     public enum PerformAction
     {
         WAIT,
@@ -58,10 +57,9 @@ public class CombatStateMachine : MonoBehaviour
     private void Start()
     {
         this.combatState = PerformAction.WAIT;
-        this.combatZone = GameObject.FindObjectOfType<CombatZone>();
         
-        this.butCtrl.actionPanel.SetActive(false);
-        this.butCtrl.skillPanel.SetActive(false);
+        ButtonController.Instance.actionPanel.SetActive(false);
+        ButtonController.Instance.skillPanel.SetActive(false);
         this.heroTurn = true;
         playerInput = PlayerGUI.ACTIVATE;
     }
@@ -71,12 +69,27 @@ public class CombatStateMachine : MonoBehaviour
         this.enemiesInCombat.AddRange(GameObject.FindGameObjectsWithTag("Enemy"));
         //if (this.playersInCombat != null) return;
         this.playersInCombat.AddRange(GameObject.FindGameObjectsWithTag("Player"));
-        this.LoadButCtrl();
+        this.enemyInfoSpacer = GameObject.Find("BattleCanvas").transform.Find("Panel").transform.Find("EnemyInfoPanel").transform.Find("EnemyInfoPanelSpacer");
+        //DontDestroyOnLoad(this.gameObject);
     }
-    private void LoadButCtrl()
+    protected void OnEnable()
     {
-        if (this.butCtrl != null) return;
-        this.butCtrl = FindObjectOfType<ButtonController>();
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    protected virtual void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    protected void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (this.enemiesInCombat != null) return;
+        this.enemiesInCombat.AddRange(GameObject.FindGameObjectsWithTag("Enemy"));
+        if (this.playersInCombat != null) return;
+        this.playersInCombat.AddRange(GameObject.FindGameObjectsWithTag("Player"));
+        this.enemyInfoSpacer = GameObject.Find("BattleCanvas").transform.Find("Panel").transform.Find("EnemyInfoPanel").transform.Find("EnemyInfoPanelSpacer");
+
     }
     public void StartEnemySelection(BaseAttack skillData)
     {
@@ -120,7 +133,7 @@ public class CombatStateMachine : MonoBehaviour
                 break;
             case (PerformAction.WIN):
                 Debug.Log("Win");
-                this.combatZone.EndCombat();
+                CombatController.Instance.CBZ.EndCombat();
                 break;
         }
     }
@@ -254,7 +267,7 @@ public class CombatStateMachine : MonoBehaviour
                 this.CheckActivate();
                 break;
             case (PlayerGUI.WAITING):
-                this.butCtrl.CheckState();
+                ButtonController.Instance.CheckState();
                 break;
             case (PlayerGUI.DONE):
                 this.PlayerInputDone();
@@ -269,15 +282,15 @@ public class CombatStateMachine : MonoBehaviour
             while (this.playerToManage.Count > 0 && this.heroesDoneTurn.Contains(this.playerToManage[0]))
             {
                 this.playerToManage.RemoveAt(0);
-                this.butCtrl.actionPanel.SetActive(false);
+                ButtonController.Instance.actionPanel.SetActive(false);
             }
 
             if (playerToManage.Count > 0)
             {
                 playerToManage[0].transform.Find("Body").transform.Find("Choose").gameObject.SetActive(true);
                 this.playerChoice = new HandleTurn();
-                this.butCtrl.actionPanel.SetActive(true);
-                this.butCtrl.CreateButton();
+                ButtonController.Instance.actionPanel.SetActive(true);
+                ButtonController.Instance.CreateButton();
                 this.playerInput = PlayerGUI.WAITING;
             }
         }
@@ -365,7 +378,7 @@ public class CombatStateMachine : MonoBehaviour
     {
         this.performList.Add(this.playerChoice);
         this.ClearAttackPanel();
-        this.butCtrl.ClearAttackTypeInfoPanel();
+        ButtonController.Instance.ClearAttackTypeInfoPanel();
         if (this.playerToManage.Count > 0)
         {
             GameObject currentHero = playerToManage[0];
@@ -382,17 +395,17 @@ public class CombatStateMachine : MonoBehaviour
     //Clear attack panel
     public void ClearAttackPanel()
     {
-        this.butCtrl.actionPanel.SetActive(false);
-        foreach (GameObject attackButton in this.butCtrl.actionButtons)
+        ButtonController.Instance.actionPanel.SetActive(false);
+        foreach (GameObject attackButton in ButtonController.Instance.actionButtons)
         {
             DestroyImmediate(attackButton, true);
         }
-        foreach(GameObject skillsButton in this.butCtrl.skillsButtons)
+        foreach(GameObject skillsButton in ButtonController.Instance.skillsButtons)
         {
             DestroyImmediate(skillsButton, true);
         }
-        this.butCtrl.skillsButtons.Clear();
-        this.butCtrl.actionButtons.Clear();
+        ButtonController.Instance.skillsButtons.Clear();
+        ButtonController.Instance.actionButtons.Clear();
     }
     public bool AreAllHeroesDone()
     {

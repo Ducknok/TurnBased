@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening; // DoTween for smooth animations
+using UnityEngine.SceneManagement;
 
 public class CombatZone : MonoBehaviour
 {
@@ -11,7 +12,7 @@ public class CombatZone : MonoBehaviour
    
 
     [Header("Player and Enemy References")]
-    public GameObject[] players;          // Array of player characters
+    public GameObject[] heros;
     public GameObject[] enemies;          // Array of enemies
     protected GameObject[] bodies;
 
@@ -21,26 +22,52 @@ public class CombatZone : MonoBehaviour
 
     public bool isInCombat = false;      // State to check if combat is active
 
-
-
-    // Trigger combat when player enters a combat zone
-    protected void Awake()
+    private void Awake()
     {
-        // Khởi tạo mảng bodies với cùng kích thước mảng players
-        this.bodies = new GameObject[players.Length];
+        this.LoadHeroList();
+    }
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
 
-        // Duyệt qua từng player để tìm object con "Body"
-        for (int i = 0; i < players.Length; i++)
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        this.LoadHeroList();
+    }
+
+    private void LoadHeroList()
+    {
+        var players = CombatController.Instance.CBM.playersInCombat;
+
+        this.heros = new GameObject[players.Count];
+        this.bodies = new GameObject[players.Count];
+
+        for (int i = 0; i < players.Count; i++)
         {
-            Transform bodyTransform = players[i].transform.Find("Body");
+            GameObject hero = players[i];
+            this.heros[i] = hero;
+
+            if (hero == null)
+            {
+                Debug.LogWarning($"Hero {i} is null.");
+                continue;
+            }
+
+            Transform bodyTransform = hero.transform.Find("Body");
             if (bodyTransform != null)
             {
                 bodies[i] = bodyTransform.gameObject;
-                //Debug.Log($"Body found for player {players[i].name}: {bodies[i].name}");
+                // Debug.Log($"Body found for {hero.name}: {bodyTransform.name}");
             }
             else
             {
-                Debug.LogWarning($"Body not found for player {players[i].name}");
+                Debug.LogWarning($"Body not found for hero {hero.name}");
             }
         }
     }
@@ -58,14 +85,14 @@ public class CombatZone : MonoBehaviour
         //Debug.Log("Combat Started!");
 
         // Kiểm tra kích thước mảng trước khi di chuyển
-        if (players.Length > playerPositions.Length || enemies.Length > enemyPositions.Length)
+        if (heros.Length > playerPositions.Length || enemies.Length > enemyPositions.Length)
         {
             Debug.LogError("Not enough combat positions for all players or enemies.");
             yield break;
         }
 
         // Move players
-        for (int i = 0; i < players.Length; i++)
+        for (int i = 0; i < heros.Length; i++)
         {
             MoveToPosition(bodies[i].transform, playerPositions[i].position);
         }
@@ -116,7 +143,7 @@ public class CombatZone : MonoBehaviour
         {
             hero.anim.SetBool("IdleBattle", this.isInCombat);
         }
-       
+        Destroy(this);
         // Reset positions, handle rewards, etc.
     }
     private void OnDrawGizmos()
@@ -133,4 +160,6 @@ public class CombatZone : MonoBehaviour
             if (pos != null) Gizmos.DrawSphere(pos.position, 0.2f);
         }
     }
+
+    
 }

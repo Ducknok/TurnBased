@@ -16,7 +16,7 @@ public class HeroTakeDamage : TakeDamageController
         this.DamagePop(hsm, getDamageAmount);
         CameraShakeManager.instance.CameraShake(this.impulseSource);
         HealController.Instance.HPBar(hsm);
-        hsm.UpdateHeroPanel();
+        hsm.heroPanelHandler.UpdateHeroPanel();
     }
     private void DamagePop(HeroStateMachine hsm, float getDamageAmount)
     {

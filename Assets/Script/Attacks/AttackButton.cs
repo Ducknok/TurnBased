@@ -1,6 +1,7 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class AttackButton : MonoBehaviour
 {
@@ -9,6 +10,6 @@ public class AttackButton : MonoBehaviour
     public void CastSkillAttack()
     {
         //Debug.LogWarning(skillAttackToPerform);
-        GameObject.Find("StartCombat").GetComponent<ButtonController>().SkillAttack(skillAttackToPerform);
+        ButtonController.Instance.SkillAttack(skillAttackToPerform);
     }
 }

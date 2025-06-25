@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4031109327267004789}
   - component: {fileID: 8771902829733917000}
   - component: {fileID: 6215426473971096294}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -144,7 +144,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4796982166268890003}
   - component: {fileID: 7468545846782209208}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -208,8 +208,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -183294497
-  m_SortingLayer: 3
+  m_SortingLayerID: 1665767259
+  m_SortingLayer: 5
   m_SortingOrder: -1
   m_Sprite: {fileID: -878461803, guid: fb051ba9df7a2724e99ecb3019809887, type: 3}
   m_Color: {r: 1, g: 0, b: 0, a: 1}
@@ -233,7 +233,7 @@ GameObject:
   - component: {fileID: 966741896352383125}
   - component: {fileID: 4759645613243003689}
   - component: {fileID: 7736898619669978971}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Timer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -299,8 +299,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -183294497
-  m_SortingLayer: 3
+  m_SortingLayerID: 1665767259
+  m_SortingLayer: 5
   m_SortingOrder: 0
   m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -345,7 +345,7 @@ GameObject:
   - component: {fileID: 7433539504744004788}
   - component: {fileID: 7190427029198258799}
   - component: {fileID: 8420432332123036772}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -390,9 +390,9 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 25
+  m_AdditionalShaderChannelsFlag: -1
   m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: -183294497
+  m_SortingLayerID: 1665767259
   m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!114 &7190427029198258799
@@ -417,7 +417,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
+  m_PresetInfoIsWorld: 0
 --- !u!114 &8420432332123036772
 MonoBehaviour:
   m_ObjectHideFlags: 0

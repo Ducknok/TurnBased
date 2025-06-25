@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using Inventory;
+using UnityEngine.SceneManagement;
 
 public class MainInventoryController : MonoBehaviour
 {
@@ -106,12 +107,27 @@ public class MainInventoryController : MonoBehaviour
         }
         
     }
+    protected void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
 
+    protected void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    protected void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        this.LoadItemInventoryController();
+        this.LoadEquipMenuController();
+        this.LoadSkillMenuController();
+    }
     //LoadComponent
     private void LoadItemInventoryController()
     {
         if (this.itemInventoryController != null) return;
-        this.itemInventoryController = FindObjectOfType<ItemInventoryController>();
+        this.itemInventoryController = ItemInventoryController.Instance;
     }
     private void LoadEquipMenuController()
     {
@@ -207,14 +223,14 @@ public class MainInventoryController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
         {
             currentHeroIndex = (currentHeroIndex - 1 + heroUIList.Count) % heroUIList.Count;
-            Debug.LogWarning("Nut len");
+            //Debug.LogWarning("Nut len");
             HighlightHero(currentHeroIndex);
            
         }
         else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
         {
             currentHeroIndex = (currentHeroIndex + 1) % heroUIList.Count;
-            Debug.LogWarning("Nut xuong");
+            //Debug.LogWarning("Nut xuong");
             HighlightHero(currentHeroIndex);
         }
 

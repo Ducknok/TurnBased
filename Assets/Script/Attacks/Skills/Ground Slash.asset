@@ -15,7 +15,7 @@ MonoBehaviour:
   attackImage: {fileID: 154783846, guid: fb051ba9df7a2724e99ecb3019809887, type: 3}
   attackName: Ground Slash
   attackDescription: Slash on ground
-  attackDamage: 10
+  attackDamage: 15
   attackCost: 3
   maxEnemyCount: 0
   attackType: 1

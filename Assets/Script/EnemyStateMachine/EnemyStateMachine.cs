@@ -52,7 +52,7 @@ public class EnemyStateMachine : MonoBehaviour
     private void Start()
     {
         DOTween.SetTweensCapacity(500, 50);
-        this.combatStateMachine = GameObject.Find("StartCombat").GetComponent<CombatStateMachine>();
+        this.combatStateMachine = GameObject.Find("CombatManager").GetComponent<CombatStateMachine>();
         this.enemyMoveToCombat = this.transform.GetComponentInChildren<EnemyMoveToCombat>();
         this.anim = this.transform.Find("Body").GetComponent<Animator>();
         this.enemyUI = this.transform.GetComponent<EnemyUI>();
