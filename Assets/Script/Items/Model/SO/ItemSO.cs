@@ -11,6 +11,7 @@ namespace Inventory.Model
         Weapon,
         Armor,
         Consumable,
+        Ring,
         Miscellaneous
     }
     public abstract class ItemSO : ScriptableObject

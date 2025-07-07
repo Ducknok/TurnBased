@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Despawn : MonoBehaviour
+public abstract class Despawn : DucMonobehaviour
 {
 
-    protected virtual void FixedUpdate()
+    protected override void FixedUpdate()
     {
         this.Despawning();
     }

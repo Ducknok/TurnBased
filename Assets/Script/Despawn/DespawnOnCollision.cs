@@ -9,9 +9,8 @@ public class DespawnOnCollision : Despawn
     [SerializeField] private Transform checkPoint; // N?i ki?m tra va ch?m (th??ng l¨¤ ??u vi¨ºn ??n)
     [SerializeField] private float delayBeforeDespawn = 0.1f;
 
-    private bool hasHit = false;
 
-    private void Update()
+    protected override void Update()
     {
         Collider2D hit = Physics2D.OverlapCircle(checkPoint.position, checkRadius, bodyLayer);
         if (hit != null)

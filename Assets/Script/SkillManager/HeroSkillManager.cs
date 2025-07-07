@@ -7,7 +7,7 @@ public class HeroSkillManager : SkillManager
 {
     [SerializeField] private Transform position;
     [SerializeField] private HeroStateMachine hsm;
-    private void Awake()
+    protected override void Awake()
     {
         LoadHeroSM();
     }

@@ -9,7 +9,7 @@ using UnityEngine.EventSystems;
 //View (V) in MVC
 namespace Inventory.UI
 {
-    public class UIInventoryItem : MonoBehaviour, IDropHandler /*IBeginDragHandler*//*IEndDragHandler*//*IDragHandler*/
+    public class UIInventoryItem : DucMonobehaviour, IDropHandler /*IBeginDragHandler*//*IEndDragHandler*//*IDragHandler*/
     {
         [SerializeField]
         private Image itemImage;
@@ -18,36 +18,34 @@ namespace Inventory.UI
 
         [SerializeField]
         private Image borderImage;
-
         public event Action<UIInventoryItem> OnItemSelected, OnItemDroppedOn /*OnItemBeginDrag, OnItemEndDrag /*OnItemSold*/;
-
         private bool empty = true;
 
-        public void Awake()
+        protected override void Awake()
         {
             ResetData();
             Deselect();
         }
         public void ResetData()
         {
-            itemImage.gameObject.SetActive(false);
-            empty = true;
+            this.itemImage.gameObject.SetActive(false);
+            this.empty = true;
         }
         public void Deselect()
         {
-            borderImage.enabled = false;
+            this.borderImage.enabled = false;
         }
         public void SetData(Sprite sprite, int quantity)
         {
-            itemImage.gameObject.SetActive(true);
-            itemImage.sprite = sprite;
-            quantityText.text = quantity + "";
-            empty = false;
+            this.itemImage.gameObject.SetActive(true);
+            this.itemImage.sprite = sprite;
+            this.quantityText.text = quantity + "";
+            this.empty = false;
         }
         public void Select()
         {
-            borderImage.enabled = true;
-            OnItemSelected?.Invoke(this);
+            this.borderImage.enabled = true;
+            this.OnItemSelected?.Invoke(this);
         }
 
         //public void OnBeginDrag(PointerEventData eventData)

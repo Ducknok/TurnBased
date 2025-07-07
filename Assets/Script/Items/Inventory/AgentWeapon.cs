@@ -4,43 +4,41 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AgentWeapon : MonoBehaviour
+public class AgentWeapon : DucMonobehaviour
 {
     [SerializeField]
-    public EquippableItemSO weaponItemSO;
+    public EquippableItemSO[] weaponItemSO;
 
     [SerializeField]
     private InventorySO inventoryData;
 
     [SerializeField]
     private List<ItemParameter> parameterToModify, itemCurrentState;
-
-    public void SetWeapon(EquippableItemSO weaponItemSO, List<ItemParameter> itemState)
+    public void SetWeapon(int index, EquippableItemSO weaponItemSO, List<ItemParameter> itemState)
     {
         if (this.weaponItemSO != null)
         {
-            this.inventoryData.AddItem(this.weaponItemSO, 1, this.itemCurrentState);
+            this.inventoryData.AddItem(this.weaponItemSO[index], 1, this.itemCurrentState);
         }
 
-        this.weaponItemSO = weaponItemSO;
+        this.weaponItemSO[index] = weaponItemSO;
         this.itemCurrentState = new List<ItemParameter>(itemState);
-        ModifyParamter();
+        ModifyParameter();
     }
-
-
-    private void ModifyParamter()
+    private void ModifyParameter()
     {
-        foreach (var parameter in parameterToModify)
+        for (int i = 0; i < itemCurrentState.Count; i++)
         {
-            if (this.itemCurrentState.Contains(parameter))
+            foreach (var paramMod in parameterToModify)
             {
-                int index = this.itemCurrentState.IndexOf(parameter);
-                float newValue = this.itemCurrentState[index].value + parameter.value;
-                this.itemCurrentState[index] = new ItemParameter
+                if (itemCurrentState[i].itemParameter == paramMod.itemParameter)
                 {
-                    itemParameter = parameter.itemParameter,
-                    value = newValue
-                };
+                    itemCurrentState[i] = new ItemParameter
+                    {
+                        itemParameter = itemCurrentState[i].itemParameter,
+                        value = itemCurrentState[i].value + paramMod.value
+                    };
+                }
             }
         }
     }

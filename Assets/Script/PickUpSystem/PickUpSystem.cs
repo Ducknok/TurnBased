@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PickUpSystem : MonoBehaviour
+public class PickUpSystem : DucMonobehaviour
 {
     [SerializeField]
     private InventorySO inventoryData;

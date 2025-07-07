@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-public class DamagePopup : MonoBehaviour
+public class DamagePopup : DucMonobehaviour
 {
     public static DamagePopup Create(Vector3 position, float damageAmout, bool isCriticalHit, bool isNormalAttack)
     {
@@ -19,7 +19,7 @@ public class DamagePopup : MonoBehaviour
     private float disappearTimer;
     private Vector3 moveVector;
 
-    private void Awake()
+    protected override void Awake()
     {
         this.textMesh = this.transform.GetComponent<TextMeshPro>();
     }
@@ -50,11 +50,15 @@ public class DamagePopup : MonoBehaviour
         this.moveVector = new Vector3(0f, 0.5f) * 10f;
     }
 
-    private void Update()
+    protected override void Update()
+    {
+        this.CheckState();
+    }
+    public override void CheckState()
     {
         this.transform.position += this.moveVector * Time.deltaTime;
         this.moveVector -= this.moveVector * 2f * Time.deltaTime;
-        if(this.disappearTimer > DISAPPEAR_TIMER_MAX * 5f)
+        if (this.disappearTimer > DISAPPEAR_TIMER_MAX * 5f)
         {
             float increaseScaleAmount = 1f;
             this.transform.localScale += Vector3.one * increaseScaleAmount * Time.deltaTime;
@@ -65,12 +69,12 @@ public class DamagePopup : MonoBehaviour
             this.transform.localScale -= Vector3.one * decreaseScaleAmount * Time.deltaTime;
         }
         this.disappearTimer -= Time.deltaTime;
-        if(this.disappearTimer < 0)
+        if (this.disappearTimer < 0)
         {
             float disappearSpeed = 3f;
             this.textColor.a -= disappearSpeed * Time.deltaTime;
             this.textMesh.color = this.textColor;
-            if(textColor.a < 0)
+            if (textColor.a < 0)
             {
                 Destroy(this.gameObject);
             }

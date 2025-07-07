@@ -8,8 +8,9 @@ public class DamageOverTime : DealDamageController
     public static DamageOverTime Instance => instance;
     public float interval = 1f; // mỗi 3 giây
     public int totalTicks = 3;
-    protected void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         if (instance != null && this.gameObject != null) return;
         instance = this;
         DontDestroyOnLoad(this);
@@ -66,4 +67,5 @@ public class DamageOverTime : DealDamageController
         }
     }
 
+    
 }

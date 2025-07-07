@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Reflection;
 
-public class GameAssets : MonoBehaviour
+public class GameAssets : DucMonobehaviour
 {
     private static GameAssets instance;
 

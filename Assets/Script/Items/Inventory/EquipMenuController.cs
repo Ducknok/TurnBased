@@ -1,20 +1,28 @@
-﻿using System.Collections;
+﻿using Inventory.Model;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class EquipMenuController : MonoBehaviour
+public class EquipMenuController : DucMonobehaviour
 {
     public bool isEquipMenuOpen = false;
     [Header("Hero")]
     [SerializeField] private Image heroImage;
-    [SerializeField] private TextMeshProUGUI hereName;
+    [SerializeField] private TextMeshProUGUI heroName;
+    [SerializeField] private TextMeshProUGUI heroType;
     [Header("Weapon UI")]
     [SerializeField] private GameObject weaponUI;
-    [SerializeField] private Button weaponBut;
-    [SerializeField] private Image weaponImage;
-    [SerializeField] private TextMeshProUGUI weaponName;
+    [SerializeField] private Transform weaponUISpacer;
+    private List<GameObject> currentWeaponUIs = new List<GameObject>();
+    private int currentWeaponIndex = 0;
+    private List<EquippableItemSO> currentWeapon = new List<EquippableItemSO>();
+
+    [Header("Armor")]
+    [SerializeField] private Transform armorUISpacer;
+    [Header("Ring")]
+    [SerializeField] private Transform ringUISpacer;
 
     [Header("Hero Stat")]
     [SerializeField] private TextMeshProUGUI hpValue;
@@ -30,39 +38,61 @@ public class EquipMenuController : MonoBehaviour
     private List<Button> heroSwapButtons = new List<Button>();
     private int currentSwapIndex = 0;
     private List<HeroStateMachine> heroesInCombat = new List<HeroStateMachine>();
-    //TODO: Shield UI here
-    //TODO: Ring UI here
 
-    private void Update()
+    [Header("Description")]
+    [SerializeField] private TextMeshProUGUI desText;
+
+    protected override void Update()
     {
-        if (!this.isEquipMenuOpen || heroSwapButtons.Count == 0)
+        this.CheckState();
+    }
+    public override void CheckState()
+    {
+        base.CheckState();
+        if (!this.isEquipMenuOpen || heroSwapButtons.Count == 0 || currentWeaponUIs.Count == 0)
         {
             Debug.LogWarning("Equip inventory dang dong");
             return;
         }
-        
+
+        this.SelectHero();
+        this.SelectWeapon();
+    }
+    public void SelectHero()
+    {
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            Debug.LogWarning("Nut Q");
             currentSwapIndex = (currentSwapIndex - 1 + heroSwapButtons.Count) % heroSwapButtons.Count;
             LoadCurrentHeroUI();
         }
         else if (Input.GetKeyDown(KeyCode.E))
         {
             currentSwapIndex = (currentSwapIndex + 1) % heroSwapButtons.Count;
-            Debug.LogWarning("Nut E");
             LoadCurrentHeroUI();
         }
     }
-    private void ClearWeaponUI()
+    private void SelectWeapon()
     {
-        if (weaponImage != null) this.weaponImage.sprite = null;
-        if (weaponName != null) this.weaponName.text = "";
+        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            this.currentWeaponIndex = (currentWeaponIndex - 1 + currentWeaponUIs.Count) % currentWeaponUIs.Count;
+            //Debug.LogWarning("Nut len");
+            this.UpdateWeaponSelectionVisual();
+        }
+
+        if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            currentWeaponIndex = (currentWeaponIndex + 1) % currentWeaponUIs.Count;
+            //Debug.LogWarning("Nut xuong");
+            this.UpdateWeaponSelectionVisual();
+        }
     }
+
     private void ClearHero()
     {
         if (heroImage != null) this.heroImage.sprite = null;
-        if (hereName != null) this.hereName.text = "";
+        if (heroName != null) this.heroName.text = "";
+        if (heroType != null) this.heroType.text = "";
     }
     private void ClearHeroStat()
     {
@@ -73,18 +103,40 @@ public class EquipMenuController : MonoBehaviour
         if (mAtkValue != null) this.mAtkValue.text = "";
         if (mDefValue != null) this.mDefValue.text = "";
     }
-    public void LoadWeaponUI(HeroStateMachine hero)
+    public void LoadEquipmentUI(HeroStateMachine hero, string type, GameObject uiPrefab, Transform spacer, List<GameObject> uiList)
     {
-        this.ClearWeaponUI();
-        AgentWeapon agentWeapon = hero.transform.GetComponent<AgentWeapon>();
-        this.weaponImage.sprite = agentWeapon.weaponItemSO.ItemImage;
-        this.weaponName.text = agentWeapon.weaponItemSO.Name;
+        foreach (Transform child in spacer)
+        {
+            Destroy(child.gameObject);
+        }
+
+        
+
+        AgentWeapon agentWeapon = hero.GetComponent<AgentWeapon>();
+        foreach (var item in agentWeapon.weaponItemSO)
+        {
+            if (item.itemType.ToString() == type)
+            {
+                GameObject newUI = Instantiate(uiPrefab, spacer);
+                Image itemImage = newUI.transform.Find("Button").Find("WeaponImage").GetComponent<Image>();
+                TextMeshProUGUI itemName = newUI.transform.Find("WeaponName").GetComponent<TextMeshProUGUI>();
+
+                itemImage.sprite = item.ItemImage;
+                itemName.text = item.Name;
+
+                uiList.Add(newUI);
+                this.currentWeapon.Add(item);
+            }
+        }
     }
+
+
     public void LoadHero(HeroStateMachine hero)
     {
         this.ClearHero();
         this.heroImage.sprite = hero.baseHero.heroImage;
-        this.hereName.text = hero.baseHero.theName;
+        this.heroName.text = hero.baseHero.theName;
+        this.heroType.text = hero.baseHero.heroType.ToString() + "/" + hero.baseHero.elemental.ToString();
     }
     public void LoadHeroStat(HeroStateMachine hero)
     {
@@ -134,17 +186,20 @@ public class EquipMenuController : MonoBehaviour
         if (currentSwapIndex < 0) currentSwapIndex = 0; // fallback nếu không tìm thấy
         LoadCurrentHeroUI();
     }
-
-
-
     private void LoadCurrentHeroUI()
     {
+        this.currentWeaponUIs.Clear();
+        this.currentWeapon.Clear();
         if (currentSwapIndex < 0 || currentSwapIndex >= heroesInCombat.Count) return;
 
         HeroStateMachine currentHero = heroesInCombat[currentSwapIndex];
         LoadHero(currentHero);
         LoadHeroStat(currentHero);
-        LoadWeaponUI(currentHero);
+        LoadEquipmentUI(currentHero, "Weapon", this.weaponUI, this.weaponUISpacer, this.currentWeaponUIs);
+        LoadEquipmentUI(currentHero, "Armor", this.weaponUI, this.armorUISpacer, this.currentWeaponUIs);
+        LoadEquipmentUI(currentHero, "Ring", this.weaponUI, this.ringUISpacer, this.currentWeaponUIs);
+        this.currentWeaponIndex = 0;
+        this.UpdateWeaponSelectionVisual();
         // Cập nhật màu icon của nút chọn hero
         for (int i = 0; i < heroSwapButtons.Count; i++)
         {
@@ -169,5 +224,28 @@ public class EquipMenuController : MonoBehaviour
             }
 
         }
+    }
+    private void UpdateWeaponSelectionVisual()
+    {
+        for (int i = 0; i < currentWeaponUIs.Count; i++)
+        {
+            GameObject weaponUI = currentWeaponUIs[i];
+            //Debug.LogError(weaponUI);
+            Image bg = weaponUI.GetComponent<Image>();
+            if (bg != null)
+            {
+                // Màu xám nhạt cho skill được chọn, và trong suốt nhẹ cho skill không chọn
+                bg.color = (i == currentWeaponIndex) ? new Color(1f, 1f, 1f, 0.2f) : new Color(0f, 0f, 0f, 0f);
+            }
+        }
+        if (currentWeaponIndex >= 0 && currentWeaponIndex < currentWeapon.Count)
+        {
+            UpdateWeapontDetail(currentWeapon[currentWeaponIndex]); // 💥 Gọi mô tả
+        }
+    }
+    private void UpdateWeapontDetail(EquippableItemSO curWeapon)
+    {
+        if (this.desText == null) return;
+        this.desText.text = curWeapon.Description;
     }
 }

@@ -1,9 +1,12 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
+using UnityEngine.SceneManagement;
 
-public class PlayerMovement : MonoBehaviour
+public class PlayerMovement : DucMonobehaviour
 {
     public bool isLeader = false;
+    [SerializeField] private MainInventoryController mainInventory;
     [SerializeField] public float moveSpeed = 5f;
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] public Animator anim;
@@ -13,16 +16,26 @@ public class PlayerMovement : MonoBehaviour
     public List<Vector3> positionHistory = new List<Vector3>();
     private float recordTimer;
     [SerializeField] private float recordInterval = 0.1f;
+    public Vector2 lastMove = Vector2.down;
 
-    private void Awake()
+    protected override void Awake()
     {
-        this.rb = this.transform.parent.transform.Find("Body").GetComponent<Rigidbody2D>();
-        this.anim = this.transform.parent.transform.Find("Body").GetComponent<Animator>();
+        this.rb = this.transform.parent.GetComponent<Rigidbody2D>();
+        this.anim = this.transform.parent.GetComponent<Animator>();
+        this.mainInventory = FindObjectOfType<MainInventoryController>();
     }
-
-    private void Update()
+    protected override void Update()
     {
-        if (CombatController.Instance.CBZ.isInCombat) return;
+        this.MoveInput();
+    }
+    protected override void FixedUpdate()
+    {
+        this.CheckState();
+        
+    }
+    private void MoveInput()
+    {
+        if (CombatController.Instance.CBZ.isInCombat || this.mainInventory.isMainInventoryOpen) return;
         else
         {
             if (!isLeader) return; // Chỉ Leader mới nhập input
@@ -31,6 +44,7 @@ public class PlayerMovement : MonoBehaviour
 
             anim.SetFloat("Horizontal", movement.x);
             anim.SetFloat("Vertical", movement.y);
+            lastMove = movement.normalized;
             anim.SetFloat("Speed", movement.sqrMagnitude);
 
             if (movement != Vector2.zero)
@@ -39,13 +53,11 @@ public class PlayerMovement : MonoBehaviour
                 anim.SetFloat("LastVertical", movement.y);
             }
         }
-        
     }
-
-    private void FixedUpdate()
+    public override void CheckState()
     {
         // Nếu đang combat thì không cho di chuyển
-        if (CombatController.Instance.CBZ.isInCombat)
+        if (CombatController.Instance.CBZ.isInCombat || this.mainInventory.isMainInventoryOpen)
         {
             rb.velocity = Vector2.zero;
             return;
@@ -59,16 +71,17 @@ public class PlayerMovement : MonoBehaviour
                 recordTimer += Time.fixedDeltaTime;
                 if (recordTimer >= recordInterval)
                 {
-                    positionHistory.Insert(0, this.transform.parent.Find("Body").position);
+                    positionHistory.Insert(0, this.transform.parent.position);
                     recordTimer = 0f;
                 }
             }
         }
-        
     }
-
+   
     public void ClearHistory()
     {
         positionHistory.Clear();
     }
+
+    
 }

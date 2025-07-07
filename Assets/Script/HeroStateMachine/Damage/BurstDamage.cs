@@ -6,7 +6,7 @@ public class BurstDamage : DealDamageController
 {
     private static BurstDamage instance;
     public static BurstDamage Instance => instance;
-    protected void Awake()
+    protected override void Awake()
     {
         if (instance != null && this.gameObject != null) Destroy(this.gameObject);
         instance = this;

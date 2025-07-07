@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class TransparentDetection : MonoBehaviour
+public class TransparentDetection : DucMonobehaviour
 {
     [Range(0, 1)]
     [SerializeField] private float transparencyAmount = 0.8f;
@@ -12,7 +12,7 @@ public class TransparentDetection : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private Tilemap tileMap;
 
-    private void Awake()
+    protected override void Awake()
     {
         this.spriteRenderer = GetComponent<SpriteRenderer>();
         this.tileMap = this.GetComponent<Tilemap>();

@@ -7,9 +7,9 @@ using DG.Tweening;
 using Cinemachine;
 using Inventory;
 using System.Linq;
+using UnityEngine.SceneManagement;
 
-
-public class HeroStateMachine : MonoBehaviour
+public class HeroStateMachine : DucMonobehaviour
 {
     public BaseHero baseHero;
     public ItemInventoryController inventoryController;
@@ -45,27 +45,42 @@ public class HeroStateMachine : MonoBehaviour
     public int turnsToRevive = 0;
     public int reviveTurnThreshold = 3;
     // Start is called before the first frame update
-    void Start()
+    protected override void Start()
     {
         DOTween.SetTweensCapacity(500, 50);
         this.choose.SetActive(false);
         this.body = this.transform.Find("Body").gameObject;
         this.anim = this.body.GetComponent<Animator>();
         //this.inventoryController = this.transform.GetComponent<InventoryController>();
-        this.HeroPosition();
         this.currentState = TurnState.PROCESSING;
     }
-    private void Awake()
+
+    protected override void Update()
+    {
+        this.HandleCurrentState();  
+    }
+
+    protected override void Awake()
+    {
+        var existingHeroes = FindObjectsOfType<HeroStateMachine>();
+
+        foreach (var hero in existingHeroes)
+        {
+            if (hero != this && hero.baseHero.theName == this.baseHero.theName)
+            {
+                Destroy(this.gameObject); // hoặc set inactive nếu cần giữ
+                return;
+            }
+        }
+
+        this.LoadComponent();
+        DontDestroyOnLoad(this.gameObject);
+    }
+    private void LoadComponent()
     {
         this.heroPanelHandler = this.transform.GetComponent<HeroPanelHandler>();
         this.baseHero.curHP = this.baseHero.baseHP;
-        DontDestroyOnLoad(this.gameObject);
-        
-    }
-    // Update is called once per frame
-    private void Update()
-    {
-        this.HandleCurrentState();
+        this.baseHero.curMP = this.baseHero.baseMP;
     }
     // Handle current state and check state
     private void HandleCurrentState()
@@ -153,7 +168,7 @@ public class HeroStateMachine : MonoBehaviour
             this.currentState = TurnState.PROCESSING;
         }
     }
-    private void HeroPosition()
+    public void HeroPosition()
     {
         // Xác định chỉ số của hero trong playerPosition
         for (int i = 0; i < CombatController.Instance.CBZ.heros.Length; i++)
@@ -316,6 +331,7 @@ public class HeroStateMachine : MonoBehaviour
         this.anim.Play("IdleBattle");
         yield return new WaitForSeconds(0.5f);
         Vector3 firstPosition = CombatController.Instance.CBZ.playerPositions[this.heroIndex].position;
+        //Debug.LogError(firstPosition + ": First position");
         while (this.MoveTowardsStart(firstPosition)) { yield return null; }
         //remvoe this performer from the list in CSM
         CombatController.Instance.CBM.performList.RemoveAt(0);
@@ -334,7 +350,7 @@ public class HeroStateMachine : MonoBehaviour
 
             Debug.LogWarning("hero done");
             CombatController.Instance.CBM.UpdateHeroRevival();
-            if (CombatController.Instance.CBM.AreAllEnemiesDone())
+            if (CombatController.Instance.CBM.AreAllEnemiesDone() && CombatController.Instance.CBM.performList.Count == 0)
             {
                 CombatController.Instance.CBM.heroesDoneTurn.Clear();
                 CombatController.Instance.CBM.heroTurn = true;
@@ -375,4 +391,6 @@ public class HeroStateMachine : MonoBehaviour
         Debug.LogWarning("Không tìm thấy prefab cho skill: " + baseAttack.attackName);
         return null;
     }
+
+    
 }

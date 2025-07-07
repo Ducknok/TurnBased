@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Spawner : MonoBehaviour
+public abstract class Spawner : DucMonobehaviour
 {
     [Header("Spawner")]
     [SerializeField] protected Transform holder;
@@ -13,7 +13,7 @@ public abstract class Spawner : MonoBehaviour
     [SerializeField] protected List<Transform> prefabs;
     [SerializeField] protected List<Transform> poolObjs;
 
-    protected void Start()
+    protected override void Start()
     {
         this.LoadComponents();
     }

@@ -8,13 +8,13 @@ using UnityEngine.UI;
 //View (V) in MVC
 namespace Inventory.UI
 {
-    public class UIInventoryPage : MonoBehaviour
+    public class UIInventoryPage : DucMonobehaviour
     {
         [Header("LinkClass")]
         [SerializeField] private UIInventoryItem itemPrefab;
         [SerializeField] private RectTransform contentPanel;
         [SerializeField] public UIInventoryDescription itemDescription;
-        [SerializeField] private MouseFollower mouseFollower;
+        //[SerializeField] private MouseFollower mouseFollower;
        
         [Header("ListOfUIItem")]
         List<UIInventoryItem> listOfUIItems = new List<UIInventoryItem>();
@@ -41,16 +41,18 @@ namespace Inventory.UI
         [SerializeField] public Transform infoHeroPanelSpacer;
         private List<Image> heroPanel = new List<Image>();
 
-
-
-        private void Awake()
+        protected override void Awake()
         {
             Hide();
-            this.mouseFollower.Toggle(false);
             this.itemDescription.ResetDescription();
         }
-        private void Update()
+        protected override void Update()
         {
+            this.CheckState();
+        }
+        public override void CheckState()
+        {
+            base.CheckState();
             if (this.isSelectingHero)
             {
                 SelectHero();
@@ -60,7 +62,6 @@ namespace Inventory.UI
                 SelectItem();
             }
         }
-
         public void StartHeroSelection(Action<HeroStateMachine> onSelected)
         {
             this.isSelectingHero = true;
@@ -73,14 +74,14 @@ namespace Inventory.UI
             if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
             {
                 this.currentHeroIndex = (this.currentHeroIndex + 1) % this.heroButtons.Count;
-                Debug.LogWarning("Nut S");
+                //Debug.LogWarning("Nut S");
 
                 HighlightHeroButton(this.currentHeroIndex);
             }
             else if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
             {
                 this.currentHeroIndex = (this.currentHeroIndex - 1 + this.heroButtons.Count) % this.heroButtons.Count;
-                Debug.LogWarning("Nut W");
+                ///Debug.LogWarning("Nut W");
 
                 HighlightHeroButton(this.currentHeroIndex);
             }
@@ -103,13 +104,13 @@ namespace Inventory.UI
         {
             if (Input.GetKeyDown(KeyCode.A))
             {
-                Debug.LogWarning("Nut A");
+                //Debug.LogWarning("Nut A");
 
                 MoveSelection(-1);
             }
             else if (Input.GetKeyDown(KeyCode.D))
             {
-                Debug.LogWarning("Nut D");
+                //Debug.LogWarning("Nut D");
 
                 MoveSelection(1);
             }
@@ -136,7 +137,6 @@ namespace Inventory.UI
                 }
             }
         }
-
         private void UnHighlightHeroButton(int index)
         {
             for (int i = 0; i < heroButtons.Count; i++)
@@ -151,8 +151,6 @@ namespace Inventory.UI
                 }
             }
         }
-
-
         private void MoveSelection(int direction)
         {
             if (this.listOfUIItems.Count == 0) return; // Nếu inventory rỗng thì không làm gì
@@ -170,7 +168,6 @@ namespace Inventory.UI
             // Chọn item mới
             UpdateSelection();
         }
-
         private void UpdateSelection()
         {
             //this.ResetAllItems();
@@ -190,31 +187,29 @@ namespace Inventory.UI
             }
             this.UpdateSelection();
         }
-
         public void InitializeHeroButton()
         {
-                // Clear old buttons (nếu cần)
-                foreach (Transform child in this.heroButtonSpacer)
-                {
-                    Destroy(child.gameObject);
-                }
+            foreach (Transform child in this.heroButtonSpacer)
+            {
+                Destroy(child.gameObject);
+            }
 
-                this.heroButtons.Clear();
+            this.heroButtons.Clear();
 
-                // Instantiate button và fill dữ liệu
-                for (int i = 0; i < CombatController.Instance.CBM.playersInCombat.Count; i++)
-                {
-                    HeroStateMachine hero = CombatController.Instance.CBM.playersInCombat[i].GetComponent<HeroStateMachine>();
-                    Image newImage = Instantiate(this.heroImagePrefab, this.heroButtonSpacer);
-                    this.heroButtons.Add(newImage);
+            // Instantiate button và fill dữ liệu
+            for (int i = 0; i < CombatController.Instance.CBM.playersInCombat.Count; i++)
+            {
+                HeroStateMachine hero = CombatController.Instance.CBM.playersInCombat[i].GetComponent<HeroStateMachine>();
+                Image newImage = Instantiate(this.heroImagePrefab, this.heroButtonSpacer);
+                this.heroButtons.Add(newImage);
 
-                    // Gọi hàm fill dữ liệu vào button
-                    this.itemDescription.SetHeroBarDescription(newImage, hero);
+                // Gọi hàm fill dữ liệu vào button
+                this.itemDescription.SetHeroBarDescription(newImage, hero);
 
-                    // Optional: Add onClick event
-                    //int index = i;
-                    //newButton.onClick.AddListener(() => OnHeroButtonClicked(index));
-                }
+                // Optional: Add onClick event
+                //int index = i;
+                //newButton.onClick.AddListener(() => OnHeroButtonClicked(index));
+            }
         }
         public void InitializeHeroBar(ItemSO item)
         {
@@ -251,7 +246,6 @@ namespace Inventory.UI
                 }
             }
         }
-
         internal void ResetAllItems()
         {
             foreach (var item in this.listOfUIItems)
@@ -260,7 +254,6 @@ namespace Inventory.UI
                 item.Deselect();
             }
         }
-
         public void UpdateData(int itemIndex, Sprite itemImage, int itemQuantity)
         {
             if (listOfUIItems.Count > itemIndex)
@@ -268,7 +261,6 @@ namespace Inventory.UI
                 listOfUIItems[itemIndex].SetData(itemImage, itemQuantity);
             }
         }
-
         private void HandleShowItemActions(UIInventoryItem inventoryItemUI)
         {
             int index = listOfUIItems.IndexOf(inventoryItemUI);
@@ -279,60 +271,12 @@ namespace Inventory.UI
             }
             OnItemActionRequested?.Invoke(index);
         }
-
-        //private void HandleEndDrag(UIInventoryItem inventoryItemUI)
-        //{
-        //    ResetDraggedItem();
-        //}
-
-        //private void HandleSwap(UIInventoryItem inventoryItemUI)
-        //{
-        //    int index = listOfUIItems.IndexOf(inventoryItemUI);
-        //    if (index == -1)
-        //    {
-
-        //        return;
-        //    }
-
-        //    OnSwapItems?.Invoke(currentlyDraggedItemIndex, index);
-        //    HandleItemSelection(inventoryItemUI);
-        //}
-
-        private void ResetDraggedItem()
-        {
-            mouseFollower.Toggle(false);
-            //currentlyDraggedItemIndex = -1;
-        }
-
-        //private void HandleBeginDrag(UIInventoryItem inventoryItemUI)
-        //{
-        //    int index = listOfUIItems.IndexOf(inventoryItemUI);
-        //    if (index == -1) return;
-        //    currentlyDraggedItemIndex = index;
-        //    HandleItemSelection(inventoryItemUI);
-        //    OnStartDragging?.Invoke(index);
-        //}
-
-        //public void CreatedDraggedItem(Sprite sprite, int quantity)
-        //{
-        //    mouseFollower.Toggle(true);
-        //    mouseFollower.SetData(sprite, quantity);
-        //}
-
-        //private void HandleItemSelection(UIInventoryItem inventoryItemUI)
-        //{
-        //    int index = listOfUIItems.IndexOf(inventoryItemUI);
-        //    if (index == -1) return;
-        //    OnDescriptionRequested?.Invoke(index);
-        //}
-     
-
         public void Show()
         {
-            gameObject.SetActive(true);
+            //Debug.LogError("Show");
+            this.gameObject.SetActive(true);
             ResetSelection();
         }
-
         public void ResetSelection()
         {
             this.itemDescription.ResetDescription();
@@ -347,7 +291,6 @@ namespace Inventory.UI
             this.itemActionPanel.Toggle(true);
             this.itemActionPanel.transform.position = listOfUIItems[itemIndex].transform.position;
         }
-
         private void DeselectAllItems()
         {
             foreach (UIInventoryItem item in listOfUIItems)
@@ -370,14 +313,12 @@ namespace Inventory.UI
             listOfUIItems[currentIndex].Select();
             OnDescriptionRequested?.Invoke(currentIndex);
         }
-
         public void Hide()
         {
             this.itemActionPanel.Toggle(false);
             gameObject.SetActive(false);
-            ResetDraggedItem();
+            //ResetDraggedItem();
         }
-
         internal void UpdateItemDescription(int itemIndex, Sprite itemImage, string name, string receiveEffect, string description)
         {
             this.itemDescription.SetItemDescription(itemImage, name, receiveEffect, description);
@@ -385,4 +326,50 @@ namespace Inventory.UI
             this.listOfUIItems[itemIndex].Select();
         }
     }
+    //private void HandleEndDrag(UIInventoryItem inventoryItemUI)
+    //{
+    //    ResetDraggedItem();
+    //}
+
+    //private void HandleSwap(UIInventoryItem inventoryItemUI)
+    //{
+    //    int index = listOfUIItems.IndexOf(inventoryItemUI);
+    //    if (index == -1)
+    //    {
+
+    //        return;
+    //    }
+
+    //    OnSwapItems?.Invoke(currentlyDraggedItemIndex, index);
+    //    HandleItemSelection(inventoryItemUI);
+    //}
+
+    //private void ResetDraggedItem()
+    //{
+    //    //mouseFollower.Toggle(false);
+    //    //currentlyDraggedItemIndex = -1;
+    //}
+
+    //private void HandleBeginDrag(UIInventoryItem inventoryItemUI)
+    //{
+    //    int index = listOfUIItems.IndexOf(inventoryItemUI);
+    //    if (index == -1) return;
+    //    currentlyDraggedItemIndex = index;
+    //    HandleItemSelection(inventoryItemUI);
+    //    OnStartDragging?.Invoke(index);
+    //}
+
+    //public void CreatedDraggedItem(Sprite sprite, int quantity)
+    //{
+    //    mouseFollower.Toggle(true);
+    //    mouseFollower.SetData(sprite, quantity);
+    //}
+
+    //private void HandleItemSelection(UIInventoryItem inventoryItemUI)
+    //{
+    //    int index = listOfUIItems.IndexOf(inventoryItemUI);
+    //    if (index == -1) return;
+    //    OnDescriptionRequested?.Invoke(index);
+    //}
+
 }

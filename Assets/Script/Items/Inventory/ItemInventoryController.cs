@@ -25,51 +25,33 @@ namespace Inventory
 
         [SerializeField] public List<Button> inventoryTabs = new List<Button>();
         private int currentButtonIndex = 0;
-
-        
-
-        
         //TODO: audio drop item here
         //[SerializeField]
         //private AudioClip dropClip;
         //[SerializeField]
         //private AudioSource audioSource;
-        private void Start()
+
+        protected override void Start()
         {
-            
             PrepareUI();
             PrepareInventoryData(); 
         }
         protected override void Awake()
         {
             base.Awake();
-            this.inventory = GameObject.Find("BattleCanvas").transform.Find("MainInventory").transform.Find("InventoryMenu");
-            this.inventoryUI = this.inventory.GetComponent<UIInventoryPage>();
-            this.RefreshCurrentTab();
+            this.LoadInventory();
             
         }
-        public void Update()
+        protected override void Update()
         {
             if (!this.isItemInventoryOpen)
             {
-                //Debug.LogWarning("Item inventory dang dong");
                 return;
             }
             this.SwitchButtonInput();
         }
-        protected override void OnEnable()
+        public void LoadInventory()
         {
-            base.OnEnable();
-        }
-
-        protected override void OnDisable()
-        {
-            base.OnDisable();
-        }
-
-        protected override void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-        {
-            base.OnSceneLoaded(scene, mode);
             this.inventory = GameObject.Find("BattleCanvas").transform.Find("MainInventory").transform.Find("InventoryMenu");
             this.inventoryUI = this.inventory.GetComponent<UIInventoryPage>();
             this.RefreshCurrentTab();
@@ -85,7 +67,6 @@ namespace Inventory
                 this.inventoryData.AddItem(item);
             }
         }
-
         private void UpdateInventoryUI(Dictionary<int, InventoryItem> inventoryState)
         {
             this.inventoryUI.ResetAllItems();
@@ -95,7 +76,6 @@ namespace Inventory
                     item.Value.quantity);
             }
         }
-
         public void PrepareUI()
         {
             this.inventoryUI.InitializeInventoryUI(this.inventoryData.Size);
@@ -104,24 +84,17 @@ namespace Inventory
             this.inventoryUI.OnDescriptionRequested += HandleDescriptionRequest;
             this.inventoryUI.OnItemActionRequested += HandleItemActionRequest;
         }
-
         private void HandleSwapItems(int itemIndex1, int itemIndex2)
         {
             this.inventoryData.SwapItems(itemIndex1, itemIndex2);
         }
-
-        //private void HandleStartDragging(int itemIndex)
-        //{
-        //    InventoryItem inventoryItem = this.inventoryData.GetItemAt(itemIndex);
-        //    if (inventoryItem.IsEmpty) return;
-        //    this.inventoryUI.CreatedDraggedItem(inventoryItem.item.ItemImage, inventoryItem.quantity);
-        //}
-
         public void PerformAction(int itemIndex)
         {
             if (itemIndex < 0 || itemIndex >= currentFilteredItems.Count)
                 return;
+
             InventoryItem inventoryItem = this.currentFilteredItems[itemIndex];
+
             IDestroyableItem destroyableItem = inventoryItem.item as IDestroyableItem;
             if (destroyableItem != null)
             {
@@ -132,7 +105,8 @@ namespace Inventory
             IItemAction itemAction = inventoryItem.item as IItemAction;
             if (itemAction != null)
             {
-                itemAction.PerformAction(this.gameObject, inventoryItem.itemState);
+                itemAction.PerformAction(itemIndex, this.gameObject, inventoryItem.itemState);
+
                 if (itemIndex >= currentFilteredItems.Count || currentFilteredItems[itemIndex].IsEmpty)
                 {
                     this.UpdateFilteredInventoryUI(currentButtonIndex);
@@ -140,6 +114,7 @@ namespace Inventory
                 }
             }
         }
+
         private void HandleItemActionRequest(int itemIndex)
         {
             if (itemIndex < 0 || itemIndex >= currentFilteredItems.Count)
@@ -163,29 +138,26 @@ namespace Inventory
                 // Không hiển thị nút gì cả — chuyển luôn sang chọn Hero
                 this.inventoryUI.StartHeroSelection((HeroStateMachine selectedHero) =>
                 {
-                    if (itemAction.ActionName == "Consume" && selectedHero.baseHero.curHP == selectedHero.baseHero.baseHP && selectedHero.baseHero.curMP == selectedHero.baseHero.baseMP) return;
-                    //Gọi hiệu ứng item lên hero
-                    itemAction.PerformAction(selectedHero.gameObject, inventoryItem.itemState);
+                    if (itemAction.ActionName == "Consume" &&
+                        selectedHero.baseHero.curHP == selectedHero.baseHero.baseHP &&
+                        selectedHero.baseHero.curMP == selectedHero.baseHero.baseMP)
+                        return;
 
-                    //Nếu là item tiêu hao thì xóa nó khỏi inventory
+                    // Gọi hiệu ứng item lên hero
+                    itemAction.PerformAction(itemIndex, selectedHero.gameObject, inventoryItem.itemState);
+
+                    // Nếu là item tiêu hao thì xóa nó khỏi inventory
                     if (destroyableItem != null)
                     {
                         this.inventoryData.RemoveItem(inventoryItem.item, 1);
                         UpdateFilteredInventoryUI(this.currentButtonIndex);
                     }
 
-                    //Reset UI sau khi dùng
+                    // Reset UI sau khi dùng
                     this.inventoryUI.ResetSelection();
                 });
             }
         }
-
-        //private void DropItem(int itemIndex, int quantity)
-        //{
-        //    this.inventoryData.RemoveItem(itemIndex, quantity);
-        //    this.inventoryUI.ResetSelection();
-        //    //this.audioSource.PlayOnShot(dropClip);
-        //}
 
         private void HandleDescriptionRequest(int itemIndex)
         {
@@ -207,8 +179,111 @@ namespace Inventory
             this.inventoryUI.UpdateItemDescription(itemIndex, item.ItemImage, item.Name, item.ReceiveEffect, item.Description);
             this.inventoryUI.InitializeHeroBar(item);
         }
+        private void UpdateFilteredInventoryUI(int index)
+        {
+            this.inventoryUI.ResetAllItems();
+            var inventoryState = this.inventoryData.GetCurrentInventoryState();
+            this.currentFilteredItems.Clear();
 
+            // Lấy tên tab hiện tại (để so sánh với itemType)
+            string selectedTab = this.inventoryTabs[index].gameObject.name;
+            ItemSO firstFilteredItem = null;
 
+            foreach (var item in inventoryState)
+            {
+                if (item.Value.item.itemType.ToString() == selectedTab)
+                {
+                    this.currentFilteredItems.Add(item.Value);
+
+                    // Lưu item đầu tiên (nếu có)
+                    if (firstFilteredItem == null)
+                    {
+                        firstFilteredItem = item.Value.item as ItemSO;
+                    }
+                }
+            }
+            // Hiện panel phù hợp và gọi InitializeHeroBar(chỉ gọi 1 lần)
+            foreach (GameObject bar in this.inventoryUI.heroInfoPanelList)
+            {
+                bool shouldShow = bar.name == selectedTab;
+                bar.SetActive(shouldShow);
+
+                if (shouldShow)
+                {
+                    this.inventoryUI.InitializeHeroBar(firstFilteredItem); // Truyền item vào để tính toán
+                }
+            }
+
+            // Cập nhật UI slot
+            for (int i = 0; i < this.currentFilteredItems.Count; i++)
+            {
+                this.inventoryUI.UpdateData(i, this.currentFilteredItems[i].item.ItemImage, this.currentFilteredItems[i].quantity);
+            }
+
+            // Set lại selected index
+            if (this.currentFilteredItems.Count > 0)
+            {
+                this.inventoryUI.SetSelectedIndex(0);
+            }
+            else
+            {
+                this.inventoryUI.ResetSelection();
+            }
+        }
+        //đổi qua lại giữa các button
+        private void SwitchButton(int direction)
+        {
+            int previousTabIndex = currentButtonIndex;
+            currentButtonIndex += direction;
+
+            if (currentButtonIndex < 0)
+                currentButtonIndex = inventoryTabs.Count - 1;
+            else if (currentButtonIndex >= inventoryTabs.Count)
+                currentButtonIndex = 0;
+
+            if (previousTabIndex != currentButtonIndex)
+            {
+                //Debug.LogWarning(inventoryTabs[previousTabIndex].transform.Find("Background"));
+                inventoryTabs[previousTabIndex].transform.Find("Background").gameObject.GetComponent<Image>().enabled = false;
+                inventoryTabs[currentButtonIndex].transform.Find("Background").gameObject.GetComponent<Image>().enabled = true;
+                UpdateFilteredInventoryUI(currentButtonIndex);
+            }
+        }
+        private void SwitchButtonInput()
+        {
+            if (Input.GetKeyDown(KeyCode.Q))
+            {
+                SwitchButton(-1); // Chuyển về trái
+            }
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                SwitchButton(1);  // Chuyển sang phải
+            }
+        }
+        private void RefreshCurrentTab()
+        {
+            this.inventoryTabs[currentButtonIndex].transform.Find("Background").gameObject.gameObject.GetComponent<Image>().enabled = true;
+            UpdateFilteredInventoryUI(currentButtonIndex);
+        }
+        public void OpenItemInventory()
+        {
+            //Debug.LogError("hello");
+            this.inventoryUI.InitializeHeroButton();
+            this.inventoryUI.Show();
+            this.RefreshCurrentTab();
+        }
+        //private void HandleStartDragging(int itemIndex)
+        //{
+        //    InventoryItem inventoryItem = this.inventoryData.GetItemAt(itemIndex);
+        //    if (inventoryItem.IsEmpty) return;
+        //    this.inventoryUI.CreatedDraggedItem(inventoryItem.item.ItemImage, inventoryItem.quantity);
+        //}
+        //private void DropItem(int itemIndex, int quantity)
+        //{
+        //    this.inventoryData.RemoveItem(itemIndex, quantity);
+        //    this.inventoryUI.ResetSelection();
+        //    //this.audioSource.PlayOnShot(dropClip);
+        //}
         //public string PrepareDescription(InventoryItem inventoryItem)
         //{
         //    StringBuilder sb = new StringBuilder();
@@ -264,107 +339,6 @@ namespace Inventory
         //        this.inventoryUI.ResetSelection();
         //        //Debug.Log("No items after filter, resetting selection");
         //    }
-        //}
-        private void UpdateFilteredInventoryUI(int index)
-        {
-            this.inventoryUI.ResetAllItems();
-            var inventoryState = this.inventoryData.GetCurrentInventoryState();
-            this.currentFilteredItems.Clear();
-
-            // Lấy tên tab hiện tại (để so sánh với itemType)
-            string selectedTab = this.inventoryTabs[index].gameObject.name;
-            ItemSO firstFilteredItem = null;
-
-            foreach (var item in inventoryState)
-            {
-                if (item.Value.item.itemType.ToString() == selectedTab)
-                {
-                    this.currentFilteredItems.Add(item.Value);
-
-                    // Lưu item đầu tiên (nếu có)
-                    if (firstFilteredItem == null)
-                    {
-                        firstFilteredItem = item.Value.item as ItemSO;
-                    }
-                }
-            }
-
-            // Hiện panel phù hợp và gọi InitializeHeroBar (chỉ gọi 1 lần)
-            foreach (GameObject bar in this.inventoryUI.heroInfoPanelList)
-            {
-                bool shouldShow = bar.name == selectedTab;
-                bar.SetActive(shouldShow);
-
-                if (shouldShow)
-                {
-                    this.inventoryUI.InitializeHeroBar(firstFilteredItem); // Truyền item vào để tính toán
-                }
-            }
-
-            // Cập nhật UI slot
-            for (int i = 0; i < this.currentFilteredItems.Count; i++)
-            {
-                this.inventoryUI.UpdateData(i, this.currentFilteredItems[i].item.ItemImage, this.currentFilteredItems[i].quantity);
-            }
-
-            // Set lại selected index
-            if (this.currentFilteredItems.Count > 0)
-            {
-                this.inventoryUI.SetSelectedIndex(0);
-            }
-            else
-            {
-                this.inventoryUI.ResetSelection();
-            }
-        }
-
-        //đổi qua lại giữa các button
-        private void SwitchButton(int direction)
-        {
-            int previousTabIndex = currentButtonIndex;
-            currentButtonIndex += direction;
-
-            if (currentButtonIndex < 0)
-                currentButtonIndex = inventoryTabs.Count - 1;
-            else if (currentButtonIndex >= inventoryTabs.Count)
-                currentButtonIndex = 0;
-
-            if (previousTabIndex != currentButtonIndex)
-            {
-                //Debug.LogWarning(inventoryTabs[previousTabIndex].transform.Find("Background"));
-                inventoryTabs[previousTabIndex].transform.Find("Background").gameObject.GetComponent<Image>().enabled = false;
-                inventoryTabs[currentButtonIndex].transform.Find("Background").gameObject.GetComponent<Image>().enabled = true;
-                UpdateFilteredInventoryUI(currentButtonIndex);
-            }
-        }
-
-        private void SwitchButtonInput()
-        {
-            if (Input.GetKeyDown(KeyCode.Q))
-            {
-                Debug.LogWarning("Nut Q");
-                SwitchButton(-1); // Chuyển về trái
-            }
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                Debug.LogWarning("Nut E");
-                SwitchButton(1);  // Chuyển sang phải
-            }
-        }
-        private void RefreshCurrentTab()
-        {
-
-            this.inventoryTabs[currentButtonIndex].transform.Find("Background").gameObject.gameObject.GetComponent<Image>().enabled = true;
-            UpdateFilteredInventoryUI(currentButtonIndex);
-        }
-
-        public void OpenItemInventory()
-        {
-            this.inventoryUI.InitializeHeroButton();
-            this.inventoryUI.Show();
-            this.RefreshCurrentTab();
-        }
-
-        
+        //} 
     }
 }

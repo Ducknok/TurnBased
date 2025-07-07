@@ -14,4 +14,5 @@ public class BaseHero : BaseClass
 
     
     public HeroType heroType;
+    public Elemental elemental;
 }

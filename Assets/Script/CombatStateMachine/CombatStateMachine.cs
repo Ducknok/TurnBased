@@ -8,7 +8,7 @@ using UnityEngine.EventSystems;
 using Inventory;
 using UnityEngine.SceneManagement;
 
-public class CombatStateMachine : MonoBehaviour
+public class CombatStateMachine : DucMonobehaviour
 {
     public enum PerformAction
     {
@@ -54,16 +54,24 @@ public class CombatStateMachine : MonoBehaviour
     public bool enemyTurn;
     public List<GameObject> heroesDoneTurn = new List<GameObject>();
     // Start is called before the first frame update
-    private void Start()
+    protected override void Start()
     {
         this.combatState = PerformAction.WAIT;
-        
+
         ButtonController.Instance.actionPanel.SetActive(false);
         ButtonController.Instance.skillPanel.SetActive(false);
         this.heroTurn = true;
         playerInput = PlayerGUI.ACTIVATE;
     }
-    private void Awake()
+    protected override void Update()
+    {
+        this.AreAllHeroesDone();
+        if (this.isSelectingEnemy) this.SelectEnemyWithKeyboard();
+        this.HandleCombatState();
+        this.HandlePlayerInputState();
+    }
+
+    protected override void Awake()
     {
         //if (this.enemiesInCombat != null) return;
         this.enemiesInCombat.AddRange(GameObject.FindGameObjectsWithTag("Enemy"));
@@ -72,25 +80,26 @@ public class CombatStateMachine : MonoBehaviour
         this.enemyInfoSpacer = GameObject.Find("BattleCanvas").transform.Find("Panel").transform.Find("EnemyInfoPanel").transform.Find("EnemyInfoPanelSpacer");
         //DontDestroyOnLoad(this.gameObject);
     }
-    protected void OnEnable()
+
+    protected override void OnEnable()
     {
-        SceneManager.sceneLoaded += OnSceneLoaded;
+        base.OnEnable();
     }
 
-    protected virtual void OnDisable()
+    protected override void OnDisable()
     {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
+        base.OnDisable();
     }
 
-    protected void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    protected override void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         if (this.enemiesInCombat != null) return;
         this.enemiesInCombat.AddRange(GameObject.FindGameObjectsWithTag("Enemy"));
         if (this.playersInCombat != null) return;
         this.playersInCombat.AddRange(GameObject.FindGameObjectsWithTag("Player"));
         this.enemyInfoSpacer = GameObject.Find("BattleCanvas").transform.Find("Panel").transform.Find("EnemyInfoPanel").transform.Find("EnemyInfoPanelSpacer");
-
     }
+
     public void StartEnemySelection(BaseAttack skillData)
     {
         if (enemiesInCombat.Count == 0) return;
@@ -102,14 +111,7 @@ public class CombatStateMachine : MonoBehaviour
         HighlightEnemy(); // Highlight ban đầu
     }
     // Update is called once per frame
-    [System.Obsolete]
-    private void Update()
-    {
-        this.AreAllHeroesDone();
-        if (this.isSelectingEnemy) this.SelectEnemyWithKeyboard();
-        this.HandleCombatState();
-        this.HandlePlayerInputState();
-    }
+    
     private void HandleCombatState()
     {
         switch (this.combatState)
@@ -234,7 +236,7 @@ public class CombatStateMachine : MonoBehaviour
             //call function
             this.ClearAttackPanel();
             if (this.AreAllHeroesDone()) this.heroesDoneTurn.Clear();
-            if (this.AreAllEnemiesDone())
+            if (this.AreAllEnemiesDone() && this.performList.Count == 0)
             {
                 Debug.LogWarning("Enemy done");
                 //Nếu tất cả enemy đã tấn công xong, reset Lock & Timer, rồi chuyển lượt cho player
@@ -258,7 +260,6 @@ public class CombatStateMachine : MonoBehaviour
             this.playerInput = PlayerGUI.ACTIVATE;
         }
     }
-    [System.Obsolete]
     private void HandlePlayerInputState()
     {
         switch (this.playerInput)
@@ -285,7 +286,7 @@ public class CombatStateMachine : MonoBehaviour
                 ButtonController.Instance.actionPanel.SetActive(false);
             }
 
-            if (playerToManage.Count > 0)
+            if (playerToManage.Count > 0 && this.heroTurn)
             {
                 playerToManage[0].transform.Find("Body").transform.Find("Choose").gameObject.SetActive(true);
                 this.playerChoice = new HandleTurn();
@@ -373,7 +374,6 @@ public class CombatStateMachine : MonoBehaviour
     }
     //--------------------------------------------Hero-----------------------------------------
     //Player input done
-    [System.Obsolete]
     protected void PlayerInputDone()
     {
         this.performList.Add(this.playerChoice);
@@ -474,4 +474,6 @@ public class CombatStateMachine : MonoBehaviour
             }
         }
     }
+
+    
 }

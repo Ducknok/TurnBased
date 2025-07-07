@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
-public class EnemyMoveToCombat : MonoBehaviour
+public class EnemyMoveToCombat : DucMonobehaviour
 {
     public Transform targetPosition;  // V? tr¨ª m¨¤ enemy s? nh?y t?i khi combat b?t ??u
     public float jumpHeight = 2f;     // ?? cao c?a c¨² nh?y
@@ -32,7 +32,7 @@ public class EnemyMoveToCombat : MonoBehaviour
             // Ki?m tra l?i c¨¢c ??i t??ng tr??c khi th?c hi?n h¨¤nh ??ng trong callback
             if (targetPosition != null)
            {
-               Debug.Log("Target position is valid!");
+               //Debug.Log("Target position is valid!");
                StartCombat();
            }
            else

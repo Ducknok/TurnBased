@@ -9,7 +9,7 @@ public class EnemySkillManager : SkillManager
     [SerializeField] private EnemyStateMachine esm;
     [SerializeField] private Transform position;
 
-    private void Awake()
+    protected override void Awake()
     {
         LoadHeroSM();
     }

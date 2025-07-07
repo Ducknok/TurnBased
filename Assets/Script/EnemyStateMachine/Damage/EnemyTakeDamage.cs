@@ -8,7 +8,7 @@ public class EnemyTakeDamage : TakeDamageController
 {
     private float trailDelay;
     private CinemachineImpulseSource impulseSource;
-    protected void Start()
+    protected override void Start()
     {
         this.impulseSource = this.transform.GetComponent<CinemachineImpulseSource>();
     }

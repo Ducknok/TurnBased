@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Item : MonoBehaviour
+public class Item : DucMonobehaviour
 {
     [field: SerializeField]
     public ItemSO InventoryItem { get; private set; }
@@ -14,7 +14,7 @@ public class Item : MonoBehaviour
     [field: SerializeField]
     private float duration = 0.3f;
 
-    private void Start()
+    protected override void Start()
     {
         GetComponent<SpriteRenderer>().sprite = this.InventoryItem.ItemImage;
     }

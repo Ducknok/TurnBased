@@ -7,7 +7,7 @@ using UnityEngine.UI;
 using Cinemachine;
 using System.Linq;
 
-public class EnemyStateMachine : MonoBehaviour
+public class EnemyStateMachine : DucMonobehaviour
 {
     public CombatStateMachine combatStateMachine;
     public BaseEnemy baseEnemy;
@@ -49,7 +49,7 @@ public class EnemyStateMachine : MonoBehaviour
     private Vector3 initialPosition;
 
     // Start is called before the first frame update
-    private void Start()
+    protected override void Start()
     {
         DOTween.SetTweensCapacity(500, 50);
         this.combatStateMachine = GameObject.Find("CombatManager").GetComponent<CombatStateMachine>();
@@ -63,13 +63,13 @@ public class EnemyStateMachine : MonoBehaviour
         this.choose.SetActive(false);
     }
 
-    private void Awake()
+    protected override void Awake()
     {
         this.baseEnemy.curHP = this.baseEnemy.baseHP;
     }
 
     // Update is called once per frame
-    private void Update()
+    protected override void Update()
     {
         this.HandleCurrentState();
     }

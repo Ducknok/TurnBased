@@ -9,7 +9,7 @@ using Inventory.Model;
 //View (V) in MVC
 namespace Inventory.UI
 {
-    public class UIInventoryDescription : MonoBehaviour
+    public class UIInventoryDescription : DucMonobehaviour
     {
         [Header("Item")]
         [SerializeField] private Image itemImage;
@@ -18,7 +18,7 @@ namespace Inventory.UI
         [SerializeField] private TextMeshProUGUI description;
         private float trailDelay = 0.4f;
 
-        public void Awake()
+        protected override void Awake()
         {
             ResetDescription();
         }

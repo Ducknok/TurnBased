@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MouseFollower : MonoBehaviour
+public class MouseFollower : DucMonobehaviour
 {
     [SerializeField]
     private Canvas canvas;
@@ -11,7 +11,7 @@ public class MouseFollower : MonoBehaviour
     [SerializeField]
     private UIInventoryItem inventoryItem;
 
-    public void Awake()
+    protected override void Awake()
     {
         this.canvas = this.transform.root.GetComponent<Canvas>();
         this.inventoryItem = GetComponentInChildren<UIInventoryItem>();
@@ -21,7 +21,7 @@ public class MouseFollower : MonoBehaviour
     {
         this.inventoryItem.SetData(sprite, quantity);
     }
-    private void Update()
+    protected override void Update()
     {
         Vector2 position;
         RectTransformUtility.ScreenPointToLocalPointInRectangle(

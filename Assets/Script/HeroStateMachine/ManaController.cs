@@ -1,4 +1,4 @@
-using DG.Tweening;
+Ôªøusing DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,10 +13,12 @@ public class ManaController : Singleton<ManaController>
     {
         if (CombatController.Instance.CBM.performList[0].choosenAttack.attackType == BaseAttack.AttackType.NormalAttack)
         {
+            
             this.RestoreMana(hsm);
         }
         else
         {
+            
             this.DescreaseMana(hsm);
         }
 
@@ -30,7 +32,7 @@ public class ManaController : Singleton<ManaController>
     {
         hsm.baseHero.curMP += 3f;
 
-        // ??m b?o mana kh?ng v??t qu®¢ gi®¢ tr? t?i ?a
+        // ??m b?o mana kh?ng v??t qu√° gi√° tr? t?i ?a
         if (hsm.baseHero.curMP > hsm.baseHero.baseMP)
         {
             hsm.baseHero.curMP = hsm.baseHero.baseMP;
@@ -40,7 +42,7 @@ public class ManaController : Singleton<ManaController>
     }
     public void RestoreManaAfterRevive(HeroStateMachine hsm)
     {
-        hsm.baseHero.curMP = Mathf.FloorToInt(hsm.baseHero.baseMP * 0.5f); // H?i 50% m®¢u
+        hsm.baseHero.curMP = Mathf.FloorToInt(hsm.baseHero.baseMP * 0.5f); // H?i 50% m√°u
         this.UpdateManaBar(hsm);
     }
     public void UpdateManaBar(HeroStateMachine hsm)
@@ -50,8 +52,8 @@ public class ManaController : Singleton<ManaController>
             hsm.baseHero.curMP = hsm.baseHero.baseMP;
         }
         float ratio = hsm.baseHero.curMP / hsm.baseHero.baseMP;
-
         Sequence sequence = DOTween.Sequence();
+        if (hsm.heroPanelHandler.heroMPBarFill == null) Debug.LogError("null r cha");
         sequence.Append(hsm.heroPanelHandler.heroMPBarFill.DOFillAmount(ratio, 0.25f)).SetEase(Ease.InOutSine);
         sequence.AppendInterval(this.trailDelay);
         sequence.Append(hsm.heroPanelHandler.heroMPBarTrail.DOFillAmount(ratio, 0.3f)).SetEase(Ease.InOutSine);
@@ -59,6 +61,7 @@ public class ManaController : Singleton<ManaController>
     }
     public void DescreaseMana(HeroStateMachine hsm)
     {
+        //Debug.LogError("RestoreMana");
         hsm.baseHero.curMP -= CombatController.Instance.CBM.performList[0].choosenAttack.attackCost;
         float ratio = hsm.baseHero.curMP / hsm.baseHero.baseMP;
         Sequence sequence = DOTween.Sequence();

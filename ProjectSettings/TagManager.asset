@@ -12,13 +12,13 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Camera
   - Water
   - UI
   - Hero
   - Enemy
+  - Obstacle
   - Platform
-  - 
   - 
   - 
   - 

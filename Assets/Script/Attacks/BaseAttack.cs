@@ -13,7 +13,7 @@ public class BaseAttack : ScriptableObject
         Sword,
         Lance,
         Wind,
-        Thunder,
+        Lightning,
     }
     public enum AttackType
     {
@@ -33,7 +33,7 @@ public class BaseAttack : ScriptableObject
 
 }
 
-public abstract class SkillBehaviour : MonoBehaviour
+public abstract class SkillBehaviour : DucMonobehaviour
 {
     public BaseAttack skillData;
 

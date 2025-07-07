@@ -110,12 +110,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1161727585192710918}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 3.1066666, y: -1.6666667, z: 0}
+  m_LocalScale: {x: 1.3333335, y: 1.3333334, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 6754629560666854712}
+  m_Father: {fileID: 8272432415455867844}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4005882086705676895
 MonoBehaviour:
@@ -149,6 +149,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6379408e3d2c74f4dbf5ede315c62a62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  comCtrl: {fileID: 0}
   leader: {fileID: 4005882086705676895}
   followDelay: 5
   minFollowDistance: 2
@@ -250,7 +251,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8272432415455867844}
-  - {fileID: 3324462702669753801}
   - {fileID: 4346162384564322791}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -266,6 +266,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30d004bbc980db5418080354bdcb99ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  comCtrl: {fileID: 0}
   baseHero:
     theName: May
     baseHP: 500
@@ -442,6 +443,7 @@ Transform:
   - {fileID: 1780982417977763756}
   - {fileID: 7035423523795491970}
   - {fileID: 5801455577285031525}
+  - {fileID: 3324462702669753801}
   m_Father: {fileID: 6754629560666854712}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &3028843794975385779

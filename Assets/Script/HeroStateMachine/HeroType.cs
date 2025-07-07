@@ -7,5 +7,11 @@ public enum HeroType
     Warrior,
     Lancer,
     Archer,
-    Mage
+    Mage,
+    All
+}
+public enum Elemental
+{
+    Wind,
+    Lightning,
 }

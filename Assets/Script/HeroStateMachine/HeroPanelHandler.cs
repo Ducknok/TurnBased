@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class HeroPanelHandler : MonoBehaviour
+public class HeroPanelHandler : DucMonobehaviour
 {
     public HeroStateMachine hsm;
     //For the Player Bar
@@ -16,31 +16,27 @@ public class HeroPanelHandler : MonoBehaviour
     //Hero Panel;
     private HeroPanelStats stats;
     public GameObject playerPanel;
+    private GameObject playerPanelInstance;
     public Transform heroPanelSpacer;
     // Start is called before the first frame update
-    private void Awake()
+
+    protected override void OnEnable()
     {
-        this.hsm = this.gameObject.GetComponent<HeroStateMachine>();
-        this.playerPanel = Resources.Load<GameObject>($"Prefabs/GUI/{this.hsm.baseHero.theName}Bar");
-        this.heroPanelSpacer = GameObject.Find("BattleCanvas").transform.Find("Panel").transform.Find("HeroPanel").transform.Find("HeroPanelSpacer");
-        if (heroPanelSpacer == null)
-        {
-            Debug.LogError("Không tìm thấy BattleCanvas!");
-            return;
-        }
+        base.OnEnable();
+    }
+
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+    }
+
+    protected override void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+
+        this.LoadComponent();
         this.CreateHeroPanel();
     }
-    protected void OnEnable()
-    {
-        SceneManager.sceneLoaded += OnSceneLoaded;
-    }
-
-    protected virtual void OnDisable()
-    {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
-    }
-
-    protected void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    private void LoadComponent()
     {
         this.hsm = this.gameObject.GetComponent<HeroStateMachine>();
         this.playerPanel = Resources.Load<GameObject>($"Prefabs/GUI/{this.hsm.baseHero.theName}Bar");
@@ -50,7 +46,6 @@ public class HeroPanelHandler : MonoBehaviour
             Debug.LogError("Không tìm thấy BattleCanvas!");
             return;
         }
-        //this.CreateHeroPanel();
     }
     public void BindHeroUI(Image hpFill, Image mpFill)
     {
@@ -62,10 +57,12 @@ public class HeroPanelHandler : MonoBehaviour
     //Create a player panel
     public void CreateHeroPanel()
     {
-        this.playerPanel = Instantiate(this.playerPanel) as GameObject;
-        this.stats = this.playerPanel.GetComponent<HeroPanelStats>();
-        this.InitializeStatHero();
-
+        if(this.playerPanelInstance == null)
+        {
+            this.playerPanelInstance = Instantiate(this.playerPanel) as GameObject;
+            this.stats = this.playerPanelInstance.GetComponent<HeroPanelStats>();
+            this.InitializeStatHero();
+        }
     }
     public void InitializeStatHero()
     {
@@ -81,12 +78,15 @@ public class HeroPanelHandler : MonoBehaviour
         this.heroMPBarFill.fillAmount = 1f;
         this.heroMPBarTrail.fillAmount = 1f;
 
-        this.playerPanel.transform.SetParent(this.heroPanelSpacer, false);
+        this.playerPanelInstance.transform.SetParent(this.heroPanelSpacer, false);
     }
     //Update stats hp, mp, heal
     public void UpdateHeroPanel()
     {
+        
         this.stats.heroHP.text = this.hsm.baseHero.curHP.ToString();
         this.stats.heroMP.text = this.hsm.baseHero.curMP.ToString();
     }
+
+    
 }

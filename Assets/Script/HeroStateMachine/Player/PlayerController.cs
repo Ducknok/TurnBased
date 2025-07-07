@@ -21,9 +21,8 @@ public class PlayerController : Singleton<PlayerController>
 
     protected void LoadHeroSM()
     {
-        if (this.heroSMList != null && this.heroSMList.Count > 0) return; // N?u ?? c¨® heroSMList r?i th¨¬ kh?ng c?n t¨¬m l?i
+        if (this.heroSMList != null && this.heroSMList.Count > 0) return;
         this.heroSMList = new List<HeroStateMachine>(GameObject.FindObjectsOfType<HeroStateMachine>());
     }
 
-    
 }

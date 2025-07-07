@@ -1,15 +1,22 @@
-﻿using System.Collections;
+﻿using Inventory;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class AreaEntrance : MonoBehaviour
+public class AreaEntrance : DucMonobehaviour
 {
     [SerializeField] private string transitionName;
 
-    private void Start()
+    protected override void Start()
     {
         StartCoroutine(SetPlayerPositionDelayed());
+        PlayerController.Instance.LoadComponent();
+        CombatController.Instance.LoadComponent();
+        ItemInventoryController.Instance.LoadInventory();
+        PartyManager.Instance.LoadPlayerMove();
+        PartyManager.Instance.ClearLeaderPosition();
+        UIFade.Instance.FadeToClear();
     }
 
     private IEnumerator SetPlayerPositionDelayed()

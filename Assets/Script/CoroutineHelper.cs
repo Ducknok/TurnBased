@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class CoroutineHelper : MonoBehaviour
+public class CoroutineHelper : DucMonobehaviour
 {
     private static CoroutineHelper instance;
 

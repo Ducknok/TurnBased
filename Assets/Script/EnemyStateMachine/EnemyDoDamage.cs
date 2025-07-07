@@ -4,7 +4,7 @@ public class EnemyDoDamage : DealDamageController
 {
     private static EnemyDoDamage instance;
     public static EnemyDoDamage Instance => instance;
-    protected void Awake()
+    protected override void Awake()
     {
         if (instance != null && this.gameObject != null) Destroy(this.gameObject);
         instance = this;

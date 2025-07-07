@@ -1,22 +1,22 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class PartyManager : Singleton<PartyManager>
 {
-
+    public CombatStateMachine cbm;
     public List<PlayerMovement> partyMembers = new List<PlayerMovement>();
+    public Transform currentLeader;
     private int currentLeaderIndex = 0;
 
     protected override void Awake()
     {
         base.Awake();
+        this.cbm = FindObjectOfType<CombatStateMachine>();
+        StartCoroutine(WaitSetLeader());
+        this.LoadPlayerMove();
         
-    }
-
-    private void Start()
-    {
-        SetLeader(this.currentLeaderIndex);
     }
     protected override void OnEnable()
     {
@@ -25,35 +25,42 @@ public class PartyManager : Singleton<PartyManager>
 
     protected override void OnDisable()
     {
-        base.OnDisable();
+        base.OnDisable(); 
     }
     protected override void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         base.OnSceneLoaded(scene, mode);
+        this.cbm = FindObjectOfType<CombatStateMachine>();
+        StartCoroutine(WaitSetLeader());
         this.LoadPlayerMove();
+    }
+    private IEnumerator WaitSetLeader()
+    {
+        yield return null; // đợi 1 frame
+        SetLeader(this.currentLeaderIndex);
     }
     public void LoadPlayerMove()
     {
         //Debug.LogError("LoadComponent of " + this.gameObject);
-        foreach (var hero in CombatController.Instance.CBM.playersInCombat)
+        foreach (var hero in this.cbm.playersInCombat)
         {
             if (hero == null)
             {
-                //Debug.LogWarning("Hero is null, có thể đã bị destroy.");
+                Debug.LogWarning("Hero is null, có thể đã bị destroy.");
                 continue;
             }
 
-            Transform movement = hero.transform.Find("Movement");
+            Transform movement = hero.transform.Find("Body").Find("Movement");
             if (movement == null)
             {
-               // Debug.LogWarning($"Không tìm thấy child 'Movement' trong {hero.name}");
+               Debug.LogWarning($"Không tìm thấy child 'Movement' trong {hero.name}");
                 continue;
             }
 
             PlayerMovement plMove = movement.GetComponent<PlayerMovement>();
             if (plMove == null)
             {
-                //Debug.LogWarning($"Không tìm thấy component PlayerMovement trên {movement.name}");
+                Debug.LogWarning($"Không tìm thấy component PlayerMovement trên {movement.name}");
                 continue;
             }
 
@@ -61,6 +68,7 @@ public class PartyManager : Singleton<PartyManager>
             {
                 this.partyMembers.Add(plMove);
             }
+            
         }
     }
 
@@ -84,7 +92,7 @@ public class PartyManager : Singleton<PartyManager>
         var newLeader = this.partyMembers[index];
         this.partyMembers.RemoveAt(index);
         this.partyMembers.Insert(0, newLeader);
-
+        this.currentLeader = newLeader.transform;
         this.UpdateLeaderAndFollowers();
     }
 
@@ -135,6 +143,15 @@ public class PartyManager : Singleton<PartyManager>
             }
         }
     }
-
+    public void ClearLeaderPosition()
+    {
+        for (int i = 0; i < partyMembers.Count; i++)
+        {
+            if(partyMembers[i].isLeader == true)
+            {
+                this.partyMembers[i].GetComponent<PlayerMovement>().ClearHistory();
+            }
+        }
+    }
     
 }

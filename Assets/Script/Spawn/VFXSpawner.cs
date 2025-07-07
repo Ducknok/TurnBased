@@ -33,7 +33,7 @@ public class VFXSpawner : Spawner
     public static string windHitParticle = "WindHitParticle";
     public static string slashHitParticle = "SlashHitParticle";
 
-    protected void Awake()
+    protected override void Awake()
     {
         if (VFXSpawner.instance != null) Debug.LogError("Only 1 FXSpawner allow to exist");
         VFXSpawner.instance = this;

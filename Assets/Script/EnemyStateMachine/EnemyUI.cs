@@ -7,7 +7,7 @@ using TMPro;
 using Random = UnityEngine.Random;
 
 [Serializable]
-public class EnemyUI : MonoBehaviour
+public class EnemyUI : DucMonobehaviour
 {
     private EnemyStateMachine esm;
     public Transform attacktypesIconPosition; // Vị trí trên đầu enemy
@@ -20,12 +20,12 @@ public class EnemyUI : MonoBehaviour
 
 
 
-    protected void Start()
+    protected override void Start()
     {
         this.timerIconPrefab = Resources.Load<GameObject>($"TimerIcon/Timer");
         this.esm = this.transform.GetComponent<EnemyStateMachine>();
     }
-    protected void Update()
+    protected override void Update()
     {
         foreach(var icon in this.timerIconToDestroy)
         {

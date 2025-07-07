@@ -100,6 +100,7 @@ Transform:
   - {fileID: 7534347938789785585}
   - {fileID: 8723838106964006511}
   - {fileID: 1219079479338252770}
+  - {fileID: 5698838789704041478}
   m_Father: {fileID: 2701311430215032669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &6210442940254201361
@@ -383,7 +384,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 508586976787691624}
-  - {fileID: 5698838789704041478}
   - {fileID: 4802964640024030838}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -399,6 +399,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30d004bbc980db5418080354bdcb99ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  comCtrl: {fileID: 0}
   baseHero:
     theName: Ducknok
     baseHP: 500
@@ -566,12 +567,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5826430933840391314}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 1.0666667, y: 29.413334, z: 0}
+  m_LocalScale: {x: 1.3333334, y: 1.3333334, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2701311430215032669}
+  m_Father: {fileID: 508586976787691624}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8174056013139240418
 MonoBehaviour:
@@ -605,6 +606,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6379408e3d2c74f4dbf5ede315c62a62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  comCtrl: {fileID: 0}
   leader: {fileID: 8174056013139240418}
   followDelay: 5
   minFollowDistance: 2

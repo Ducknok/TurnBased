@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class AttackButton : MonoBehaviour
+public class AttackButton : DucMonobehaviour
 {
     public SkillBehaviour skillAttackToPerform;
 

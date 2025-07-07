@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class SkillManager : MonoBehaviour
+public class SkillManager : DucMonobehaviour
 {
     protected virtual void SpawnEffect(string prefab, Vector3 position)
     {

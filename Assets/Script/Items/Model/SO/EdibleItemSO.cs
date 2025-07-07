@@ -16,7 +16,7 @@ namespace Inventory.Model
         //TODO: add sound effect for item here
         //[field: SerializeField]
         //public AudioClip actionSFX { get; private set; }
-        public bool PerformAction(GameObject character, List<ItemParameter> itemState = null)
+        public bool PerformAction(int index, GameObject character, List<ItemParameter> itemState = null)
         {
             foreach (ModifierData data in Modifiers)
             {
@@ -35,7 +35,7 @@ namespace Inventory.Model
     {
         public string ActionName { get; }
         //public AudioClip actionSFX { get; }
-        bool PerformAction(GameObject character, List<ItemParameter> itemState);
+        bool PerformAction(int index, GameObject character, List<ItemParameter> itemState);
     }
     
 }

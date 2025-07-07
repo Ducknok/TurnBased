@@ -35,17 +35,15 @@ public class ButtonController : Singleton<ButtonController>
         this.LoadCBM();
         this.LoadTransform();
     }
-
     protected override void OnEnable()
     {
         base.OnEnable();
     }
-
     protected override void OnDisable()
     {
+
         base.OnDisable();
     }
-
     protected override void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         base.OnSceneLoaded(scene, mode);
@@ -66,7 +64,7 @@ public class ButtonController : Singleton<ButtonController>
         this.skillSpacer = this.skillPanel.transform.Find("SkillBarSpacer");
         this.attackTypeInfoSpacer = this.panel.Find("AttackTypeInfoPanel").transform.Find("AttackTypeInfoPanelSpacer");
     }
-    public void CheckState()
+    public override void CheckState()
     {
         if (this.combatCtrl.CBM.playerInput == CombatStateMachine.PlayerGUI.WAITING)
         {
@@ -95,12 +93,12 @@ public class ButtonController : Singleton<ButtonController>
                         {
                             ExecuteEvents.Execute(skillsButtons[selectedIndex], new BaseEventData(EventSystem.current), ExecuteEvents.submitHandler);
                             var attackButton = skillsButtons[selectedIndex].GetComponent<AttackButton>();
-                            if (attackButton != null && attackButton.skillAttackToPerform != null)
-                            {
-                                Debug.Log($"Kích hoạt skill: {attackButton.skillAttackToPerform.name}");
+                            //if (attackButton != null && attackButton.skillAttackToPerform != null)
+                            //{
+                            //    Debug.Log($"Kích hoạt skill: {attackButton.skillAttackToPerform.name}");
                                 
-                                Debug.Log(selectedIndex);
-                            }
+                            //    Debug.Log(selectedIndex);
+                            //}
                             
                         }
                         else
@@ -168,8 +166,6 @@ public class ButtonController : Singleton<ButtonController>
         this.combatCtrl.CBM.isSelectingEnemy = true;
         this.actionPanel.SetActive(false);
     }
-
-
     //Skill attack
     public void SkillAttack(SkillBehaviour choosenSkill)
     {
@@ -323,7 +319,6 @@ public class ButtonController : Singleton<ButtonController>
             buttonComponent.interactable = false;
         }
     }
-
     private void AddSkillButtonListener(GameObject button, HeroStateMachine hero, SkillBehaviour skill)
     {
         Button buttonComponent = button.GetComponent<Button>();
@@ -455,6 +450,4 @@ public class ButtonController : Singleton<ButtonController>
             EventSystem.current.SetSelectedGameObject(this.skillsButtons[selectedIndex]);
         }
     }
-
-    
 }

@@ -14,7 +14,7 @@ namespace Inventory.Model
         public string ActionName => "Equip";
         public AudioClip actionSFX { get; private set; }
 
-        public bool PerformAction(GameObject character, List<ItemParameter> itemState = null)
+        public bool PerformAction(int index, GameObject character, List<ItemParameter> itemState = null)
         {
             HeroStateMachine hero = character.GetComponent<HeroStateMachine>();
             if (hero != null && hero.baseHero.heroType != this.allowedWeapons)
@@ -30,7 +30,7 @@ namespace Inventory.Model
                 {
                     data.stat.AffectCharacter(character, data.val1, data.val2);
                 }
-                weaponSystem.SetWeapon(this, itemState == null ?
+                weaponSystem.SetWeapon(index, this, itemState == null ?
                     DefaultParameterList : itemState);
                 return true;
             }

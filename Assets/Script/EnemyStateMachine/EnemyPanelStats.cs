@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class EnemyPanelStats : MonoBehaviour
+public class EnemyPanelStats : DucMonobehaviour
 {
     public TextMeshProUGUI enemyName;
     public TextMeshProUGUI enemyHP;

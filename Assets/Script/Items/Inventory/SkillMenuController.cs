@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SkillMenuController : MonoBehaviour
+public class SkillMenuController : DucMonobehaviour
 {
     public bool isSkillMenuOpen = false;
 
@@ -30,7 +30,7 @@ public class SkillMenuController : MonoBehaviour
     private int currentSwapIndex = 0;
     private List<HeroStateMachine> heroesInCombat = new List<HeroStateMachine>();
 
-    private void Update()
+    protected override void Update()
     {
 
         if (!this.isSkillMenuOpen) return;
@@ -44,14 +44,14 @@ public class SkillMenuController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            Debug.LogWarning("Nut Q");
+            //Debug.LogWarning("Nut Q");
             currentSwapIndex = (currentSwapIndex - 1 + heroSwapButtons.Count) % heroSwapButtons.Count;
             LoadCurrentHeroUI();
         }
         else if (Input.GetKeyDown(KeyCode.E))
         {
             currentSwapIndex = (currentSwapIndex + 1) % heroSwapButtons.Count;
-            Debug.LogWarning("Nut E");
+            //Debug.LogWarning("Nut E");
             LoadCurrentHeroUI();
         }
     }
@@ -60,7 +60,7 @@ public class SkillMenuController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
         {
             currentSkillIndex = (currentSkillIndex - 1 + currentSkillUIs.Count) % currentSkillUIs.Count;
-            Debug.LogWarning("Nut len");
+            //Debug.LogWarning("Nut len");
             UpdateSkillSelectionVisual();
             UpdateSkillDetailUI(currentSkills[currentSkillIndex]);
         }
@@ -68,12 +68,11 @@ public class SkillMenuController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
         {
             currentSkillIndex = (currentSkillIndex + 1) % currentSkillUIs.Count;
-            Debug.LogWarning("Nut xuong");
+            //Debug.LogWarning("Nut xuong");
             UpdateSkillSelectionVisual();
             UpdateSkillDetailUI(currentSkills[currentSkillIndex]);
         }
     }
-
     private void ClearHero()
     {
         if (heroImage != null) this.heroImage.sprite = null;
@@ -106,7 +105,6 @@ public class SkillMenuController : MonoBehaviour
         this.UpdateSkillSelectionVisual();
         
     }
-
     public void LoadHero(HeroStateMachine hero)
     {
         this.ClearHero();
@@ -132,7 +130,6 @@ public class SkillMenuController : MonoBehaviour
 
         
     }
-
     public void SetAttackTypes(BaseAttack.Effect attackType, Transform spawnPosition)
     {
 

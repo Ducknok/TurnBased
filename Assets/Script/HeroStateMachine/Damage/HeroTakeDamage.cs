@@ -6,7 +6,7 @@ using UnityEngine;
 public class HeroTakeDamage : TakeDamageController
 {
     private CinemachineImpulseSource impulseSource;
-    protected void Start()
+    protected override void Start()
     {
         this.impulseSource = this.transform.GetComponent<CinemachineImpulseSource>();
     }
