@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8c5cd8b2141e4f941a2210d29baea2ce, type: 3}
-  m_Name: Ground Slash
+  m_Name: Water Ball
   m_EditorClassIdentifier: 
-  attackImage: {fileID: 154783846, guid: fb051ba9df7a2724e99ecb3019809887, type: 3}
-  attackName: Ground Slash
-  attackDescription: Slash on ground
-  attackDamage: 15
-  attackCost: 3
-  maxEnemyCount: 0
+  attackImage: {fileID: 930279301, guid: fb051ba9df7a2724e99ecb3019809887, type: 3}
+  attackName: Water Ball
+  attackDescription: Shoot a water ball towards target
+  attackDamage: 6
+  attackCost: 0
+  maxEnemyCount: 1
   attackType: 1
-  effect1: 1
-  effect2: 2
-  hitParticleName: WindHitParticle
+  effect1: 3
+  effect2: 3
+  hitParticleName: BlueHitParticle

@@ -78305,9 +78305,9 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4ef9aa6176f5d4c4598803c7a4fc981d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Assembly-CSharp::VFXSpawner
   holder: {fileID: 933947819}
-  spawnedCount: 10
+  spawnedCount: 0
   prefabs:
   - {fileID: 845591371}
   - {fileID: 429638386}
@@ -84027,20 +84027,20 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1402380690}
     m_Modifications:
+    - target: {fileID: 4576843201256819662, guid: 96090c758d4ced144abbbc2a0ec833ad,
+        type: 3}
+      propertyPath: m_FlipX
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7846403662473084810, guid: 96090c758d4ced144abbbc2a0ec833ad,
         type: 3}
       propertyPath: m_Name
-      value: GroundSlash
+      value: WindBlade
       objectReference: {fileID: 0}
     - target: {fileID: 7846403662473084810, guid: 96090c758d4ced144abbbc2a0ec833ad,
         type: 3}
       propertyPath: m_IsActive
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7887512790125852808, guid: 96090c758d4ced144abbbc2a0ec833ad,
-        type: 3}
-      propertyPath: InitialModule.startLifetime.scalar
-      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 8207030288440956054, guid: 96090c758d4ced144abbbc2a0ec833ad,
         type: 3}
@@ -84091,21 +84091,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8740961415133816152, guid: 96090c758d4ced144abbbc2a0ec833ad,
-        type: 3}
-      propertyPath: m_SortingLayer
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 8740961415133816152, guid: 96090c758d4ced144abbbc2a0ec833ad,
-        type: 3}
-      propertyPath: m_SortingOrder
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8740961415133816152, guid: 96090c758d4ced144abbbc2a0ec833ad,
-        type: 3}
-      propertyPath: m_SortingLayerID
-      value: -655598427
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

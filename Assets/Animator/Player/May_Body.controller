@@ -148,6 +148,32 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
+--- !u!1102 &-3612837320010210523
+AnimatorState:
+  serializedVersion: 6
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Wind Blade
+  m_Speed: 1
+  m_CycleOffset: 0
+  m_Transitions: []
+  m_StateMachineBehaviours: []
+  m_Position: {x: 50, y: 50, z: 0}
+  m_IKOnFeet: 0
+  m_WriteDefaultValues: 1
+  m_Mirror: 0
+  m_SpeedParameterActive: 0
+  m_MirrorParameterActive: 0
+  m_CycleOffsetParameterActive: 0
+  m_TimeParameterActive: 0
+  m_Motion: {fileID: 7400000, guid: 8a86d781ab8842f49bf7bae899ad5006, type: 2}
+  m_Tag: 
+  m_SpeedParameter: 
+  m_MirrorParameter: 
+  m_CycleOffsetParameter: 
+  m_TimeParameter: 
 --- !u!1101 &-2871773574165266592
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -295,32 +321,6 @@ AnimatorState:
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
---- !u!1102 &3612002782840483008
-AnimatorState:
-  serializedVersion: 6
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: Ground Slash
-  m_Speed: 1
-  m_CycleOffset: 0
-  m_Transitions: []
-  m_StateMachineBehaviours: []
-  m_Position: {x: 50, y: 50, z: 0}
-  m_IKOnFeet: 0
-  m_WriteDefaultValues: 1
-  m_Mirror: 0
-  m_SpeedParameterActive: 0
-  m_MirrorParameterActive: 0
-  m_CycleOffsetParameterActive: 0
-  m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 8a86d781ab8842f49bf7bae899ad5006, type: 2}
-  m_Tag: 
-  m_SpeedParameter: 
-  m_MirrorParameter: 
-  m_CycleOffsetParameter: 
-  m_TimeParameter: 
 --- !u!1102 &4534504133434929980
 AnimatorState:
   serializedVersion: 6
@@ -376,11 +376,11 @@ AnimatorStateMachine:
     m_State: {fileID: 7342088281710319758}
     m_Position: {x: -200, y: 360, z: 0}
   - serializedVersion: 1
-    m_State: {fileID: 3612002782840483008}
-    m_Position: {x: 140, y: 370, z: 0}
-  - serializedVersion: 1
     m_State: {fileID: -7219278352111471077}
     m_Position: {x: 170, y: 430, z: 0}
+  - serializedVersion: 1
+    m_State: {fileID: -3612837320010210523}
+    m_Position: {x: 417.771, y: 378.889, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []

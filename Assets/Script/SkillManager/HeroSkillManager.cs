@@ -53,30 +53,33 @@ public class HeroSkillManager : SkillManager
     }
     public void GroundSlash()
     {
-        Transform origin = this.hsm.transform.Find("Body").Find("GroundSlashPosition");
-        if (origin == null) return;
-
+        Transform origin = hsm.transform.Find("Body").Find("GroundSlashPosition");
         Vector3 startPos = origin.position;
+
+
         Vector3 targetPos = this.hsm.enemyToAttack.transform.Find("Body").position;
 
-        Transform effect = VFXSpawner.Instance.Spawn(VFXSpawner.groundSlash, startPos, Quaternion.identity);
+        Transform effect = VFXSpawner.Instance.Spawn(VFXSpawner.windBlade, startPos, Quaternion.identity);
         if (effect != null)
         {
             effect.gameObject.SetActive(true);
-
             Vector3 dir = (targetPos - startPos).normalized;
             effect.right = dir;
+            Vector3 perpendicular = new Vector3(-dir.y, dir.x, 0);
+            Vector3 controlPoint = (startPos + targetPos) / 2f + perpendicular * 1.5f; 
 
-            effect.DOMove(targetPos, 0.4f)
-                  .SetEase(Ease.InQuad)
-                  .OnComplete(() =>
-                  {
-    
-                          VFXSpawner.Instance.Despawn(effect);
-                  });
+            Vector3[] path = new Vector3[] { controlPoint, targetPos };
+
+            effect.DOPath(path, 0.4f, PathType.CatmullRom)
+                          .SetEase(Ease.InQuad)
+                          .OnComplete(() =>
+                          {
+                              VFXSpawner.Instance.Despawn(effect);
+                          });
         }
     }
-    public void Tornado()
+    
+public void Tornado()
     {
         Vector2 enemyPosition = new Vector2(this.hsm.enemyToAttack.transform.position.x,
                                            this.hsm.enemyToAttack.transform.position.y - 1f);

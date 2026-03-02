@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GroundSlash : SkillBehaviour
+public class WindBlade : SkillBehaviour
 {
     public override IEnumerator Activate(GameObject attacker, GameObject target)
     {

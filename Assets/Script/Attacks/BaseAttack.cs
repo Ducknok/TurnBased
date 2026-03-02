@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Skill", menuName = "RPG/Skills/New Skill")]
@@ -30,20 +31,40 @@ public class BaseAttack : ScriptableObject
     public Effect effect1;
     public Effect effect2;
     public string hitParticleName;
+#if UNITY_EDITOR
+    // Hàm này tự động chạy mỗi khi bạn thay đổi giá trị trên Inspector
+    private void OnValidate()
+    {
+        if (Application.isPlaying || string.IsNullOrWhiteSpace(attackName)) return;
+
+        string assetPath = AssetDatabase.GetAssetPath(this.GetInstanceID());
+        if (string.IsNullOrEmpty(assetPath)) return;
+
+        string currentFileName = System.IO.Path.GetFileNameWithoutExtension(assetPath);
+
+        if (currentFileName != attackName)
+        {
+            EditorApplication.delayCall += () =>
+            {
+                if (this == null) return;
+
+                AssetDatabase.RenameAsset(assetPath, attackName);
+                AssetDatabase.SaveAssets();
+            };
+        }
+    }
+#endif
 
 }
 
 public abstract class SkillBehaviour : DucMonobehaviour
 {
     public BaseAttack skillData;
-
-    // Kích hoạt kỹ năng: 1: Animation -> 2: Sound effect -> 3: VFX
     public virtual IEnumerator Activate(GameObject attacker, GameObject target)
     {
         yield return new WaitForSeconds(0f);
     }
 
-    // Phương thức để áp dụng các hiệu ứng của kỹ năng
     protected virtual void ApplySkillEffects(GameObject attacker)
     {
         BurstDamage.Instance.DoDamage(attacker);
