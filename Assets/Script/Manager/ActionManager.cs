@@ -4,20 +4,25 @@ using UnityEngine.EventSystems;
 using System.Collections.Generic;
 using TMPro;
 
-public class ActionManager : MonoBehaviour
+public class ActionManager : DucMonobehaviour
 {
     
     public GameObject actionPanel; // Panel chứa các button
     private List<Button> buttons = new List<Button>();
     private int selectedIndex = 0;
 
-    void Start()
+    protected override void Start()
     {
         RefreshButtons();
     }
 
-    void Update()
+    protected override void Update()
     {
+        this.CheckState();
+    }
+    public override void CheckState()
+    {
+        base.CheckState();
         if (buttons.Count == 0) return;
 
         if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S))
@@ -35,7 +40,6 @@ public class ActionManager : MonoBehaviour
             buttons[selectedIndex].onClick.Invoke();
         }
     }
-
     public void RefreshButtons()
     {
         // Xóa danh sách cũ

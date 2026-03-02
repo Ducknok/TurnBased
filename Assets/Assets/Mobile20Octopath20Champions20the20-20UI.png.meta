@@ -22064,9 +22064,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 415
-        y: 408
+        y: 414
         width: 235
-        height: 69
+        height: 63
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -22126,7 +22126,7 @@ TextureImporter:
       name: Mobile20Octopath20Champions20the20-20UI_1066
       rect:
         serializedVersion: 2
-        x: 1505
+        x: 1504
         y: 405
         width: 90
         height: 93
@@ -23651,6 +23651,27 @@ TextureImporter:
       bones: []
       spriteID: 79d73770d80fc874785946fae3bcf111
       internalID: -1594970971
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Mobile20Octopath20Champions20the20-20UI_146
+      rect:
+        serializedVersion: 2
+        x: 1018
+        y: 1554
+        width: 342
+        height: 231
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dbeb7a968f5fd604e82745496056e07d
+      internalID: 746187665
       vertices: []
       indices: 
       edges: []

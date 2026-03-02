@@ -4,9 +4,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Random = UnityEngine.Random;
 
 [Serializable]
-public class EnemyUI : MonoBehaviour
+public class EnemyUI : DucMonobehaviour
 {
     private EnemyStateMachine esm;
     public Transform attacktypesIconPosition; // Vị trí trên đầu enemy
@@ -19,12 +20,12 @@ public class EnemyUI : MonoBehaviour
 
 
 
-    protected void Start()
+    protected override void Start()
     {
         this.timerIconPrefab = Resources.Load<GameObject>($"TimerIcon/Timer");
         this.esm = this.transform.GetComponent<EnemyStateMachine>();
     }
-    protected void Update()
+    protected override void Update()
     {
         foreach(var icon in this.timerIconToDestroy)
         {
@@ -128,6 +129,7 @@ public class EnemyUI : MonoBehaviour
         yield return new WaitForSeconds(1.3f);
         foreach (var icon in iconsToDestroy)
         {
+            //Debug.LogError("destroy lock");
             Destroy(icon);
         }
 
@@ -156,9 +158,9 @@ public class EnemyUI : MonoBehaviour
         foreach (var icon in timerIconToDestroy)
         {
             Destroy(icon);
-            
         }
         this.timerIconToDestroy.Clear();
+        
     }
 
 }

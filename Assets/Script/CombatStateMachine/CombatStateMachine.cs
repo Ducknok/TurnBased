@@ -5,10 +5,11 @@ using UnityEngine.InputSystem;
 using System.Collections;
 using TMPro;
 using UnityEngine.EventSystems;
+using Inventory;
+using UnityEngine.SceneManagement;
 
-public class CombatStateMachine : MonoBehaviour
+public class CombatStateMachine : DucMonobehaviour
 {
-    public CombatZone combatZone;
     public enum PerformAction
     {
         WAIT,
@@ -19,13 +20,11 @@ public class CombatStateMachine : MonoBehaviour
         WIN,
         LOSE
     }
-
     public PerformAction combatState;
-
     public List<HandleTurn> performList = new List<HandleTurn>();
     public List<GameObject> playersInCombat = new List<GameObject>();
     public List<GameObject> enemiesInCombat = new List<GameObject>();
-
+    public List<HeroStateMachine> heroesToRevive = new List<HeroStateMachine>();
     public enum PlayerGUI
     {
         ACTIVATE,
@@ -33,229 +32,284 @@ public class CombatStateMachine : MonoBehaviour
         INPUT1,
         DONE,
     }
-
     public PlayerGUI playerInput;
-
     public List<GameObject> playerToManage = new List<GameObject>();
-    private HandleTurn playerChoice;
-
-    [Header("Panel")]
-    public GameObject actionPanel;
-    public GameObject skillPanel;
-    public GameObject attackTypeInfoPanel;
+    public HandleTurn playerChoice;
     //public GameObject ememySelectPanel;
     [Header("Select enemy")]
     private int selectedEnemyIndex = 0;
     public bool isSelectingEnemy = false; // Biến cờ để kiểm tra trạng thái
     public bool isEnemyActing = false;
+    private int maxSelectableEnemies;
+    private List<GameObject> selectedEnemies = new List<GameObject>();
     private GameObject enemySelected;
-
     [Header("Enemy panel")]
     public Transform enemyInfoSpacer;
     public GameObject enemyInfoPanel;
     private EnemyPanelStats enemyStats;
     private List<GameObject> enemyInfoList = new List<GameObject>();
     public List<GameObject> enemiesAttacked = new List<GameObject>(); // Lưu enemy đã tấn công
-
-
-    [Header("Player Panel")]
-    public Transform actionSpacer;
-    public Transform skillSpacer;
-    public Transform attackTypeInfoSpacer;
-    public GameObject actionButton;
-    public GameObject skillsBarButton;
-    public GameObject skillsButton;
-    public GameObject itemButton;
-    public GameObject swapButton;
-    public AttackInfoPanel attackInfo;
-    private List<GameObject> attackButtons = new List<GameObject>();
-    private List<GameObject> skillsButtons = new List<GameObject>();
-    private List<GameObject> attackTypeInfoList = new List<GameObject>(); 
-
-    [Header("Select action")]
-    private int selectedIndex = 0; // Lưu index của button đang được chọn
-
     [Header("Turn")]
     public bool heroTurn;
     public bool enemyTurn;
     public List<GameObject> heroesDoneTurn = new List<GameObject>();
-
-
-    // Start is called before the first frame update
-    private void Start()
+    protected override void Awake()
+    {
+        this.enemiesInCombat.AddRange(GameObject.FindGameObjectsWithTag("Enemy"));
+        this.playersInCombat.AddRange(GameObject.FindGameObjectsWithTag("Player"));
+        this.enemyInfoSpacer = GameObject.Find("BattleCanvas").transform.Find("Panel").transform.Find("EnemyInfoPanel").transform.Find("EnemyInfoPanelSpacer");
+    }
+    protected override void Start()
     {
         this.combatState = PerformAction.WAIT;
-        this.combatZone = GameObject.FindObjectOfType<CombatZone>();
-        
-        this.actionPanel.SetActive(false);
-        this.skillPanel.SetActive(false);
+
+        ButtonController.Instance.actionPanel.SetActive(false);
+        ButtonController.Instance.skillPanel.SetActive(false);
         this.heroTurn = true;
         playerInput = PlayerGUI.ACTIVATE;
     }
-    private void Awake()
-    {
-        //if (this.enemiesInCombat != null) return;
-        this.enemiesInCombat.AddRange(GameObject.FindGameObjectsWithTag("Enemy"));
-        //if (this.playersInCombat != null) return;
-        this.playersInCombat.AddRange(GameObject.FindGameObjectsWithTag("Player"));
-    }
-    // Update is called once per frame
-    [System.Obsolete]
-    private void Update()
+    protected override void Update()
     {
         this.AreAllHeroesDone();
         if (this.isSelectingEnemy) this.SelectEnemyWithKeyboard();
+        this.HandleCombatState();
+        this.HandlePlayerInputState();
+    }
+
+
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+    }
+
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+    }
+
+    protected override void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (this.enemiesInCombat != null) return;
+        this.enemiesInCombat.AddRange(GameObject.FindGameObjectsWithTag("Enemy"));
+        if (this.playersInCombat != null) return;
+        this.playersInCombat.AddRange(GameObject.FindGameObjectsWithTag("Player"));
+        this.enemyInfoSpacer = GameObject.Find("BattleCanvas").transform.Find("Panel").transform.Find("EnemyInfoPanel").transform.Find("EnemyInfoPanelSpacer");
+    }
+
+    public void StartEnemySelection(BaseAttack skillData)
+    {
+        if (enemiesInCombat.Count == 0) return;
+        isSelectingEnemy = true;
+        selectedEnemies.Clear();
+        selectedEnemyIndex = 0;
+
+        maxSelectableEnemies = skillData.maxEnemyCount;
+        HighlightEnemy(); // Highlight ban đầu
+    }
+    
+    private void HandleCombatState()
+    {
         switch (this.combatState)
         {
             case (PerformAction.WAIT):
-                if(this.performList.Count > 0)
-                {
-                    if (this.performList[0].Type == "Enemy")
-                    {
-                        this.combatState = PerformAction.ENEMYACTION;
-                    }
-                    if(this.performList[0].Type == "Hero")
-                    {
-                        this.combatState = PerformAction.PLAYERACTION;
-                    }
-                }
+                this.CheckWait();
                 break;
-            case (PerformAction.ENEMYACTION): 
-                GameObject enemyPerformer = GameObject.Find(performList[0].Attacker);
-                if (this.performList[0].Type == "Enemy")
-                {
-                    EnemyStateMachine esm = enemyPerformer.GetComponent<EnemyStateMachine>();
-                    for (int i = 0; i < this.playersInCombat.Count; i++)
-                    {
-                        if (this.performList[0].AttackerTarget == this.playersInCombat[i])
-                        {
-                            esm.playerToAttack = this.performList[0].AttackerTarget;
-                            esm.currentState = EnemyStateMachine.TurnState.ACTION;
-                            break;
-                        }
-                        else
-                        {
-                            this.performList[0].AttackerTarget = this.playersInCombat[Random.Range(0, this.playersInCombat.Count)];
-                            esm.playerToAttack = performList[0].AttackerTarget;
-                            esm.currentState = EnemyStateMachine.TurnState.ACTION;
-                        }
-                    }
-
-                }
-                
-                combatState = PerformAction.PERFORMACTION;
+            case (PerformAction.ENEMYACTION):
+                this.CheckEnemyAction();
                 break;
             case (PerformAction.PLAYERACTION):
-                if (performList.Count > 0)
-                {
-                    GameObject playerPerformer = GameObject.Find(performList[0].Attacker);
-                    if (this.performList[0].Type == "Hero")
-                    {
-                        //Debug.Log("Hero is here to perform");
-                        HeroStateMachine hsm = playerPerformer.GetComponent<HeroStateMachine>();
-                        hsm.enemyToAttack = this.performList[0].AttackerTarget;
-                        hsm.currentState = HeroStateMachine.TurnState.ACTION;
-                    }
-
-                    combatState = PerformAction.PERFORMACTION;
-                }    
+                this.CheckPlayerAction();
                 break;
-
             case (PerformAction.PERFORMACTION):
                 break;
-
             case (PerformAction.CHECKALIVE):
-                
-                if (this.playersInCombat.Count < 1)
-                {
-                    this.combatState = PerformAction.LOSE;
-                    //Lose game;
-                }
-                else if (this.enemiesInCombat.Count < 1)
-                {
-                    this.combatState = PerformAction.WIN;
-                    //Win the battle
-                    for (int i = 0; i < playersInCombat.Count; i++)
-                    {
-                        playersInCombat[i].GetComponent<HeroStateMachine>().currentState = HeroStateMachine.TurnState.WAITING;
-                    }
-                }
-                else
-                {
-                    //call function
-                    this.ClearAttackPanel();
-                    if (this.AreAllEnemiesDone())
-                    {
-                        Debug.LogWarning("Enemy done");
-                        // ✅ Nếu tất cả enemy đã tấn công xong, reset Lock & Timer, rồi chuyển lượt cho player
-
-                        this.enemiesAttacked.Clear();
-                        this.heroTurn = true;
-                        this.enemyTurn = false;
-                        foreach (var enemy in this.enemiesInCombat)
-                        {
-
-                            EnemyStateMachine esm = enemy.GetComponent<EnemyStateMachine>();
-                            Debug.LogWarning(esm.gameObject);
-                            esm.timer = Random.Range(1, this.playersInCombat.Count + 1);
-                            esm.ChooseAction();
-                        }
-                    }
-                    else
-                    {
-                        this.heroTurn = true;
-                        this.enemyTurn = false;
-                    }
-                    this.combatState = PerformAction.WAIT;
-                    this.playerInput = PlayerGUI.ACTIVATE;
-                }
+                this.CheckAlive();
                 break;
             case (PerformAction.LOSE):
                 Debug.Log("Loser");
                 break;
             case (PerformAction.WIN):
                 Debug.Log("Win");
-                this.combatZone.EndCombat();
+                CombatController.Instance.CBZ.EndCombat();
                 break;
         }
+    }
+    private void CheckWait()
+    {
+        if (this.performList.Count > 0)
+        {
+            if (this.performList[0].Type == "Enemy")
+            {
+                this.combatState = PerformAction.ENEMYACTION;
+            }
+            if (this.performList[0].Type == "Hero")
+            {
+                this.combatState = PerformAction.PLAYERACTION;
+            }
+        }
+    }
+    private void CheckEnemyAction()
+    {
+        if (performList == null || performList.Count == 0)
+        {
+            Debug.LogWarning("performList is empty!");
+            return;
+        }
+
+        if (playersInCombat == null || playersInCombat.Count == 0)
+        {
+            Debug.LogWarning("playersInCombat is empty!");
+            return;
+        }
+
+        GameObject enemyPerformer = GameObject.Find(performList[0].Attacker);
+
+        if (enemyPerformer == null)
+        {
+            Debug.LogWarning("Không tìm thấy kẻ địch: " + performList[0].Attacker + ". Lượt đánh sẽ bị hủy bỏ!");
+            this.performList.RemoveAt(0);
+            this.combatState = PerformAction.WAIT;
+            return;
+        }
+        if (performList[0].Type == "Enemy")
+        {
+            EnemyStateMachine esm = enemyPerformer.GetComponent<EnemyStateMachine>();
+            if (esm.isLockBrokenOnce)
+            {
+                esm.CheckCombatState();
+                return;
+            }
+            bool foundTarget = false;
+            for (int i = 0; i < playersInCombat.Count; i++)
+            {
+                if (performList[0].AttackerTarget == playersInCombat[i])
+                {
+                    esm.playerToAttack = performList[0].AttackerTarget;
+                    esm.currentState = EnemyStateMachine.TurnState.ACTION;
+                    foundTarget = true;
+                    break;
+                }
+            }
+
+            if (!foundTarget)
+            {
+                performList[0].AttackerTarget = playersInCombat[Random.Range(0, playersInCombat.Count)];
+                esm.playerToAttack = performList[0].AttackerTarget;
+                esm.currentState = EnemyStateMachine.TurnState.ACTION;
+            }
+        }
+
+        combatState = PerformAction.PERFORMACTION;
+    }
+    private void CheckPlayerAction()
+    {
+        if (performList.Count > 0)
+        {
+            GameObject playerPerformer = GameObject.Find(performList[0].Attacker);
+            if (playerPerformer == null)
+            {
+                Debug.LogWarning("Không tìm thấy Hero: " + performList[0].Attacker + ". Lượt đánh bị hủy.");
+                this.performList.RemoveAt(0);
+                this.combatState = PerformAction.WAIT;
+                return;
+            }
+            if (this.performList[0].Type == "Hero")
+            {
+                //Debug.Log("Hero is here to perform");
+                HeroStateMachine hsm = playerPerformer.GetComponent<HeroStateMachine>();
+                hsm.enemyToAttack = this.performList[0].AttackerTarget;
+                hsm.currentState = HeroStateMachine.TurnState.ACTION;
+            }
+
+            combatState = PerformAction.PERFORMACTION;
+        }
+    }
+    private void CheckAlive()
+    {
+        if (this.playersInCombat.Count < 1)
+        {
+            this.combatState = PerformAction.LOSE;
+            //Lose game;
+        }
+        else if (this.enemiesInCombat.Count < 1)
+        {
+            this.combatState = PerformAction.WIN;
+            //Win the battle
+            for (int i = 0; i < playersInCombat.Count; i++)
+            {
+                playersInCombat[i].GetComponent<HeroStateMachine>().currentState = HeroStateMachine.TurnState.WAITING;
+            }
+        }
+        else
+        {
+            this.ClearAttackPanel();
+            if (this.AreAllHeroesDone()) this.heroesDoneTurn.Clear();
+            if (this.AreAllEnemiesDone() && this.performList.Count == 0)
+            {
+                Debug.LogWarning("Enemy done");
+                //Nếu tất cả enemy đã tấn công xong, reset Lock & Timer, rồi chuyển lượt cho player
+                this.enemiesAttacked.Clear();
+                this.heroTurn = true;
+                this.enemyTurn = false;
+
+                foreach (var enemy in this.enemiesInCombat)
+                {
+                    EnemyStateMachine esm = enemy.GetComponent<EnemyStateMachine>();
+                    esm.timer = Random.Range(1, this.playersInCombat.Count + 1);
+                    esm.ChooseAction();
+                }
+            }
+            else
+            {
+                this.heroTurn = true;
+                this.enemyTurn = false;
+            }
+            this.combatState = PerformAction.WAIT;
+            this.playerInput = PlayerGUI.ACTIVATE;
+        }
+    }
+    private void HandlePlayerInputState()
+    {
         switch (this.playerInput)
         {
             case (PlayerGUI.ACTIVATE):
-                if (this.playerToManage.Count > 0)
-                {
-                    // Bỏ qua Hero đã thực hiện hành động
-                    while (this.playerToManage.Count > 0 && this.heroesDoneTurn.Contains(this.playerToManage[0]))
-                    {
-                        this.playerToManage.RemoveAt(0);
-                        this.actionPanel.SetActive(false);
-                    }
-
-                    if (playerToManage.Count > 0)
-                    {
-                        playerToManage[0].transform.Find("Body").transform.Find("Choose").gameObject.SetActive(true);
-                        this.playerChoice = new HandleTurn();
-                        this.actionPanel.SetActive(true);
-                        this.CreateButton();
-                        this.playerInput = PlayerGUI.WAITING;
-                    }
-                }
+                this.CheckActivate();
                 break;
             case (PlayerGUI.WAITING):
-                this.CheckState();
-                
+                ButtonController.Instance.CheckState();
                 break;
             case (PlayerGUI.DONE):
                 this.PlayerInputDone();
                 break;
         }
     }
+    private void CheckActivate()
+    {
+        if (this.playerToManage.Count > 0)
+        {
+            // Bỏ qua Hero đã thực hiện hành động
+            while (this.playerToManage.Count > 0 && this.heroesDoneTurn.Contains(this.playerToManage[0]))
+            {
+                this.playerToManage.RemoveAt(0);
+                ButtonController.Instance.actionPanel.SetActive(false);
+            }
 
+            if (playerToManage.Count > 0 && this.heroTurn)
+            {
+                playerToManage[0].transform.Find("Body").transform.Find("Choose").gameObject.SetActive(true);
+                this.playerChoice = new HandleTurn();
+                ButtonController.Instance.actionPanel.SetActive(true);
+                ButtonController.Instance.CreateButton();
+                this.playerInput = PlayerGUI.WAITING;
+            }
+        }
+    }
     //Collect action
     public void CollectAction(HandleTurn input)
     {
+        
         performList.Add(input);
     }
-
     //-----------------------------------Enemy------------------------------------
     //Select enemy 
     public void SelectEnemyWithKeyboard()
@@ -280,10 +334,22 @@ public class CombatStateMachine : MonoBehaviour
             ConfirmEnemySelection();
         }
     }
-
-    // Hiển thị highlight kẻ địch được chọn
-    private void HighlightEnemy()
+    // Show highlight enemy chosen
+    public void HighlightEnemy()
     {
+        // Không có enemy nào trong danh sách
+        if (enemiesInCombat == null || enemiesInCombat.Count == 0)
+        {
+            Debug.LogWarning("Không có enemy nào trong danh sách.");
+            return;
+        }
+
+        // Nếu chỉ số hiện tại không hợp lệ thì reset về 0
+        if (selectedEnemyIndex < 0 || selectedEnemyIndex >= enemiesInCombat.Count)
+        {
+            selectedEnemyIndex = 0;
+        }
+
         if (enemySelected != null)
         {
             enemySelected.SetActive(false); // Ẩn highlight kẻ địch trước đó
@@ -294,12 +360,9 @@ public class CombatStateMachine : MonoBehaviour
         this.ClearEnemyInfoPanel();
         this.CreateEnemyInfoPanel(enemy);
         enemySelected = enemy.transform.Find("ChooseEnemy").gameObject;
-        enemySelected.SetActive(true);
-        
-        
+        enemySelected.SetActive(true);   
     }
-
-    // Xác nhận chọn kẻ địch
+    // Confirm enemy
     private void ConfirmEnemySelection()
     {
         this.playerChoice.AttackerTarget = enemiesInCombat[selectedEnemyIndex];
@@ -308,7 +371,6 @@ public class CombatStateMachine : MonoBehaviour
         
         StartCoroutine(DeactivateAfterAction());
     }
-
     //Deactivate after action
     private IEnumerator DeactivateAfterAction()
     {
@@ -318,64 +380,13 @@ public class CombatStateMachine : MonoBehaviour
             enemySelected.SetActive(false);
         }
     }
-
-    //--------------------------------------------Player-----------------------------------------
-    //Attack button (Input)
-    public void NormalAttack()
-    {
-        this.skillPanel.SetActive(false);
-        this.playerChoice.Attacker = playerToManage[0].name;
-        this.playerChoice.AttacksGameObject = playerToManage[0];
-        this.playerChoice.Type = "Hero";
-        this.playerChoice.choosenAttack = playerToManage[0].GetComponent<HeroStateMachine>().baseHero.attacks[0];
-        this.CreateAttackTypeInfoPanel(this.playerChoice.choosenAttack);
-        this.isSelectingEnemy = true;
-        this.actionPanel.SetActive(false);
-
-    }
-
-    //Open skill panel
-    public void OpenSkillPanel()
-    {
-        this.actionPanel.SetActive(false);
-        this.skillPanel.SetActive(true);
-        this.selectedIndex = 0;
-        if (this.skillsButtons.Count > 0)
-        {
-
-            EventSystem.current.SetSelectedGameObject(this.skillsButtons[selectedIndex]);
-        }
-    }
-
-    //Skill attack
-    public void SkillAttack(BaseAttack choosenSkill)
-    {
-        //Choose skills
-        this.playerChoice.Attacker = this.playerToManage[0].name;
-        this.playerChoice.AttacksGameObject = this.playerToManage[0];
-        this.playerChoice.Type = "Hero";
-        // Check curMP
-        if (this.playerToManage[0].GetComponent<HeroStateMachine>().baseHero.curMP < choosenSkill.attackCost)
-        {
-            Debug.Log("Không đủ mana!");
-            return;
-        }
-
-        this.playerChoice.choosenAttack = choosenSkill;
-        this.CreateAttackTypeInfoPanel(this.playerChoice.choosenAttack);
-        this.skillPanel.SetActive(false);
-        this.isSelectingEnemy = true;
-        this.actionPanel.SetActive(false);
-    }
-
-
+    //--------------------------------------------Hero-----------------------------------------
     //Player input done
-    [System.Obsolete]
     protected void PlayerInputDone()
     {
         this.performList.Add(this.playerChoice);
         this.ClearAttackPanel();
-        this.ClearAttackTypeInfoPanel();
+        ButtonController.Instance.ClearAttackTypeInfoPanel();
         if (this.playerToManage.Count > 0)
         {
             GameObject currentHero = playerToManage[0];
@@ -389,242 +400,29 @@ public class CombatStateMachine : MonoBehaviour
             playerInput = PlayerGUI.WAITING;
         }
     }
-
-
     //Clear attack panel
     public void ClearAttackPanel()
     {
-        this.actionPanel.SetActive(false);
-        foreach (GameObject attackButton in attackButtons)
+        ButtonController.Instance.actionPanel.SetActive(false);
+        foreach (GameObject attackButton in ButtonController.Instance.actionButtons)
         {
             DestroyImmediate(attackButton, true);
         }
-        foreach(GameObject skillsButton in skillsButtons)
+        foreach(GameObject skillsButton in ButtonController.Instance.skillsButtons)
         {
             DestroyImmediate(skillsButton, true);
         }
-        this.skillsButtons.Clear();
-        this.attackButtons.Clear();
+        ButtonController.Instance.skillsButtons.Clear();
+        ButtonController.Instance.actionButtons.Clear();
     }
-
-    //Create actionButtons
-    public void CreateButton()
-    {
-        this.CreateAttackButton();
-        this.CreateSkillButton();
-        this.CreateSwapButton();
-        this.CreateItemButton();
-        if (this.attackButtons.Count > 0)
-        {
-            selectedIndex = 0; // Đặt lại index khi tạo mới
-            SelectButton(selectedIndex);
-        }
-    }
-    public void CreateAttackButton()
-    {
-        GameObject attackButton = Instantiate(this.actionButton) as GameObject;
-        TextMeshProUGUI attackButtonText = attackButton.transform.Find("Text").gameObject.GetComponent<TextMeshProUGUI>();
-        attackButtonText.text = "Attack";
-        attackButton.GetComponent<Button>().onClick.AddListener(() => NormalAttack());
-        attackButton.transform.SetParent(this.actionSpacer, false);
-        this.attackButtons.Add(attackButton);
-    }
-    public void CreateSkillButton()
-    {
-        GameObject skillButton = Instantiate(this.skillsBarButton) as GameObject;
-        TextMeshProUGUI skillButtonText = skillButton.transform.Find("Text").gameObject.GetComponent<TextMeshProUGUI>();
-        skillButtonText.text = "Skills";
-        skillButton.GetComponent<Button>().onClick.AddListener(() => OpenSkillPanel());
-        skillButton.transform.SetParent(this.actionSpacer, false);
-        this.attackButtons.Add(skillButton);
-
-        if (this.playerToManage[0].GetComponent<HeroStateMachine>().baseHero.skills.Count > 0)
-        {
-            foreach (BaseAttack skill in this.playerToManage[0].GetComponent<HeroStateMachine>().baseHero.skills)
-            {
-                GameObject skillsButton = Instantiate(this.skillsButton) as GameObject;
-                TextMeshProUGUI skillsName = skillsButton.transform.Find("Text").gameObject.GetComponent<TextMeshProUGUI>();
-                TextMeshProUGUI mpCost = skillsButton.transform.Find("MpCost").gameObject.GetComponent<TextMeshProUGUI>();
-                skillsName.text = skill.attackName.ToString();
-                mpCost.text = skill.attackCost.ToString();
-                // Kiểm tra nếu hero không đủ MP
-                if (this.playerToManage[0].GetComponent<HeroStateMachine>().baseHero.curMP < skill.attackCost)
-                {
-                    skillsName.color = Color.gray;
-                    skillsButton.GetComponent<Button>().interactable = false; // Vô hiệu hóa nếu không đủ MP
-                }
-                else
-                {
-                    AttackButton atb = skillsButton.GetComponent<AttackButton>();
-                    atb.skillAttackToPerform = skill;
-                }
-                skillsButton.transform.SetParent(this.skillSpacer, false);
-                this.skillsButtons.Add(skillsButton);
-                
-            }
-        }
-        else
-        {
-            //Dung <Button>().interactable de vo hieu hoa button
-            skillButton.GetComponent<Button>().interactable = false;
-        }
-    }
-    public void CreateItemButton()
-    {
-        GameObject itemButton = Instantiate(this.itemButton) as GameObject;
-        TextMeshProUGUI itemButtonText = itemButton.transform.Find("Text").gameObject.GetComponent<TextMeshProUGUI>();
-        itemButtonText.text = "Items";
-        //itemButton.GetComponent<Button>().onClick.AddListener(() => NormalAttack());
-        itemButton.transform.SetParent(this.actionSpacer, false);
-        this.attackButtons.Add(itemButton);
-    }
-    public void CreateSwapButton()
-    {
-        GameObject swapButton = Instantiate(this.swapButton) as GameObject;
-        TextMeshProUGUI swapButtonText = swapButton.transform.Find("Text").gameObject.GetComponent<TextMeshProUGUI>();
-        swapButtonText.text = "Swap";
-        //itemButton.GetComponent<Button>().onClick.AddListener(() => NormalAttack());
-        swapButton.transform.SetParent(this.actionSpacer, false);
-        this.attackButtons.Add(swapButton);
-    }
-    private void CheckState()
-    {
-        if (playerInput == PlayerGUI.WAITING)
-        {
-            if (skillPanel.activeSelf) // Nếu đang ở skill panel
-            {
-                if (skillsButtons.Count > 0)
-                {
-                    if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S))
-                    {
-                        selectedIndex = (selectedIndex + 1) % skillsButtons.Count;
-                        Debug.Log(selectedIndex);
-                        SelectSkillButton(selectedIndex);
-                    }
-                    else if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W))
-                    {
-                        selectedIndex = (selectedIndex - 1 + skillsButtons.Count) % skillsButtons.Count;
-                        SelectSkillButton(selectedIndex);
-                    }
-                    else if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space))
-                    {
-                        
-                        ExecuteEvents.Execute(skillsButtons[selectedIndex], new BaseEventData(EventSystem.current), ExecuteEvents.submitHandler);
-                    }
-                    else if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A) ||
-                             Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D))
-                    {
-                        skillPanel.SetActive(false);
-                        actionPanel.SetActive(true);
-                        selectedIndex = 0;
-                        SelectButton(selectedIndex);
-                    }
-                }
-            }
-            else if (attackButtons.Count > 0) // Nếu đang ở action panel
-            {
-                if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S))
-                {
-                    selectedIndex = (selectedIndex + 1) % attackButtons.Count;
-                    SelectButton(selectedIndex);
-                }
-                else if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W))
-                {
-                    selectedIndex = (selectedIndex - 1 + attackButtons.Count) % attackButtons.Count;
-                    SelectButton(selectedIndex);
-                }
-                else if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space))
-                {
-                    ExecuteEvents.Execute(attackButtons[selectedIndex], new BaseEventData(EventSystem.current), ExecuteEvents.submitHandler);
-                }
-            }
-        }
-    }
-
-    private void SelectSkillButton(int index)
-    {
-        
-        EventSystem.current.SetSelectedGameObject(null);
-        EventSystem.current.SetSelectedGameObject(skillsButtons[index]);
-        EventSystem.current.firstSelectedGameObject = skillsButtons[index];
-    }
-
-    private void SelectButton(int index)
-    {
-        EventSystem.current.SetSelectedGameObject(attackButtons[index]);
-    }
-
     public bool AreAllHeroesDone()
     {
-        foreach (GameObject hero in playersInCombat)
-        {
-            HeroStateMachine heroSM = hero.GetComponent<HeroStateMachine>();
-            if (heroSM != null && heroSM.currentState != HeroStateMachine.TurnState.WAITING && heroSM.currentState != HeroStateMachine.TurnState.DEAD)
-            {
-                return false; // Còn hero chưa xong lượt
-            }
-        }
-        return true; // Tất cả hero đã xong lượt
+        return this.heroesDoneTurn.Count == this.playersInCombat.Count;
     }
     public bool AreAllEnemiesDone()
     {
-        return this.enemiesInCombat.TrueForAll(enemy =>
-        {
-            return this.enemiesAttacked.Contains(enemy);
-        });
+        return this.enemiesAttacked.Count == this.enemiesInCombat.Count;
     }
-
-    //Create attack type info panel
-    public void CreateAttackTypeInfoPanel(BaseAttack chooseSkill)
-    {
-        GameObject attackTypeInfo = Instantiate(this.attackTypeInfoPanel) as GameObject;
-        this.attackInfo = attackTypeInfo.transform.GetComponent<AttackInfoPanel>();
-        this.attackInfo.attackName.text = chooseSkill.attackName;
-        this.attackInfo.attackTypeInfo.text = chooseSkill.attackDescription;
-        this.SetAttackTypes(chooseSkill.effect1, this.attackInfo.attackTypeIconSpacer.transform);
-        this.SetAttackTypes(chooseSkill.effect2, this.attackInfo.attackTypeIconSpacer.transform);
-        //Debug.LogWarning(enemyStat.enemyHPBarFill);
-        attackTypeInfo.transform.SetParent(this.attackTypeInfoSpacer, false);
-        this.attackTypeInfoList.Add(attackTypeInfo);
-    }
-    public void ClearAttackTypeInfoPanel()
-    {
-        foreach (GameObject attackTypeInfo in attackTypeInfoList)
-        {
-            DestroyImmediate(attackTypeInfo);
-        }
-        this.attackTypeInfoList.Clear();
-    }
-
-    public void SetAttackTypes(BaseAttack.Effect attackType, Transform spawnPosition)
-    {
-        // Kiểm tra xem attackType đã tồn tại chưa
-        foreach (Transform child in spawnPosition)
-        {
-            if (child.name == $"{attackType}Icon") // So sánh với tên icon
-            {
-                //Debug.Log($"Attack type {attackType} đã tồn tại, không tạo mới.");
-                return; // Không tạo lại nếu đã có
-            }
-        }
-
-        // Tải prefab của icon từ Resources
-        GameObject attackPrefab = Resources.Load<GameObject>($"AttackTypeIconImage/{attackType}Icon");
-
-        if (attackPrefab != null)
-        {
-            GameObject attackIcon = Instantiate(attackPrefab); // Tạo icon và đặt vào vị trí
-            attackIcon.transform.SetParent(spawnPosition);
-            attackIcon.name = $"{attackType}Icon"; // Đặt tên để kiểm tra sau này
-        }
-        else
-        {
-            //Debug.LogWarning($"Không tìm thấy icon cho {attackType}");
-            return;
-        }
-    }
-
-
     //Create Enemy info panel
     public void CreateEnemyInfoPanel(GameObject enemy)
     {
@@ -658,7 +456,7 @@ public class CombatStateMachine : MonoBehaviour
             // Giảm timer
             enemySM.timer--;
             // Nếu timer đạt 0, thực hiện xử lý
-            if (enemySM.timer == 0)
+            if (enemySM.timer <= 0)
             {
                 // Xóa toàn bộ danh sách enemy đã tấn công
                 this.enemyTurn = true;
@@ -670,6 +468,20 @@ public class CombatStateMachine : MonoBehaviour
             }
         }
     }
+    public void UpdateHeroRevival()
+    {
+        for (int i = heroesToRevive.Count - 1; i >= 0; i--)
+        {
+            HeroStateMachine hero = heroesToRevive[i];
+            hero.turnsToRevive++;
 
+            if (hero.turnsToRevive >= hero.reviveTurnThreshold)
+            {
+                hero.ReviveHero();
+                heroesToRevive.RemoveAt(i); // Xóa khỏi danh sách
+            }
+        }
+    }
 
+    
 }

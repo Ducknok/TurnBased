@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 6579719909959910807}
   - component: {fileID: 7533439968578834299}
   - component: {fileID: 7821441686657198208}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SwordIcon
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -77,9 +77,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -183294497
-  m_SortingLayer: 3
-  m_SortingOrder: 0
+  m_SortingLayerID: 1665767259
+  m_SortingLayer: 5
+  m_SortingOrder: 2
   m_Sprite: {fileID: -739223910, guid: fb051ba9df7a2724e99ecb3019809887, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -123,7 +123,7 @@ GameObject:
   - component: {fileID: 8100368879754351899}
   - component: {fileID: 4196614184388956412}
   - component: {fileID: 908227990410277532}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Break
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -183,9 +183,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -183294497
-  m_SortingLayer: 3
-  m_SortingOrder: 1
+  m_SortingLayerID: 1665767259
+  m_SortingLayer: 5
+  m_SortingOrder: 3
   m_Sprite: {fileID: 783868130, guid: fb051ba9df7a2724e99ecb3019809887, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -241,7 +241,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4654244548763874982}
   - component: {fileID: 6253913935107076165}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -301,9 +301,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -183294497
-  m_SortingLayer: 3
-  m_SortingOrder: -1
+  m_SortingLayerID: 1665767259
+  m_SortingLayer: 5
+  m_SortingOrder: 1
   m_Sprite: {fileID: -887420655, guid: fb051ba9df7a2724e99ecb3019809887, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

@@ -1,13 +1,15 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
-public class AttackButton : MonoBehaviour
+public class AttackButton : DucMonobehaviour
 {
-    public BaseAttack skillAttackToPerform;
+    public SkillBehaviour skillAttackToPerform;
 
     public void CastSkillAttack()
     {
-        GameObject.Find("StartCombat").GetComponent<CombatStateMachine>().SkillAttack(skillAttackToPerform);
+        //Debug.LogWarning(skillAttackToPerform);
+        ButtonController.Instance.SkillAttack(skillAttackToPerform);
     }
 }

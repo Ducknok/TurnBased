@@ -14,8 +14,15 @@ public class BaseClass
     public float baseATK;
     public float curATK;
 
+    public float baseMATK;
+    public float curMATK;
+
     public float baseDEF;
     public float curDEF;
 
-    public List<BaseAttack> attacks = new List<BaseAttack>();
+    public float baseMDEF;
+    public float curMDEF;
+
+    public List<BaseAttack> normalAttacks = new List<BaseAttack>();
+    public List<BaseAttack> specialAttacks = new List<BaseAttack>();
 }

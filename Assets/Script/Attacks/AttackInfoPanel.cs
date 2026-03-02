@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class AttackInfoPanel : MonoBehaviour
+public class AttackInfoPanel : DucMonobehaviour
 {
     public TextMeshProUGUI attackName;
     public TextMeshProUGUI attackTypeInfo;

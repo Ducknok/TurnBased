@@ -2,22 +2,27 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
-{  
-    [SerializeField] private static PlayerController instance;
-    public static PlayerController Instance => instance;
-    [SerializeField] private CombatZone combatZone;
-    public CombatZone CombatZone => combatZone;
+public class PlayerController : Singleton<PlayerController>
+{
 
+    [SerializeField] private List<HeroStateMachine> heroSMList;  // Danh s¨¢ch ch?a t?t c? HeroStateMachine
+    public List<HeroStateMachine> HeroSMList => heroSMList;
 
-    protected void Awake()
+    protected override void Awake()
     {
-        this.LoadCombatZone();
+        base.Awake();
+        this.LoadComponent();
     }
-    protected void LoadCombatZone()
+
+    public void LoadComponent()
     {
-        if (this.combatZone != null) return;
-        this.combatZone = GameObject.FindObjectOfType<CombatZone>();
+        this.LoadHeroSM();
+    }
+
+    protected void LoadHeroSM()
+    {
+        if (this.heroSMList != null && this.heroSMList.Count > 0) return;
+        this.heroSMList = new List<HeroStateMachine>(GameObject.FindObjectsOfType<HeroStateMachine>());
     }
 
 }

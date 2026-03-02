@@ -2,48 +2,91 @@
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening; // DoTween for smooth animations
+using UnityEngine.SceneManagement;
 
-public class CombatZone : MonoBehaviour
+public class CombatZone : DucMonobehaviour
 {
+    public CombatStateMachine cbm;
+    public CameraController cameraCtrl;
     [Header("Combat Settings")]
     public Transform[] playerPositions;   // Set positions for players during combat
     public Transform[] enemyPositions;    // Set positions for enemies during combat
-   
-
+    public Transform centerPosition;
     [Header("Player and Enemy References")]
-    public GameObject[] players;          // Array of player characters
+    public GameObject[] heros;
     public GameObject[] enemies;          // Array of enemies
     protected GameObject[] bodies;
-
     [Header("Combat Flow Settings")]
     public float movementDuration = 1f;   // Duration for moving characters to combat positions
     public float jumpHeight = 2f;         // Jump height for entering combat
-
     public bool isInCombat = false;      // State to check if combat is active
 
-
-
-    // Trigger combat when player enters a combat zone
-    protected void Awake()
+    [System.Obsolete]
+    protected override void Awake()
     {
-        // Khởi tạo mảng bodies với cùng kích thước mảng players
-        this.bodies = new GameObject[players.Length];
+        this.cbm = FindObjectOfType<CombatStateMachine>();
+        StartCoroutine(WaitSetCameraController());
+    }
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+    }
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+    }
+    protected override void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        this.cbm = FindObjectOfType<CombatStateMachine>();
+        StartCoroutine(WaitSetCameraController());
+    }
+    private IEnumerator WaitSetCameraController()
+    {
+        yield return null; // đợi 1 frame
+        this.cameraCtrl = CameraController.Instance;
+    }
+    private void LoadHeroList()
+    {
 
-        // Duyệt qua từng player để tìm object con "Body"
-        for (int i = 0; i < players.Length; i++)
+        var players = this.cbm.playersInCombat;
+
+        this.heros = new GameObject[players.Count];
+        this.bodies = new GameObject[players.Count];
+
+        for (int i = 0; i < players.Count; i++)
         {
-            Transform bodyTransform = players[i].transform.Find("Body");
+            GameObject hero = players[i];
+            this.heros[i] = hero;
+
+            if (hero == null)
+            {
+                Debug.LogWarning($"Hero {i} is null.");
+                continue;
+            }
+
+            Transform bodyTransform = hero.transform.Find("Body");
             if (bodyTransform != null)
             {
                 bodies[i] = bodyTransform.gameObject;
-                //Debug.Log($"Body found for player {players[i].name}: {bodies[i].name}");
+                // Debug.Log($"Body found for {hero.name}: {bodyTransform.name}");
             }
             else
             {
-                Debug.LogWarning($"Body not found for player {players[i].name}");
+                Debug.LogWarning($"Body not found for hero {hero.name}");
+            }
+            // 🔽 Gọi HeroPosition() ở đây
+            var heroSM = hero.GetComponent<HeroStateMachine>();
+            if (heroSM != null)
+            {
+                heroSM.HeroPosition(); // 👈 Gọi hàm bạn đã viết
+            }
+            else
+            {
+                Debug.LogWarning($"Không tìm thấy HeroCombatStateMachine trên {hero.name}");
             }
         }
     }
+
     private void OnTriggerEnter2D(Collider2D collider)
     {
         if (collider.CompareTag("Body") && !isInCombat)
@@ -52,21 +95,21 @@ public class CombatZone : MonoBehaviour
             StartCoroutine(InitiateCombat());
         }
     }
-
     private IEnumerator InitiateCombat()
     {
         //Debug.Log("Combat Started!");
-
+        this.LoadHeroList();
+        CameraController.Instance.SetCameraForCombat(this.centerPosition);
         // Kiểm tra kích thước mảng trước khi di chuyển
-        if (players.Length > playerPositions.Length || enemies.Length > enemyPositions.Length)
+        if (heros.Length > playerPositions.Length || enemies.Length > enemyPositions.Length)
         {
-            Debug.LogError("Not enough combat positions for all players or enemies.");
             yield break;
         }
 
         // Move players
-        for (int i = 0; i < players.Length; i++)
+        for (int i = 0; i < heros.Length; i++)
         {
+            //Debug.Log($"Player {i} move to {playerPositions[i].position}");
             MoveToPosition(bodies[i].transform, playerPositions[i].position);
         }
 
@@ -80,7 +123,6 @@ public class CombatZone : MonoBehaviour
 
         StartCombat();
     }
-
     // Move a character to a target position with a jump animation
     private void MoveToPosition(Transform character, Vector3 targetPosition)
     {
@@ -95,20 +137,39 @@ public class CombatZone : MonoBehaviour
         character.DOPath(path, movementDuration, PathType.CatmullRom).SetEase(Ease.InOutQuad); // .OnComplete( /*=> Debug.Log($"{character.name} reached {targetPosition}")*/);
     }
 
-
     // Logic to handle the actual combat after positioning
     private void StartCombat()
     {
-        this.isInCombat = true;
-    }
 
+        this.isInCombat = true;
+        foreach (var hero in PlayerController.Instance.HeroSMList)
+        {
+            hero.anim.SetFloat("Speed", 0);
+            hero.anim.SetBool("IdleBattle", this.isInCombat);
+        }
+    }
     // End the combat
     public void EndCombat()
     {
         Debug.Log("Combat Ended!");
         isInCombat = false;
-
+        foreach(var hero in PlayerController.Instance.HeroSMList)
+        {
+            hero.anim.SetBool("IdleBattle", this.isInCombat);
+        }
+        this.cbm.combatState = CombatStateMachine.PerformAction.WAIT;
+        this.cbm.playerInput = CombatStateMachine.PlayerGUI.ACTIVATE;
+        cameraCtrl.SetCameraFollowHero(PartyManager.Instance.currentLeader.transform.parent.GetComponent<HeroStateMachine>());
+        this.DisActiveObject();
         // Reset positions, handle rewards, etc.
+    }
+    private void DisActiveObject()
+    {
+        this.gameObject.SetActive(false);
+    }
+    private void ActiveObject()
+    {
+        this.gameObject.SetActive(true);
     }
     private void OnDrawGizmos()
     {
@@ -123,5 +184,5 @@ public class CombatZone : MonoBehaviour
         {
             if (pos != null) Gizmos.DrawSphere(pos.position, 0.2f);
         }
-    }
+    } 
 }

@@ -1,37 +1,86 @@
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
+using UnityEngine.SceneManagement;
 
-public class PlayerMovement : MonoBehaviour
+public class PlayerMovement : DucMonobehaviour
 {
-    private PlayerController playerCtrl; 
-    [SerializeField] protected Rigidbody2D rb;
-    [SerializeField] protected GameObject body { get; private set; }
-    [SerializeField] protected Animator anim;
-    [SerializeField] protected float moveSpeed = 5f;
-    [SerializeField] protected Vector2 movement;
-    protected void Awake()
+    public bool isLeader = false;
+    [SerializeField] private MainInventoryController mainInventory;
+    [SerializeField] public float moveSpeed = 5f;
+    [SerializeField] private Rigidbody2D rb;
+    [SerializeField] public Animator anim;
+    public Vector2 movement;
+
+    // Lưu lịch sử vị trí
+    public List<Vector3> positionHistory = new List<Vector3>();
+    private float recordTimer;
+    [SerializeField] private float recordInterval = 0.1f;
+    public Vector2 lastMove = Vector2.down;
+
+    protected override void Awake()
     {
-        this.body = this.transform.parent.Find("Body").gameObject;
-        this.rb = this.body.GetComponent <Rigidbody2D>();
-        this.anim = this.body.GetComponent<Animator>();
-        this.playerCtrl = GetComponentInParent<PlayerController>();
+        this.rb = this.transform.parent.GetComponent<Rigidbody2D>();
+        this.anim = this.transform.parent.GetComponent<Animator>();
+        this.mainInventory = FindObjectOfType<MainInventoryController>();
     }
-    protected void Update()
+    protected override void Update()
     {
-        this.anim.SetFloat("Horizontal", this.movement.x);
-        this.anim.SetFloat("Vertical", this.movement.y);
-        this.anim.SetFloat("Speed", this.movement.sqrMagnitude);
-        if(this.movement != Vector2.zero)
+        this.MoveInput();
+    }
+    protected override void FixedUpdate()
+    {
+        this.CheckState();
+        
+    }
+    private void MoveInput()
+    {
+        if (CombatController.Instance.CBZ.isInCombat || this.mainInventory.isMainInventoryOpen) return;
+        else
         {
-            this.anim.SetFloat("LastHorizontal", this.movement.x);
-            this.anim.SetFloat("LastVertical", this.movement.y);
+            if (!isLeader) return; 
+
+            movement.Set(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+
+            anim.SetFloat("Horizontal", movement.x);
+            anim.SetFloat("Vertical", movement.y);
+            lastMove = movement.normalized;
+            anim.SetFloat("Speed", movement.sqrMagnitude);
+
+            if (movement != Vector2.zero)
+            {
+                anim.SetFloat("LastHorizontal", movement.x);
+                anim.SetFloat("LastVertical", movement.y);
+            }
         }
     }
-    protected void FixedUpdate()
+    public override void CheckState()
     {
-        if (this.playerCtrl.CombatZone.isInCombat) return;
-        this.movement.Set(InputManager.Movement.x, InputManager.Movement.y);
-        this.rb.velocity = this.movement * this.moveSpeed;
+        if (CombatController.Instance.CBZ.isInCombat || this.mainInventory.isMainInventoryOpen)
+        {
+            rb.linearVelocity = Vector2.zero;
+            return;
+        }
+        else
+        {
+            if (this.isLeader)
+            {
+                rb.linearVelocity = movement.normalized * moveSpeed;
+
+                recordTimer += Time.fixedDeltaTime;
+                if (recordTimer >= recordInterval)
+                {
+                    positionHistory.Insert(0, this.transform.parent.position);
+                    recordTimer = 0f;
+                }
+            }
+        }
     }
+   
+    public void ClearHistory()
+    {
+        positionHistory.Clear();
+    }
+
+    
 }

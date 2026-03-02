@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class HeroPanelStats : MonoBehaviour
+public class HeroPanelStats : DucMonobehaviour
 {
     public Image playerImage;
     public TextMeshProUGUI heroName;
