@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Gold Ring
   m_EditorClassIdentifier: 
   itemType: 3
+  rarity: 2
   <IsStackable>k__BackingField: 0
   <MaxStackSize>k__BackingField: 1
   <Name>k__BackingField: Gold Ring

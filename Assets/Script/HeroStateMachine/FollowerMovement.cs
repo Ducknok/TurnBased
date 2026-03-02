@@ -38,7 +38,7 @@ public class FollowerMovement : DucMonobehaviour
     {
         if (CombatController.Instance.CBZ.isInCombat || leader == null || leader.positionHistory.Count <= followDelay || isWarping)
         {
-            rb.velocity = Vector2.zero;
+            rb.linearVelocity = Vector2.zero;
             anim.SetFloat("Speed", 0);
             return;
         }
@@ -66,7 +66,7 @@ public class FollowerMovement : DucMonobehaviour
         // Nếu đã ở gần leader, không cần di chuyển
         if (distanceToLeader <= desiredDistance)
         {
-            rb.velocity = Vector2.zero;
+            rb.linearVelocity = Vector2.zero;
             anim.SetFloat("Speed", 0);
             return;
         }
@@ -94,7 +94,7 @@ public class FollowerMovement : DucMonobehaviour
         }
         else
         {
-            rb.velocity = Vector2.zero;
+            rb.linearVelocity = Vector2.zero;
             anim.SetFloat("Speed", 0);
         }
 
@@ -103,7 +103,7 @@ public class FollowerMovement : DucMonobehaviour
     private void WarpToLeader()
     {
         isWarping = true;
-        rb.velocity = Vector2.zero;
+        rb.linearVelocity = Vector2.zero;
         anim.SetFloat("Speed", 0);
 
         Vector3 targetPos = leader.transform.position - (Vector3)(leader.lastMove.normalized * desiredDistance);

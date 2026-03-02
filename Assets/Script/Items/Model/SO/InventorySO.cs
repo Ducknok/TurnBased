@@ -127,13 +127,7 @@ namespace Inventory.Model
             return returnValue;
         }
 
-        public void SwapItems(int itemIndex1, int itemIndex2)
-        {
-            InventoryItem item1 = this.inventoryItems[itemIndex1]; // a = b, b = c, c = a 
-            this.inventoryItems[itemIndex1] = this.inventoryItems[itemIndex2];
-            this.inventoryItems[itemIndex2] = item1;
-            this.InformAboutChange();
-        }
+
 
         private void InformAboutChange()
         {
@@ -205,5 +199,11 @@ namespace Inventory.Model
             };
     }
 }
-
+//public void SwapItems(int itemIndex1, int itemIndex2)
+//{
+//    InventoryItem item1 = this.inventoryItems[itemIndex1]; // a = b, b = c, c = a 
+//    this.inventoryItems[itemIndex1] = this.inventoryItems[itemIndex2];
+//    this.inventoryItems[itemIndex2] = item1;
+//    this.InformAboutChange();
+//}
 

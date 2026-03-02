@@ -9,7 +9,7 @@ using UnityEngine.EventSystems;
 //View (V) in MVC
 namespace Inventory.UI
 {
-    public class UIInventoryItem : DucMonobehaviour, IDropHandler /*IBeginDragHandler*//*IEndDragHandler*//*IDragHandler*/
+    public class UIInventoryItem : DucMonobehaviour //IDropHandler /*IBeginDragHandler*//*IEndDragHandler*//*IDragHandler*/
     {
         [SerializeField]
         private Image itemImage;
@@ -59,10 +59,10 @@ namespace Inventory.UI
         //    OnItemEndDrag?.Invoke(this);
         //}
 
-        public void OnDrop(PointerEventData eventData)
-        {
-            OnItemDroppedOn?.Invoke(this);
-        }
+        //public void OnDrop(PointerEventData eventData)
+        //{
+        //    OnItemDroppedOn?.Invoke(this);
+        //}
 
         //public void OnDrag(PointerEventData eventData)
         //{

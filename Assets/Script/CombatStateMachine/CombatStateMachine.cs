@@ -53,7 +53,12 @@ public class CombatStateMachine : DucMonobehaviour
     public bool heroTurn;
     public bool enemyTurn;
     public List<GameObject> heroesDoneTurn = new List<GameObject>();
-    // Start is called before the first frame update
+    protected override void Awake()
+    {
+        this.enemiesInCombat.AddRange(GameObject.FindGameObjectsWithTag("Enemy"));
+        this.playersInCombat.AddRange(GameObject.FindGameObjectsWithTag("Player"));
+        this.enemyInfoSpacer = GameObject.Find("BattleCanvas").transform.Find("Panel").transform.Find("EnemyInfoPanel").transform.Find("EnemyInfoPanelSpacer");
+    }
     protected override void Start()
     {
         this.combatState = PerformAction.WAIT;
@@ -71,15 +76,6 @@ public class CombatStateMachine : DucMonobehaviour
         this.HandlePlayerInputState();
     }
 
-    protected override void Awake()
-    {
-        //if (this.enemiesInCombat != null) return;
-        this.enemiesInCombat.AddRange(GameObject.FindGameObjectsWithTag("Enemy"));
-        //if (this.playersInCombat != null) return;
-        this.playersInCombat.AddRange(GameObject.FindGameObjectsWithTag("Player"));
-        this.enemyInfoSpacer = GameObject.Find("BattleCanvas").transform.Find("Panel").transform.Find("EnemyInfoPanel").transform.Find("EnemyInfoPanelSpacer");
-        //DontDestroyOnLoad(this.gameObject);
-    }
 
     protected override void OnEnable()
     {
@@ -110,7 +106,6 @@ public class CombatStateMachine : DucMonobehaviour
         maxSelectableEnemies = skillData.maxEnemyCount;
         HighlightEnemy(); // Highlight ban đầu
     }
-    // Update is called once per frame
     
     private void HandleCombatState()
     {
@@ -169,6 +164,13 @@ public class CombatStateMachine : DucMonobehaviour
 
         GameObject enemyPerformer = GameObject.Find(performList[0].Attacker);
 
+        if (enemyPerformer == null)
+        {
+            Debug.LogWarning("Không tìm thấy kẻ địch: " + performList[0].Attacker + ". Lượt đánh sẽ bị hủy bỏ!");
+            this.performList.RemoveAt(0);
+            this.combatState = PerformAction.WAIT;
+            return;
+        }
         if (performList[0].Type == "Enemy")
         {
             EnemyStateMachine esm = enemyPerformer.GetComponent<EnemyStateMachine>();
@@ -204,6 +206,13 @@ public class CombatStateMachine : DucMonobehaviour
         if (performList.Count > 0)
         {
             GameObject playerPerformer = GameObject.Find(performList[0].Attacker);
+            if (playerPerformer == null)
+            {
+                Debug.LogWarning("Không tìm thấy Hero: " + performList[0].Attacker + ". Lượt đánh bị hủy.");
+                this.performList.RemoveAt(0);
+                this.combatState = PerformAction.WAIT;
+                return;
+            }
             if (this.performList[0].Type == "Hero")
             {
                 //Debug.Log("Hero is here to perform");
@@ -233,7 +242,6 @@ public class CombatStateMachine : DucMonobehaviour
         }
         else
         {
-            //call function
             this.ClearAttackPanel();
             if (this.AreAllHeroesDone()) this.heroesDoneTurn.Clear();
             if (this.AreAllEnemiesDone() && this.performList.Count == 0)
@@ -326,7 +334,7 @@ public class CombatStateMachine : DucMonobehaviour
             ConfirmEnemySelection();
         }
     }
-    // Hiển thị highlight kẻ địch được chọn
+    // Show highlight enemy chosen
     public void HighlightEnemy()
     {
         // Không có enemy nào trong danh sách
@@ -354,7 +362,7 @@ public class CombatStateMachine : DucMonobehaviour
         enemySelected = enemy.transform.Find("ChooseEnemy").gameObject;
         enemySelected.SetActive(true);   
     }
-    // Xác nhận chọn kẻ địch
+    // Confirm enemy
     private void ConfirmEnemySelection()
     {
         this.playerChoice.AttackerTarget = enemiesInCombat[selectedEnemyIndex];

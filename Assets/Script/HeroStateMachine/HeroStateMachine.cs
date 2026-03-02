@@ -11,6 +11,7 @@ using UnityEngine.SceneManagement;
 
 public class HeroStateMachine : DucMonobehaviour
 {
+    public AgentWeapon agentWeapon;
     public BaseHero baseHero;
     public ItemInventoryController inventoryController;
     public SkillBehaviour currentAttack;
@@ -45,21 +46,6 @@ public class HeroStateMachine : DucMonobehaviour
     public int turnsToRevive = 0;
     public int reviveTurnThreshold = 3;
     // Start is called before the first frame update
-    protected override void Start()
-    {
-        DOTween.SetTweensCapacity(500, 50);
-        this.choose.SetActive(false);
-        this.body = this.transform.Find("Body").gameObject;
-        this.anim = this.body.GetComponent<Animator>();
-        //this.inventoryController = this.transform.GetComponent<InventoryController>();
-        this.currentState = TurnState.PROCESSING;
-    }
-
-    protected override void Update()
-    {
-        this.HandleCurrentState();  
-    }
-
     protected override void Awake()
     {
         var existingHeroes = FindObjectsOfType<HeroStateMachine>();
@@ -72,12 +58,28 @@ public class HeroStateMachine : DucMonobehaviour
                 return;
             }
         }
+        this.body = this.transform.Find("Body").gameObject;
+        this.anim = this.body.GetComponent<Animator>();
 
         this.LoadComponent();
         DontDestroyOnLoad(this.gameObject);
     }
+    protected override void Start()
+    {
+        DOTween.SetTweensCapacity(500, 50);
+        this.choose.SetActive(false);
+        //this.inventoryController = this.transform.GetComponent<InventoryController>();
+        this.currentState = TurnState.PROCESSING;
+    }
+
+    protected override void Update()
+    {
+        this.HandleCurrentState();  
+    }
+
     private void LoadComponent()
     {
+        this.agentWeapon = this.GetComponent<AgentWeapon>();
         this.heroPanelHandler = this.transform.GetComponent<HeroPanelHandler>();
         this.baseHero.curHP = this.baseHero.baseHP;
         this.baseHero.curMP = this.baseHero.baseMP;
@@ -85,7 +87,7 @@ public class HeroStateMachine : DucMonobehaviour
     // Handle current state and check state
     private void HandleCurrentState()
     {
-        Debug.Log(this.currentState);
+        //Debug.Log(this.currentState);
         // Kiểm tra nếu chuột trái được click
         switch (this.currentState)
         {

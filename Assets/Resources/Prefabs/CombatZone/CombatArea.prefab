@@ -40,9 +40,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8536570624886851611}
+  - component: {fileID: 7229564321441920029}
   - component: {fileID: 8948462457915718737}
   - component: {fileID: 12465553669415892}
-  - component: {fileID: 7229564321441920029}
   m_Layer: 0
   m_Name: CombatArea
   m_TagString: CombatZone
@@ -71,6 +71,36 @@ Transform:
   - {fileID: 6374804413476040121}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7229564321441920029
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3236976197755014771}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 943151433b6907b498852e6ac11b51b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cbm: {fileID: 0}
+  cameraCtrl: {fileID: 0}
+  playerPositions:
+  - {fileID: 3124976985613348264}
+  - {fileID: 1158787306518676781}
+  enemyPositions:
+  - {fileID: 1550642192517557547}
+  - {fileID: 2942021682672258470}
+  - {fileID: 3581508173851994456}
+  centerPosition: {fileID: 0}
+  heros: []
+  enemies:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  movementDuration: 1
+  jumpHeight: 1
+  isInCombat: 0
 --- !u!212 &8948462457915718737
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -169,36 +199,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &7229564321441920029
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3236976197755014771}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 943151433b6907b498852e6ac11b51b3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cbm: {fileID: 0}
-  cameraCtrl: {fileID: 0}
-  playerPositions:
-  - {fileID: 3124976985613348264}
-  - {fileID: 1158787306518676781}
-  enemyPositions:
-  - {fileID: 1550642192517557547}
-  - {fileID: 2942021682672258470}
-  - {fileID: 3581508173851994456}
-  centerPosition: {fileID: 0}
-  heros: []
-  enemies:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  movementDuration: 1
-  jumpHeight: 1
-  isInCombat: 0
 --- !u!1 &3379602229632298521
 GameObject:
   m_ObjectHideFlags: 0

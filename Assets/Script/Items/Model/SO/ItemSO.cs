@@ -14,11 +14,19 @@ namespace Inventory.Model
         Ring,
         Miscellaneous
     }
+    public enum Rarity
+    {
+        Normal, 
+        Rare,
+        Epic,
+    }
     public abstract class ItemSO : ScriptableObject
     {
 
         [field: SerializeField]
         public ItemType itemType;
+        [field: SerializeField]
+        public Rarity rarity;
         [field: SerializeField]
         public bool IsStackable { get; set; }
         public int ID => GetInstanceID();

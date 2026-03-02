@@ -100,7 +100,7 @@ public class MainInventoryController : DucMonobehaviour
                 LockSelectedButton(); // Giữ selection
             }
             // Khi đang ở trong một UI phụ như Equip, Skill, Item,...
-            else if (IsInSubUI() && Input.GetKeyDown(KeyCode.LeftControl))
+            else if (IsInSubUI() && Input.GetKeyDown(KeyCode.LeftControl) && !this.equipMenuController.isItemPanel)
             {
                 ReturnToMainMenu();
             }
@@ -214,7 +214,7 @@ public class MainInventoryController : DucMonobehaviour
             HighlightHero(currentHeroIndex);
         }
 
-        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+        if ((Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter)))
         {
             var hero = CombatController.Instance.CBM.playersInCombat[currentHeroIndex].GetComponent<HeroStateMachine>();
             

@@ -430,11 +430,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isEquipMenuOpen: 0
   heroImage: {fileID: 164963317}
-  hereName: {fileID: 821468679}
+  heroName: {fileID: 0}
+  heroType: {fileID: 0}
   weaponUI: {fileID: 1351790119}
-  weaponBut: {fileID: 1838298327}
-  weaponImage: {fileID: 2031313250}
-  weaponName: {fileID: 1806251680}
+  weaponUISpacer: {fileID: 0}
+  currentWeapon: []
+  armorUISpacer: {fileID: 0}
+  ringUISpacer: {fileID: 0}
   hpValue: {fileID: 1516022162}
   mpValue: {fileID: 481125959}
   atkValue: {fileID: 106363529}
@@ -444,6 +446,10 @@ MonoBehaviour:
   heroSwapButtonPrefab: {fileID: 6240007344419185771, guid: bc973fe771cf9bb469827f1c7149b804,
     type: 3}
   heroSwapButtonSpacer: {fileID: 1790951689}
+  desText: {fileID: 0}
+  isItemPanel: 0
+  itemPanel: {fileID: 0}
+  spacer: {fileID: 0}
 --- !u!1 &28953590
 GameObject:
   m_ObjectHideFlags: 0
@@ -40567,7 +40573,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 14.2}
-  m_SizeDelta: {x: 20, y: 20}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &809432306
 MonoBehaviour:
@@ -60310,7 +60316,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1272370788
 MonoBehaviour:
   m_ObjectHideFlags: 0

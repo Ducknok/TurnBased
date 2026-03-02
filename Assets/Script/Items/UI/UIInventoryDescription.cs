@@ -58,7 +58,6 @@ namespace Inventory.UI
             this.UpdateMPBar(mpBarFill, hero);
 
         }
-
         public void SetHeroUIDescription(GameObject image, HeroStateMachine hero)
         {
             Image heroButton = image.transform.Find("Icon").GetComponent<Image>();
@@ -86,7 +85,6 @@ namespace Inventory.UI
             hpValue.text = $"{hero.baseHero.curHP} / {hero.baseHero.baseHP}";
             mpValue.text = $"{hero.baseHero.curMP} / {hero.baseHero.baseMP}";
         }
-
         public void SetATKDescription(Image image, HeroStateMachine hero, ItemSO item)
         {
             Image heroBar = image.transform.Find("HeroIcon/Icon").GetComponent<Image>();
@@ -121,19 +119,14 @@ namespace Inventory.UI
                 matk.transform.parent.gameObject.SetActive(false); // Ẩn MATKBG
             }
         }
-
-
         public void UpdateHPBar(Image hpBar, HeroStateMachine hero)
         {
             float ratio = hero.baseHero.curHP / hero.baseHero.baseHP;
-
-
             Sequence sequence = DOTween.Sequence();
             sequence.Append(hpBar.DOFillAmount(ratio, 0.25f)).SetEase(Ease.InOutSine);
             sequence.AppendInterval(this.trailDelay);
             sequence.Append(hpBar.DOFillAmount(ratio, 0.3f)).SetEase(Ease.InOutSine);
             sequence.Play();
-
             if (hero.baseHero.curHP <= 0)
             {
                 hero.baseHero.curHP = 0;

@@ -48,14 +48,19 @@ public class EnemyStateMachine : DucMonobehaviour
     // Store initial position
     private Vector3 initialPosition;
 
-    // Start is called before the first frame update
-    protected override void Start()
+    protected override void Awake()
     {
-        DOTween.SetTweensCapacity(500, 50);
         this.combatStateMachine = GameObject.Find("CombatManager").GetComponent<CombatStateMachine>();
         this.enemyMoveToCombat = this.transform.GetComponentInChildren<EnemyMoveToCombat>();
         this.anim = this.transform.Find("Body").GetComponent<Animator>();
         this.enemyUI = this.transform.GetComponent<EnemyUI>();
+       
+    }
+    // Start is called before the first frame update
+    protected override void Start()
+    {
+        DOTween.SetTweensCapacity(500, 50);
+        this.baseEnemy.curHP = this.baseEnemy.baseHP;
         this.timer = Random.Range(1, this.combatStateMachine.playersInCombat.Count + 1);
         this.initialPosition = enemyMoveToCombat.targetPosition.transform.position; // Store initial position
         this.ChooseAction();
@@ -63,10 +68,6 @@ public class EnemyStateMachine : DucMonobehaviour
         this.choose.SetActive(false);
     }
 
-    protected override void Awake()
-    {
-        this.baseEnemy.curHP = this.baseEnemy.baseHP;
-    }
 
     // Update is called once per frame
     protected override void Update()
@@ -98,9 +99,9 @@ public class EnemyStateMachine : DucMonobehaviour
         {
             this.combatStateMachine.enemyTurn = true; // Enable enemy turn
         }
-        if (this.combatStateMachine.enemyTurn && this.timer == 0 && !this.enemyAttacked &&
+        if (this.combatStateMachine.enemyTurn && this.timer <= 0 && !this.enemyAttacked &&
              !this.combatStateMachine.enemiesAttacked.Contains(this.gameObject) &&
-                this.currentState != TurnState.DEAD)
+                this.currentState != TurnState.DEAD && this.alive) // THÊM KIỂM TRA ALIVE
         {
             this.enemyAttacked = true;
             this.combatStateMachine.CollectAction(savedAttack);
@@ -111,39 +112,40 @@ public class EnemyStateMachine : DucMonobehaviour
     {
         if (!this.alive)
         {
-
             return;
         }
         else
         {
+            // Set alive false 
+            this.alive = false;
+
             // Not attackable by heroes
             this.combatStateMachine.enemiesInCombat.Remove(this.gameObject);
+
             // Remove all inputs hero attacks
-            if (this.combatStateMachine.enemiesInCombat.Count > 0)
+            for (int i = this.combatStateMachine.performList.Count - 1; i >= 0; i--)
             {
-                for (int i = 0; i < this.combatStateMachine.performList.Count; i++)
+                if (this.combatStateMachine.performList[i].AttacksGameObject == this.gameObject)
                 {
-                    if (this.combatStateMachine.performList[i].AttacksGameObject == this.gameObject)
-                    {
-                        this.combatStateMachine.performList.Remove(this.combatStateMachine.performList[i]);
-                    }
+                    this.combatStateMachine.performList.RemoveAt(i);
                 }
-                for (int i = 0; i < this.combatStateMachine.enemiesAttacked.Count; i++)
+            }
+            for (int i = this.combatStateMachine.enemiesAttacked.Count - 1; i >= 0; i--)
+            {
+                if (this.combatStateMachine.enemiesAttacked[i].gameObject == this.gameObject)
                 {
-                    if (this.combatStateMachine.enemiesAttacked[i].gameObject == this.gameObject)
-                    {
-                        this.combatStateMachine.enemiesAttacked.Remove(this.combatStateMachine.enemiesAttacked[i]);
-                    }
+                    this.combatStateMachine.enemiesAttacked.RemoveAt(i);
                 }
             }
 
+
             this.anim.Play("Dead");
-            // Set alive false
-            this.alive = false;
+
             StartCoroutine(this.ClearEnemyInfo());
             // Destroy object after 3s and effect after dead
             StartCoroutine(this.DestroyObject());
-            // Check alive
+
+            // Đảm bảo không bị kẹt lượt nếu quái chết khi chưa kịp đánh
             this.combatStateMachine.combatState = CombatStateMachine.PerformAction.CHECKALIVE;
         }
     }

@@ -38,7 +38,7 @@ public class PlayerMovement : DucMonobehaviour
         if (CombatController.Instance.CBZ.isInCombat || this.mainInventory.isMainInventoryOpen) return;
         else
         {
-            if (!isLeader) return; // Chỉ Leader mới nhập input
+            if (!isLeader) return; 
 
             movement.Set(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
 
@@ -56,17 +56,16 @@ public class PlayerMovement : DucMonobehaviour
     }
     public override void CheckState()
     {
-        // Nếu đang combat thì không cho di chuyển
         if (CombatController.Instance.CBZ.isInCombat || this.mainInventory.isMainInventoryOpen)
         {
-            rb.velocity = Vector2.zero;
+            rb.linearVelocity = Vector2.zero;
             return;
         }
         else
         {
             if (this.isLeader)
             {
-                rb.velocity = movement.normalized * moveSpeed;
+                rb.linearVelocity = movement.normalized * moveSpeed;
 
                 recordTimer += Time.fixedDeltaTime;
                 if (recordTimer >= recordInterval)

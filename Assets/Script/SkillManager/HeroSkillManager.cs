@@ -44,10 +44,8 @@ public class HeroSkillManager : SkillManager
     {
         Transform body = hsm.transform.Find("Body");
 
-        // Spawn hi?u ?ng t?i v? tr¨ª hi?n t?i c?a body
         Transform effect = VFXSpawner.Instance.Spawn(VFXSpawner.lightningTrail, new Vector3(hsm.transform.Find("Body").position.x + 4f, hsm.transform.Find("Body").position.y, 0), Quaternion.identity);
         effect.gameObject.SetActive(true);
-        // G?n hi?u ?ng l¨¤m con c?a body => s? di chuy?n theo hero
         if (effect != null)
         {
             effect.SetParent(body);
@@ -66,16 +64,14 @@ public class HeroSkillManager : SkillManager
         {
             effect.gameObject.SetActive(true);
 
-            // H??ng effect v? ph¨ªa enemy
             Vector3 dir = (targetPos - startPos).normalized;
-            effect.right = dir; // Gi? ??nh VFX xoay theo tr?c right
+            effect.right = dir;
 
-            // Di chuy?n t?i enemy
             effect.DOMove(targetPos, 0.4f)
                   .SetEase(Ease.InQuad)
                   .OnComplete(() =>
                   {
-                          // G?y damage ho?c hi?u ?ng t?i enemy
+    
                           VFXSpawner.Instance.Despawn(effect);
                   });
         }
@@ -86,7 +82,6 @@ public class HeroSkillManager : SkillManager
                                            this.hsm.enemyToAttack.transform.position.y - 1f);
         if (float.IsNaN(enemyPosition.x) || float.IsNaN(enemyPosition.y))
         {
-            Debug.LogError("enemyToAttack ?ang c¨® position NaN!");
             return;
         }
 

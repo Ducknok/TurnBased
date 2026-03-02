@@ -84,10 +84,7 @@ namespace Inventory
             this.inventoryUI.OnDescriptionRequested += HandleDescriptionRequest;
             this.inventoryUI.OnItemActionRequested += HandleItemActionRequest;
         }
-        private void HandleSwapItems(int itemIndex1, int itemIndex2)
-        {
-            this.inventoryData.SwapItems(itemIndex1, itemIndex2);
-        }
+        
         public void PerformAction(int itemIndex)
         {
             if (itemIndex < 0 || itemIndex >= currentFilteredItems.Count)
@@ -105,7 +102,7 @@ namespace Inventory
             IItemAction itemAction = inventoryItem.item as IItemAction;
             if (itemAction != null)
             {
-                itemAction.PerformAction(itemIndex, this.gameObject, inventoryItem.itemState);
+                itemAction.PerformAction(itemIndex, this.gameObject);
 
                 if (itemIndex >= currentFilteredItems.Count || currentFilteredItems[itemIndex].IsEmpty)
                 {
@@ -142,17 +139,14 @@ namespace Inventory
                         selectedHero.baseHero.curHP == selectedHero.baseHero.baseHP &&
                         selectedHero.baseHero.curMP == selectedHero.baseHero.baseMP)
                         return;
-
-                    // Gọi hiệu ứng item lên hero
-                    itemAction.PerformAction(itemIndex, selectedHero.gameObject, inventoryItem.itemState);
-
                     // Nếu là item tiêu hao thì xóa nó khỏi inventory
                     if (destroyableItem != null)
                     {
                         this.inventoryData.RemoveItem(inventoryItem.item, 1);
                         UpdateFilteredInventoryUI(this.currentButtonIndex);
                     }
-
+                    // Gọi hiệu ứng item lên hero
+                    itemAction.PerformAction(itemIndex, selectedHero.gameObject);
                     // Reset UI sau khi dùng
                     this.inventoryUI.ResetSelection();
                 });
@@ -272,6 +266,26 @@ namespace Inventory
             this.inventoryUI.Show();
             this.RefreshCurrentTab();
         }
+        public List<EquippableItemSO> GetEquipableItemsByType(ItemType type)
+        {
+            var result = new List<EquippableItemSO>();
+            var inventory = inventoryData.GetCurrentInventoryState();
+
+            foreach (var item in inventory.Values)
+            {
+                if (item.item is EquippableItemSO equipItem && equipItem.itemType == type && !item.IsEmpty)
+                {
+                    result.Add(equipItem);
+                }
+            }
+
+            return result;
+        }
+
+        //private void HandleSwapItems(int itemIndex1, int itemIndex2)
+        //{
+        //    this.inventoryData.SwapItems(itemIndex1, itemIndex2);
+        //}
         //private void HandleStartDragging(int itemIndex)
         //{
         //    InventoryItem inventoryItem = this.inventoryData.GetItemAt(itemIndex);
