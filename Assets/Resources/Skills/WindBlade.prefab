@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7904670462677150126}
   - component: {fileID: 1879404418655777323}
   m_Layer: 0
-  m_Name: GroundSlash
+  m_Name: WindBlade
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

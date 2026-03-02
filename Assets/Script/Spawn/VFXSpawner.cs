@@ -17,7 +17,7 @@ public class VFXSpawner : Spawner
     public static string ducknokClone = "DucknokClone";
 
     //May's VFX
-    public static string groundSlash = "GroundSlash";
+    public static string windBlade = "WindBlade";
     public static string tonardo = "Tornado";
 
     //Enemy
