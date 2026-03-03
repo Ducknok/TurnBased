@@ -21,6 +21,6 @@ public class Tornado : SkillBehaviour
         float animationDuration = GetAnimationDuration(anim, skillData.attackName);
         yield return new WaitForSeconds(animationDuration);
         Vector3 impactPoint = target.transform.position;
-        this.ApplyAoEDamage(attacker, impactPoint, aoeRadius);
+        this.ApplyAoEDamage(attacker, target, impactPoint, aoeRadius);
     }
 }

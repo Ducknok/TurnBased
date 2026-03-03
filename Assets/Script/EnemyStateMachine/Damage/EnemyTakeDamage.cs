@@ -23,8 +23,6 @@ public class EnemyTakeDamage : TakeDamageController
         EnemyStateMachine esm = target.GetComponent<EnemyStateMachine>();
         this.CheckLock(esm, getDamageAmount, attackType1, attackType2);
         this.DamagePop(esm, getDamageAmount);   
-        //TODO: Viet 1 ham hp rieng cho enemy
-        // C?p nh?t thanh m¨¢u
         float ratio = esm.baseEnemy.curHP /  esm.baseEnemy.baseHP;
         if (esm.enemyHPBarFill != null)
         {
@@ -75,11 +73,26 @@ public class EnemyTakeDamage : TakeDamageController
         bool isCritical = Random.Range(0, 100) < 20;
         if (isCritical) getDamageAmount *= 2;
 
-        // Hi?n th? popup s¨¢t th??ng
         int finalDamage = Mathf.CeilToInt(getDamageAmount);
-        DamagePopup.Create(esm.transform.Find("Body").position, finalDamage, isCritical, false);
-        esm.baseEnemy.curHP -= finalDamage;
-        esm.curHpNumber.text = esm.baseEnemy.curHP.ToString();
+
+        Transform body = esm.transform.Find("Body");
+        Vector3 popPos = body != null ? body.position : esm.transform.position;
+        DamagePopup.Create(popPos, finalDamage, isCritical, false);
+
+        if (esm.baseEnemy != null)
+        {
+            esm.baseEnemy.curHP -= finalDamage;
+        }
+
+        if (esm.curHpNumber != null)
+        {
+            esm.curHpNumber.text = esm.baseEnemy.curHP.ToString();
+        }
+
+        if (esm.enemyHPBarFill != null && esm.baseEnemy != null)
+        {
+            esm.enemyHPBarFill.fillAmount = esm.baseEnemy.curHP / esm.baseEnemy.baseHP;
+        }
     }
     IEnumerator DeadSequence(EnemyStateMachine esm)
     {

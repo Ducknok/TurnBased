@@ -17,7 +17,7 @@ MonoBehaviour:
   attackDescription: Normal attack
   attackDamage: 10
   attackCost: 0
-  maxEnemyCount: 0
+  maxEnemyCount: 1
   attackType: 0
   effect1: 1
   effect2: 1

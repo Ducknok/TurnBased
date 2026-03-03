@@ -17,7 +17,7 @@ MonoBehaviour:
   attackDescription: A standard physical strike against a single enemy.
   attackDamage: 10
   attackCost: 0
-  maxEnemyCount: 0
+  maxEnemyCount: 1
   attackType: 0
   effect1: 0
   effect2: 0

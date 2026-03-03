@@ -17,7 +17,7 @@ MonoBehaviour:
   attackDescription: Creates a tornado that deals continuous damage for 3 seconds.
   attackDamage: 20
   attackCost: 6
-  maxEnemyCount: 1
+  maxEnemyCount: 3
   attackType: 1
   effect1: 2
   effect2: 2

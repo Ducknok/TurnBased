@@ -83,9 +83,9 @@ public class HeroPanelHandler : DucMonobehaviour
     //Update stats hp, mp, heal
     public void UpdateHeroPanel()
     {
-        
         this.stats.heroHP.text = this.hsm.baseHero.curHP.ToString();
         this.stats.heroMP.text = this.hsm.baseHero.curMP.ToString();
+       
     }
 
     

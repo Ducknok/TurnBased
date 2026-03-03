@@ -17,7 +17,7 @@ MonoBehaviour:
   attackDescription: Slash on ground
   attackDamage: 15
   attackCost: 3
-  maxEnemyCount: 0
+  maxEnemyCount: 1
   attackType: 1
   effect1: 1
   effect2: 2

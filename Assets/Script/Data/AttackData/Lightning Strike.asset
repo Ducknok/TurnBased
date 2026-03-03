@@ -17,7 +17,7 @@ MonoBehaviour:
   attackDescription: Tao 1 tia sam set
   attackDamage: 20
   attackCost: 3
-  maxEnemyCount: 0
+  maxEnemyCount: 1
   attackType: 1
   effect1: 3
   effect2: 3
