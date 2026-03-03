@@ -22,12 +22,10 @@ public class HeroSkillManager : SkillManager
     {
         SpawnEffect(VFXSpawner.swordSlash, this.position.position);
     }
-
     public void LanceSlashEffect()
     {
         SpawnEffect(VFXSpawner.lanceSlash, this.position.position);
     }
-
     public void LightnintStrikeEffect()
     {
         Vector2 enemyPosition = new Vector2(this.hsm.enemyToAttack.transform.position.x,
@@ -78,7 +76,6 @@ public class HeroSkillManager : SkillManager
                           });
         }
     }
-
     public void Tornado()
     {
         Transform origin = hsm.transform.Find("Body").Find("GroundSlashPosition");
@@ -86,64 +83,52 @@ public class HeroSkillManager : SkillManager
 
         Vector3 startPos = origin.position;
 
-        // Nhắm vào phần Body của enemy
         Transform enemyBody = hsm.enemyToAttack.transform.Find("Body");
         Vector3 targetPos = (enemyBody != null) ? enemyBody.position : hsm.enemyToAttack.transform.position;
 
-        // Dịch chuyển điểm đích xuống dưới một chút (ví dụ: 0.6 đơn vị) để lốc nằm ở chân enemy
         targetPos.y -= 0.6f;
 
-        // Lưu ý: Kiểm tra tên biến trong VFXSpawner là tornado hay tonardo cho khớp nhé
         Transform effect = VFXSpawner.Instance.Spawn(VFXSpawner.tonardo, startPos, Quaternion.identity);
 
         if (effect != null)
         {
             effect.gameObject.SetActive(true);
 
-            // 1. Khởi tạo trạng thái
             effect.localScale = Vector3.one * 0.1f;
             effect.rotation = Quaternion.identity;
 
-            // Tạo một Sequence để xâu chuỗi các hành động
             Sequence tornadoSeq = DOTween.Sequence();
 
-            // 2. GIAI ĐOẠN BAY: Vừa bay vừa phóng to (0.7 giây)
-            // Phóng to lên 1.8 lần
             tornadoSeq.Join(effect.DOScale(new Vector3(0.5f, 0.5f, 0.5f), 0.7f).SetEase(Ease.InQuad));
 
-            // Tính toán quỹ đạo Zic-zac
             Vector3 dir = (targetPos - startPos).normalized;
             Vector3 sideDir = new Vector3(-dir.y, dir.x, 0);
             Vector3 p1 = startPos + dir * 0.33f + sideDir * 0.7f;
             Vector3 p2 = startPos + dir * 0.66f - sideDir * 0.7f;
             Vector3[] path = new Vector3[] { p1, p2, targetPos };
 
-            // Bay theo đường cong
+
             tornadoSeq.Join(effect.DOPath(path, 0.7f, PathType.CatmullRom).SetEase(Ease.OutQuad));
 
-            // 3. GIAI ĐOẠN DỪNG: Ở lại mục tiêu 3 giây và gây dame 3 lần
             for (int i = 0; i < 3; i++)
             {
                 tornadoSeq.AppendCallback(() => {
 
-                    // Hiệu ứng rung quái vật và rung nhẹ lốc xoáy khi đang "quét"
                     if (hsm.enemyToAttack != null)
                         hsm.enemyToAttack.transform.DOShakePosition(0.2f, 0.15f, 10);
 
                     effect.DOShakePosition(0.2f, 0.1f, 5);
                 });
 
-                tornadoSeq.AppendInterval(1.0f); // Đợi 1 giây cho mỗi nhịp Dame
+                tornadoSeq.AppendInterval(1.0f); 
             }
 
-            // 4. KẾT THÚC: Thu nhỏ và biến mất
             tornadoSeq.Append(effect.DOScale(Vector3.zero, 0.3f).SetEase(Ease.InBack));
             tornadoSeq.OnComplete(() => {
                 VFXSpawner.Instance.Despawn(effect);
             });
         }
     }
-
     protected override void SpawnEffect(string prefab, Vector3 position)
     {
         base.SpawnEffect(prefab, position);

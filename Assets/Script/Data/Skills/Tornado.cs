@@ -5,10 +5,8 @@ using UnityEngine;
 
 public class Tornado : SkillBehaviour
 {
-    protected override void ApplySkillEffects(GameObject attacker)
-    {
-        DamageOverTime.Instance.DoDamage(attacker);
-    }
+    [Header("Tornado Settings")]
+    public float aoeRadius = 5f;
 
     // B?n có th? ghi ?è ph??ng th?c Activate ?? thêm logic ??c bi?t
     public override IEnumerator Activate(GameObject attacker, GameObject target)
@@ -22,6 +20,7 @@ public class Tornado : SkillBehaviour
         }
         float animationDuration = GetAnimationDuration(anim, skillData.attackName);
         yield return new WaitForSeconds(animationDuration);
-        this.ApplySkillEffects(attacker);
+        Vector3 impactPoint = target.transform.position;
+        this.ApplyAoEDamage(attacker, impactPoint, aoeRadius);
     }
 }

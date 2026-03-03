@@ -5,11 +5,8 @@ using UnityEngine;
 
 public class FireBall : SkillBehaviour
 {
-    protected override void ApplySkillEffects(GameObject attacker)
-    {
-        EnemyDoDamage.Instance.DoDamage(attacker);
-    }
-    // B?n có th? ghi ?è ph??ng th?c Activate ?? thêm logic ??c bi?t
+
+
     public override IEnumerator Activate(GameObject attacker, GameObject target)
     {
         EnemyStateMachine esm = attacker.GetComponent<EnemyStateMachine>();
@@ -20,6 +17,6 @@ public class FireBall : SkillBehaviour
         }
         float animationDuration = GetAnimationDuration(anim, skillData.attackName);
         yield return new WaitForSeconds(animationDuration);
-        this.ApplySkillEffects(attacker);
+        this.ApplySingleTargetDamage(attacker,target);
     }
 }

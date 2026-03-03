@@ -18,11 +18,7 @@ public class Sword : SkillBehaviour
         //Debug.LogError(hero.currentAttack.skillData.attackName);
         anim.Play(hsm.currentAttack.skillData.attackName);
         yield return new WaitForSeconds(0.5f);
-        this.ApplySkillEffects(hsm.gameObject);
+        this.ApplySingleTargetDamage(hsm.gameObject, target);
     }
 
-    protected override void ApplySkillEffects(GameObject attacker)
-    {
-        base.ApplySkillEffects(attacker);
-    }
 }

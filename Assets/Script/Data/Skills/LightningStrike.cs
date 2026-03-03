@@ -4,10 +4,6 @@ using UnityEngine;
 
 public class LightningStrike : SkillBehaviour
 {
-    protected override void ApplySkillEffects(GameObject attacker)
-    {
-        base.ApplySkillEffects(attacker);
-    }
 
     public override IEnumerator Activate(GameObject attacker, GameObject target)
     {
@@ -19,10 +15,6 @@ public class LightningStrike : SkillBehaviour
         }
         float animationDuration = GetAnimationDuration(anim, skillData.attackName);
         yield return new WaitForSeconds(animationDuration);
-        this.ApplySkillEffects(hsm.gameObject);
-    }
-    protected override float GetAnimationDuration(Animator animator, string triggerName)
-    {
-        return base.GetAnimationDuration(animator, triggerName);
+        this.ApplySingleTargetDamage(hsm.gameObject, target);
     }
 }

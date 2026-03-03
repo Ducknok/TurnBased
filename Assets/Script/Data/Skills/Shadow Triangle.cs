@@ -5,10 +5,6 @@ using UnityEngine;
 
 public class ShadowTriangle : SkillBehaviour
 {
-    protected override void ApplySkillEffects(GameObject attacker)
-    {
-        base.ApplySkillEffects(attacker);
-    }
 
     public override IEnumerator Activate(GameObject attacker, GameObject target)
     {
@@ -75,6 +71,6 @@ public class ShadowTriangle : SkillBehaviour
                      });
             }
         }
-        this.ApplySkillEffects(attacker);
+        this.ApplySingleTargetDamage(attacker, target);
     }
 }
