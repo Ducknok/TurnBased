@@ -48,7 +48,7 @@ public class HeroStateMachine : DucMonobehaviour
     // Start is called before the first frame update
     protected override void Awake()
     {
-        var existingHeroes = FindObjectsOfType<HeroStateMachine>();
+        var existingHeroes = FindObjectsByType<HeroStateMachine>(FindObjectsSortMode.None);
 
         foreach (var hero in existingHeroes)
         {
@@ -289,13 +289,15 @@ public class HeroStateMachine : DucMonobehaviour
         }
         this.actionStarted = true;
         ManaController.Instance.ManaBar(this.gameObject.GetComponent<HeroStateMachine>());
-        StartCoroutine(this.currentAttack.Activate(this.gameObject, this.enemyToAttack)) ;
-        yield return new WaitForSeconds(2f);
+
+        yield return StartCoroutine(this.currentAttack.Activate(this.gameObject, this.enemyToAttack));
+
+
         CombatController.Instance.CBM.UpdateEnemyTimer();
         StartCoroutine(MoveTowardsStart());
     }
-    
-   
+
+
     public void ReviveHero()
     {
         HealController.Instance.RestoreHPAfterRevive(this);

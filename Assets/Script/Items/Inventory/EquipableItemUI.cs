@@ -10,7 +10,7 @@ public class EquipableItemUI : DucMonobehaviour
 
     protected override void Awake()
     {
-        this.controller = FindObjectOfType<EquipMenuController>();
+        this.controller = FindAnyObjectByType<EquipMenuController>();
     }
 
     public void Setup(EquippableItemSO data, EquipMenuController equipMenuController)

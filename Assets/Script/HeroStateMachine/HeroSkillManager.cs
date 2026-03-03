@@ -32,7 +32,6 @@ public class HeroSkillManager : SkillManager
                                             this.hsm.enemyToAttack.transform.position.y + 3.25f);
         if (float.IsNaN(enemyPosition.x) || float.IsNaN(enemyPosition.y))
         {
-            Debug.LogError("enemyToAttack ?ang có position NaN!");
             return;
         }
 
@@ -92,7 +91,7 @@ public class HeroSkillManager : SkillManager
         {
             targets.Add(primaryTarget);
 
-            CombatStateMachine csm = FindObjectOfType<CombatStateMachine>();
+            CombatStateMachine csm = FindAnyObjectByType<CombatStateMachine>();
             if (csm != null)
             {
                 int hitCount = 1;
@@ -170,6 +169,10 @@ public class HeroSkillManager : SkillManager
                 });
             }
         }
+    }
+    public void StormDance()
+    {
+
     }
     protected override void SpawnEffect(string prefab, Vector3 position)
     {

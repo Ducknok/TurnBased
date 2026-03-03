@@ -21,10 +21,9 @@ public class CombatZone : DucMonobehaviour
     public float jumpHeight = 2f;         // Jump height for entering combat
     public bool isInCombat = false;      // State to check if combat is active
 
-    [System.Obsolete]
     protected override void Awake()
     {
-        this.cbm = FindObjectOfType<CombatStateMachine>();
+        this.cbm = FindAnyObjectByType<CombatStateMachine>();
         StartCoroutine(WaitSetCameraController());
     }
     protected override void OnEnable()
@@ -37,7 +36,7 @@ public class CombatZone : DucMonobehaviour
     }
     protected override void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        this.cbm = FindObjectOfType<CombatStateMachine>();
+        this.cbm = FindAnyObjectByType<CombatStateMachine>();
         StartCoroutine(WaitSetCameraController());
     }
     private IEnumerator WaitSetCameraController()

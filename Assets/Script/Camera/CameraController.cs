@@ -29,7 +29,7 @@ public class CameraController : Singleton<CameraController>
     IEnumerator WaitToSetCamera()
     {
         yield return null;
-        this.virtualCamera = FindObjectOfType<CinemachineVirtualCamera>();
+        this.virtualCamera = FindAnyObjectByType<CinemachineVirtualCamera>();
         this.SetCameraFollowHero(PartyManager.Instance.currentLeader.transform.parent.parent.GetComponent<HeroStateMachine>());
     }
     public void SetCameraFollowHero(HeroStateMachine heroSelected)

@@ -62,7 +62,7 @@ public class CombatStateMachine : DucMonobehaviour
     {
         this.enemiesInCombat.AddRange(GameObject.FindGameObjectsWithTag("Enemy"));
         this.playersInCombat.AddRange(GameObject.FindGameObjectsWithTag("Player"));
-        this.enemyInfoSpacer = GameObject.Find("BattleCanvas").transform.Find("Panel").transform.Find("EnemyInfoPanel").transform.Find("EnemyInfoPanelSpacer");
+        this.enemyInfoSpacer = GameObject.Find("BattleCanvas").transform.Find("Panel").transform.Find("UIEnemyInfo").transform.Find("EnemyInfoPanelSpacer");
     }
 
     protected override void Start()
@@ -100,7 +100,7 @@ public class CombatStateMachine : DucMonobehaviour
         this.enemiesInCombat.AddRange(GameObject.FindGameObjectsWithTag("Enemy"));
         if (this.playersInCombat != null) return;
         this.playersInCombat.AddRange(GameObject.FindGameObjectsWithTag("Player"));
-        this.enemyInfoSpacer = GameObject.Find("BattleCanvas").transform.Find("Panel").transform.Find("EnemyInfoPanel").transform.Find("EnemyInfoPanelSpacer");
+        this.enemyInfoSpacer = GameObject.Find("BattleCanvas").transform.Find("Panel").transform.Find("UIEnemyInfoPanel").transform.Find("EnemyInfoPanelSpacer");
     }
 
     public void StartEnemySelection(BaseAttack skillData)

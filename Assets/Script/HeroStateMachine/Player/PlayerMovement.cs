@@ -22,7 +22,7 @@ public class PlayerMovement : DucMonobehaviour
     {
         this.rb = this.transform.parent.GetComponent<Rigidbody2D>();
         this.anim = this.transform.parent.GetComponent<Animator>();
-        this.mainInventory = FindObjectOfType<MainInventoryController>();
+        this.mainInventory = FindAnyObjectByType<MainInventoryController>();
     }
     protected override void Update()
     {

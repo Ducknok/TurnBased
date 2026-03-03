@@ -39,8 +39,8 @@ public class HeroPanelHandler : DucMonobehaviour
     private void LoadComponent()
     {
         this.hsm = this.gameObject.GetComponent<HeroStateMachine>();
-        this.playerPanel = Resources.Load<GameObject>($"Prefabs/GUI/{this.hsm.baseHero.theName}Bar");
-        this.heroPanelSpacer = GameObject.Find("BattleCanvas").transform.Find("Panel").transform.Find("HeroPanel").transform.Find("HeroPanelSpacer");
+        this.playerPanel = Resources.Load<GameObject>($"Prefabs/UI/{this.hsm.baseHero.theName}Bar");
+        this.heroPanelSpacer = GameObject.Find("BattleCanvas").transform.Find("Panel").transform.Find("UIHero").transform.Find("HeroPanelSpacer");
         if (heroPanelSpacer == null)
         {
             Debug.LogError("Không tìm thấy BattleCanvas!");

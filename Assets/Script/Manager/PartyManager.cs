@@ -13,7 +13,7 @@ public class PartyManager : Singleton<PartyManager>
     protected override void Awake()
     {
         base.Awake();
-        this.cbm = FindObjectOfType<CombatStateMachine>();
+        this.cbm = FindAnyObjectByType<CombatStateMachine>();
         StartCoroutine(WaitSetLeader());
         this.LoadPlayerMove();
         
@@ -30,7 +30,7 @@ public class PartyManager : Singleton<PartyManager>
     protected override void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         base.OnSceneLoaded(scene, mode);
-        this.cbm = FindObjectOfType<CombatStateMachine>();
+        this.cbm = FindAnyObjectByType<CombatStateMachine>();
         StartCoroutine(WaitSetLeader());
         this.LoadPlayerMove();
     }

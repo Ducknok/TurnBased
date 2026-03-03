@@ -105,7 +105,7 @@ public class EnemyStateMachine : DucMonobehaviour
         {
             this.enemyAttacked = true;
             this.combatStateMachine.CollectAction(savedAttack);
-            ///this.currentState = TurnState.ACTION;
+            //this.currentState = TurnState.ACTION;
         }
     }
     private void CheckAlive()
@@ -142,10 +142,8 @@ public class EnemyStateMachine : DucMonobehaviour
             this.anim.Play("Dead");
 
             StartCoroutine(this.ClearEnemyInfo());
-            // Destroy object after 3s and effect after dead
             StartCoroutine(this.DestroyObject());
 
-            // Đảm bảo không bị kẹt lượt nếu quái chết khi chưa kịp đánh
             this.combatStateMachine.combatState = CombatStateMachine.PerformAction.CHECKALIVE;
         }
     }
@@ -185,8 +183,9 @@ public class EnemyStateMachine : DucMonobehaviour
             yield break;
         }
         this.actionStarted = true;
-        StartCoroutine(this.currentAttack.Activate(this.gameObject, this.playerToAttack));
-        yield return new WaitForSeconds(1f);
+        yield return StartCoroutine(this.currentAttack.Activate(this.gameObject, this.playerToAttack));
+
+
         this.combatStateMachine.enemiesAttacked.Add(this.gameObject);
         StartCoroutine(MoveTowardsStart());
     }
@@ -205,25 +204,17 @@ public class EnemyStateMachine : DucMonobehaviour
 
     IEnumerator MoveTowardsStart()
     {
-        //Debug.Log($"MoveTowardsStart started for {gameObject.name}");
 
-        // Wait for attack animation to finish
         yield return new WaitForSeconds(0.6f);
-        // Play Idle animation
         if (this.anim != null && !this.anim.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
         {
             this.anim.Play("Idle");
-            //Debug.Log($"Playing Idle animation for {gameObject.name}");
         }
 
-        // Ensure no conflicting tweens
         this.transform.DOKill();
 
-        // Move back to initial position
-        //Debug.Log($"Moving {gameObject.name} to initial position: {initialPosition}");
         this.transform.Find("Body").DOMove(initialPosition, 0.5f)
             .SetEase(Ease.OutQuad);
-            //.OnComplete(() => Debug.Log($"Move completed for {gameObject.name} at position: {this.transform.position}"));
 
         yield return new WaitForSeconds(1f);
         this.CheckCombatState();

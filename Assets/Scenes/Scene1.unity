@@ -1874,7 +1874,7 @@ GameObject:
   m_Component:
   - component: {fileID: 228244717}
   m_Layer: 5
-  m_Name: ActionPanel
+  m_Name: UIAction
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2873,7 +2873,7 @@ GameObject:
   m_Component:
   - component: {fileID: 354063819}
   m_Layer: 5
-  m_Name: EnemyInfoPanel
+  m_Name: UIEnemyInfo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -37979,7 +37979,7 @@ GameObject:
   - component: {fileID: 670521532}
   - component: {fileID: 670521534}
   m_Layer: 5
-  m_Name: MainInventory
+  m_Name: UIMainInventory
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -39178,7 +39178,7 @@ GameObject:
   - component: {fileID: 809432306}
   - component: {fileID: 809432310}
   m_Layer: 5
-  m_Name: ItemActionPanel
+  m_Name: UIItemAction
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -40289,7 +40289,7 @@ GameObject:
   m_Component:
   - component: {fileID: 955024596}
   m_Layer: 5
-  m_Name: AttackTypeInfoPanel
+  m_Name: UIAttackTypeInfo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -41370,7 +41370,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1051753386}
   - component: {fileID: 1051753388}
-  - component: {fileID: 1051753387}
   m_Layer: 5
   m_Name: SkillBarSpacer
   m_TagString: Untagged
@@ -41394,23 +41393,9 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -90.8, y: 5.8}
-  m_SizeDelta: {x: 100, y: 0}
+  m_AnchoredPosition: {x: -28.4456, y: 18.4772}
+  m_SizeDelta: {x: 224.7087, y: 72.028}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1051753387
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1051753385}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_HorizontalFit: 0
-  m_VerticalFit: 2
 --- !u!114 &1051753388
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -41424,16 +41409,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 0
-    m_Right: 0
-    m_Top: 0
-    m_Bottom: 0
-  m_ChildAlignment: 0
-  m_Spacing: -9
-  m_ChildForceExpandWidth: 1
+    m_Left: 10
+    m_Right: 10
+    m_Top: 10
+    m_Bottom: 10
+  m_ChildAlignment: 4
+  m_Spacing: 5
+  m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 0
-  m_ChildControlHeight: 0
+  m_ChildControlHeight: 1
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
@@ -61551,6 +61536,11 @@ PrefabInstance:
       propertyPath: m_SortingLayerID
       value: 1665767259
       objectReference: {fileID: 0}
+    - target: {fileID: 5222932191707679278, guid: 5043c953e33a893479dc46a5057f4f2c,
+        type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6107060438092440208, guid: 5043c953e33a893479dc46a5057f4f2c,
         type: 3}
       propertyPath: m_Controller
@@ -62184,7 +62174,7 @@ GameObject:
   - component: {fileID: 1541360270}
   - component: {fileID: 1541360269}
   m_Layer: 5
-  m_Name: Timer
+  m_Name: UITimer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -63358,7 +63348,7 @@ GameObject:
   - component: {fileID: 1724880348}
   - component: {fileID: 1724880347}
   m_Layer: 5
-  m_Name: Image (2)
+  m_Name: BG
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -63381,8 +63371,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -27.8, y: 0}
-  m_SizeDelta: {x: 200, y: 120}
+  m_AnchoredPosition: {x: -27.8, y: -7.8245}
+  m_SizeDelta: {x: 200, y: 135.6489}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1724880347
 MonoBehaviour:
@@ -63622,7 +63612,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 190, y: 110}
+  m_SizeDelta: {x: 190, y: 126.1886}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1768551484
 MonoBehaviour:
@@ -78736,6 +78726,11 @@ PrefabInstance:
       propertyPath: m_SortingLayerID
       value: 1665767259
       objectReference: {fileID: 0}
+    - target: {fileID: 5222932191707679278, guid: 5043c953e33a893479dc46a5057f4f2c,
+        type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6107060438092440208, guid: 5043c953e33a893479dc46a5057f4f2c,
         type: 3}
       propertyPath: m_Controller
@@ -79186,7 +79181,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2093485881}
   m_Layer: 5
-  m_Name: HeroPanel
+  m_Name: UIHero
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -79744,12 +79739,12 @@ GameObject:
   m_Component:
   - component: {fileID: 2139839947}
   m_Layer: 5
-  m_Name: SkillBarPanel
+  m_Name: UISkillBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2139839947
 RectTransform:
   m_ObjectHideFlags: 0
@@ -79768,7 +79763,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -178.7, y: 0}
+  m_AnchoredPosition: {x: -9999, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1001 &244322074939565018
@@ -80160,6 +80155,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SortingLayerID
       value: 1665767259
+      objectReference: {fileID: 0}
+    - target: {fileID: 5222932191707679278, guid: 5043c953e33a893479dc46a5057f4f2c,
+        type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5826533145399632571, guid: 5043c953e33a893479dc46a5057f4f2c,
         type: 3}
@@ -84120,136 +84120,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1351555703257543911, guid: 91d1a3e037e9345418d5b89fcbab5724,
-        type: 3}
-      propertyPath: weaponItemSO.Array.size
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 1351555703257543911, guid: 91d1a3e037e9345418d5b89fcbab5724,
-        type: 3}
-      propertyPath: 'weaponItemSO.Array.data[0]'
-      value: 
-      objectReference: {fileID: 11400000, guid: 1a231fafe3633b14d8de0bf038ae2e0a,
-        type: 2}
-    - target: {fileID: 1351555703257543911, guid: 91d1a3e037e9345418d5b89fcbab5724,
-        type: 3}
-      propertyPath: 'weaponItemSO.Array.data[1]'
-      value: 
-      objectReference: {fileID: 11400000, guid: 1ee7bc09b57db5742b75380a12ccb243,
-        type: 2}
-    - target: {fileID: 1351555703257543911, guid: 91d1a3e037e9345418d5b89fcbab5724,
-        type: 3}
-      propertyPath: 'weaponItemSO.Array.data[2]'
-      value: 
-      objectReference: {fileID: 11400000, guid: f2974d6ec2e45cf43beccb93d53cdd7c,
-        type: 2}
-    - target: {fileID: 1351555703257543911, guid: 91d1a3e037e9345418d5b89fcbab5724,
-        type: 3}
-      propertyPath: 'weaponItemSO.Array.data[3]'
-      value: 
-      objectReference: {fileID: 11400000, guid: f2974d6ec2e45cf43beccb93d53cdd7c,
-        type: 2}
-    - target: {fileID: 1351555703257543911, guid: 91d1a3e037e9345418d5b89fcbab5724,
-        type: 3}
-      propertyPath: 'weaponItemSO.Array.data[4]'
-      value: 
-      objectReference: {fileID: 11400000, guid: 53f2acc617d1f0a46aaf81c6219e0635,
-        type: 2}
     - target: {fileID: 2180569888031511270, guid: 91d1a3e037e9345418d5b89fcbab5724,
         type: 3}
       propertyPath: leader
       value: 
       objectReference: {fileID: 1818431902}
-    - target: {fileID: 2180569888031511270, guid: 91d1a3e037e9345418d5b89fcbab5724,
-        type: 3}
-      propertyPath: moveSpeed
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 2180569888031511270, guid: 91d1a3e037e9345418d5b89fcbab5724,
-        type: 3}
-      propertyPath: followDelay
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 2180569888031511270, guid: 91d1a3e037e9345418d5b89fcbab5724,
-        type: 3}
-      propertyPath: followSpeed
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 2180569888031511270, guid: 91d1a3e037e9345418d5b89fcbab5724,
-        type: 3}
-      propertyPath: rayAngleOffset
-      value: 30
-      objectReference: {fileID: 0}
-    - target: {fileID: 2180569888031511270, guid: 91d1a3e037e9345418d5b89fcbab5724,
-        type: 3}
-      propertyPath: tooFarDistance
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2180569888031511270, guid: 91d1a3e037e9345418d5b89fcbab5724,
-        type: 3}
-      propertyPath: layerMask.m_Bits
-      value: 256
-      objectReference: {fileID: 0}
-    - target: {fileID: 2180569888031511270, guid: 91d1a3e037e9345418d5b89fcbab5724,
-        type: 3}
-      propertyPath: obstacleLayer.m_Bits
-      value: 256
-      objectReference: {fileID: 0}
-    - target: {fileID: 2466193753706112009, guid: 91d1a3e037e9345418d5b89fcbab5724,
-        type: 3}
-      propertyPath: m_SortingLayer
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 2466193753706112009, guid: 91d1a3e037e9345418d5b89fcbab5724,
-        type: 3}
-      propertyPath: m_SortingLayerID
-      value: -655598427
-      objectReference: {fileID: 0}
-    - target: {fileID: 2784619030786645958, guid: 91d1a3e037e9345418d5b89fcbab5724,
-        type: 3}
-      propertyPath: m_SortingLayer
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 2784619030786645958, guid: 91d1a3e037e9345418d5b89fcbab5724,
-        type: 3}
-      propertyPath: m_SortingLayerID
-      value: -655598427
-      objectReference: {fileID: 0}
-    - target: {fileID: 3028843794975385779, guid: 91d1a3e037e9345418d5b89fcbab5724,
-        type: 3}
-      propertyPath: m_FlipX
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3324462702669753801, guid: 91d1a3e037e9345418d5b89fcbab5724,
-        type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3324462702669753801, guid: 91d1a3e037e9345418d5b89fcbab5724,
-        type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3324462702669753801, guid: 91d1a3e037e9345418d5b89fcbab5724,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3324462702669753801, guid: 91d1a3e037e9345418d5b89fcbab5724,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4005882086705676895, guid: 91d1a3e037e9345418d5b89fcbab5724,
-        type: 3}
-      propertyPath: virtualCamera
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 4005882086705676895, guid: 91d1a3e037e9345418d5b89fcbab5724,
-        type: 3}
-      propertyPath: positionHistory.Array.size
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 5800392060313745443, guid: 91d1a3e037e9345418d5b89fcbab5724,
         type: 3}
       propertyPath: m_Name
@@ -84307,37 +84182,20 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7619542038981189161, guid: 91d1a3e037e9345418d5b89fcbab5724,
         type: 3}
-      propertyPath: baseHero.curHP
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 7619542038981189161, guid: 91d1a3e037e9345418d5b89fcbab5724,
-        type: 3}
-      propertyPath: equipment.ring
-      value: 
-      objectReference: {fileID: 11400000, guid: f2974d6ec2e45cf43beccb93d53cdd7c,
-        type: 2}
-    - target: {fileID: 7619542038981189161, guid: 91d1a3e037e9345418d5b89fcbab5724,
-        type: 3}
-      propertyPath: baseHero.baseHP
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 7619542038981189161, guid: 91d1a3e037e9345418d5b89fcbab5724,
-        type: 3}
-      propertyPath: equipment.armor
-      value: 
-      objectReference: {fileID: 11400000, guid: 1ee7bc09b57db5742b75380a12ccb243,
-        type: 2}
-    - target: {fileID: 7619542038981189161, guid: 91d1a3e037e9345418d5b89fcbab5724,
-        type: 3}
-      propertyPath: equipment.weapon
-      value: 
-      objectReference: {fileID: 11400000, guid: 1a231fafe3633b14d8de0bf038ae2e0a,
-        type: 2}
-    - target: {fileID: 7619542038981189161, guid: 91d1a3e037e9345418d5b89fcbab5724,
-        type: 3}
       propertyPath: inventoryController
       value: 
       objectReference: {fileID: 360409425}
+    - target: {fileID: 7619542038981189161, guid: 91d1a3e037e9345418d5b89fcbab5724,
+        type: 3}
+      propertyPath: baseHero.specialAttacks.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7619542038981189161, guid: 91d1a3e037e9345418d5b89fcbab5724,
+        type: 3}
+      propertyPath: 'baseHero.specialAttacks.Array.data[3]'
+      value: 
+      objectReference: {fileID: 11400000, guid: df86dd4a3fc59e549bfad5714d69f469,
+        type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

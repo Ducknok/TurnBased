@@ -87,7 +87,7 @@ public abstract class Spawner : DucMonobehaviour
     //Spawn object
     public virtual Transform Spawn(string prefabName, Vector3 spawnPos, Quaternion rotation)
     {
-        Debug.Log(prefabName);
+        //Debug.Log(prefabName);
         Transform prefab = GetPrefabByName(prefabName);
         if (prefab == null)
         {

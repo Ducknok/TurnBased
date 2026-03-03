@@ -52,7 +52,7 @@ namespace Inventory
         }
         public void LoadInventory()
         {
-            this.inventory = GameObject.Find("BattleCanvas").transform.Find("MainInventory").transform.Find("InventoryMenu");
+            this.inventory = GameObject.Find("BattleCanvas").transform.Find("UIMainInventory").transform.Find("InventoryMenu");
             this.inventoryUI = this.inventory.GetComponent<UIInventoryPage>();
             this.RefreshCurrentTab();
         }

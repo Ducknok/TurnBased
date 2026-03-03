@@ -121,12 +121,12 @@ public class MainInventoryController : DucMonobehaviour
     private void LoadEquipMenuController()
     {
         if (this.equipMenuController != null) return;
-        this.equipMenuController = FindObjectOfType<EquipMenuController>();
+        this.equipMenuController = FindAnyObjectByType<EquipMenuController>();
     }
     private void LoadSkillMenuController()
     {
         if (this.skillMenuController != null) return;
-        this.skillMenuController = FindObjectOfType<SkillMenuController>();
+        this.skillMenuController = FindAnyObjectByType<SkillMenuController>();
     }
 
     //Confirm && Undo select hero

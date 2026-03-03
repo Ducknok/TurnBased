@@ -26,7 +26,7 @@ public class BaseAttack : ScriptableObject
     private void OnValidate()
     {
         if (Application.isPlaying || string.IsNullOrWhiteSpace(attackName)) return;
-        string assetPath = AssetDatabase.GetAssetPath(this.GetInstanceID());
+        string assetPath = AssetDatabase.GetAssetPath(this);
         if (string.IsNullOrEmpty(assetPath)) return;
         string currentFileName = System.IO.Path.GetFileNameWithoutExtension(assetPath);
         if (currentFileName != attackName)
