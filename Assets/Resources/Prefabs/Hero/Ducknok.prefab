@@ -105,6 +105,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &6210442940254201361
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -120,6 +121,11 @@ SpriteRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -141,9 +147,11 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -655598427
   m_SortingLayer: 6
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_Sprite: {fileID: -373893069, guid: a347c57d383d90c4a918188217dc263a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -153,11 +161,10 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!50 &6249114298737287263
 Rigidbody2D:
-  serializedVersion: 4
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -168,8 +175,8 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0
+  m_LinearDamping: 0
+  m_AngularDamping: 0
   m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -190,6 +197,7 @@ CapsuleCollider2D:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1913063989890093446}
   m_Enabled: 1
+  serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -213,13 +221,14 @@ CapsuleCollider2D:
     m_Bits: 4294967295
   m_IsTrigger: 0
   m_UsedByEffector: 0
-  m_UsedByComposite: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
   m_Offset: {x: -0.02019895, y: -0.49543923}
   m_Size: {x: 0.8035373, y: 0.9833671}
   m_Direction: 0
 --- !u!95 &1876667708726265424
 Animator:
-  serializedVersion: 5
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -233,6 +242,7 @@ Animator:
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
@@ -299,6 +309,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &3377585955338162396
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -314,6 +325,11 @@ SpriteRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -335,9 +351,11 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -183294497
   m_SortingLayer: 0
   m_SortingOrder: 1
+  m_MaskInteraction: 0
   m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -347,7 +365,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 0
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &4440992147784056273
 GameObject:
@@ -399,7 +416,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30d004bbc980db5418080354bdcb99ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  comCtrl: {fileID: 0}
+  agentWeapon: {fileID: 0}
   baseHero:
     theName: Ducknok
     baseHP: 500
@@ -419,12 +436,15 @@ MonoBehaviour:
     specialAttacks:
     - {fileID: 11400000, guid: 6885eb27464694844bb7495099e16d6c, type: 2}
     - {fileID: 11400000, guid: 858202e01b4d30d46b199e0f1e5c71c0, type: 2}
+    - {fileID: 11400000, guid: 2ff4215bcc7bc4e4f86d1e38ea384c6b, type: 2}
+    - {fileID: 11400000, guid: 40402374b495e384d847145442ed793e, type: 2}
     heroImage: {fileID: 752369692, guid: a347c57d383d90c4a918188217dc263a, type: 3}
     stamina: 10
     intellect: 10
     dexterity: 10
     agility: 10
     heroType: 0
+    elemental: 0
   inventoryController: {fileID: 0}
   currentAttack: {fileID: 0}
   heroPanelHandler: {fileID: 0}
@@ -502,14 +522,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1aadeb6db5a4104db0a302eae6124df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponItemSO: {fileID: 11400000, guid: 5615864efc1ceda4f96066cf1a53daff, type: 2}
+  weaponItemSO:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   inventoryData: {fileID: 11400000, guid: 69dc70cf8db98de41ac5061a68454af7, type: 2}
-  parameterToModify:
-  - itemParameter: {fileID: 11400000, guid: 9201eba36d55d714db818ff484519046, type: 2}
-    value: -10
-  itemCurrentState:
-  - itemParameter: {fileID: 11400000, guid: 9201eba36d55d714db818ff484519046, type: 2}
-    value: 0
 --- !u!114 &6834377594618473957
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -587,6 +604,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isLeader: 0
+  mainInventory: {fileID: 0}
   moveSpeed: 10
   rb: {fileID: 6249114298737287263}
   anim: {fileID: 1876667708726265424}
@@ -594,6 +612,7 @@ MonoBehaviour:
   positionHistory:
   - {x: 0, y: 0, z: 0}
   recordInterval: 0.1
+  lastMove: {x: 0, y: -1}
 --- !u!114 &3502103740221340714
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -606,11 +625,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6379408e3d2c74f4dbf5ede315c62a62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  comCtrl: {fileID: 0}
   leader: {fileID: 8174056013139240418}
   followDelay: 5
-  minFollowDistance: 2
-  followSpeed: 10
+  moveSpeed: 5
+  stopDistance: 0.05
+  desiredDistance: 2
+  warpDistanceThreshold: 5
+  stuckTimeThreshold: 1.5
+  warpDuration: 0.35
 --- !u!1001 &1523159481969767295
 PrefabInstance:
   m_ObjectHideFlags: 0

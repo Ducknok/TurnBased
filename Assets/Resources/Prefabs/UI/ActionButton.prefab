@@ -103,20 +103,23 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_TextWrappingMode: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
+  m_ActiveFontFeatures: 00000000
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
+  m_EmojiFallbackSupport: 1
   m_parseCtrlCharacters: 1
   m_isOrthographic: 1
   m_isCullingEnabled: 0
@@ -143,12 +146,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1983380123944070300}
+  - component: {fileID: 1360869169113125841}
   - component: {fileID: 2846402955297971869}
   - component: {fileID: 435443160508626990}
   - component: {fileID: 8212988802097611225}
   - component: {fileID: 8624379326922941727}
   - component: {fileID: 6378397174309076962}
-  - component: {fileID: 1360869169113125841}
   m_Layer: 5
   m_Name: ActionButton
   m_TagString: Untagged
@@ -177,6 +180,19 @@ RectTransform:
   m_AnchoredPosition: {x: 1.8, y: 57}
   m_SizeDelta: {x: 150, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1360869169113125841
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5703461241458909066}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b9010a53e062a14b8d501053b889631, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skillAttackToPerform: {fileID: 0}
 --- !u!222 &2846402955297971869
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -230,8 +246,10 @@ MonoBehaviour:
   m_Navigation:
     m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 1004963521057176400, guid: e64900b0a44152545a08543c2f498568, type: 3}
-    m_SelectOnDown: {fileID: 8030538109075810848, guid: a8ef4c5ee940ccf47aa92c54cf207e7f, type: 3}
+    m_SelectOnUp: {fileID: 1004963521057176400, guid: e64900b0a44152545a08543c2f498568,
+      type: 3}
+    m_SelectOnDown: {fileID: 8030538109075810848, guid: a8ef4c5ee940ccf47aa92c54cf207e7f,
+      type: 3}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 3
@@ -281,7 +299,7 @@ MonoBehaviour:
   m_LayoutPriority: 1
 --- !u!95 &6378397174309076962
 Animator:
-  serializedVersion: 5
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -295,24 +313,12 @@ Animator:
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &1360869169113125841
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5703461241458909066}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0b9010a53e062a14b8d501053b889631, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  skillAttackToPerform: {fileID: 0}
 --- !u!1 &6817249666412520523
 GameObject:
   m_ObjectHideFlags: 0

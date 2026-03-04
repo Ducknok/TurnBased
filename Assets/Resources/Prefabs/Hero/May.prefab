@@ -298,6 +298,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 2c11521ece3505a4ea80a519ebc58315, type: 2}
     - {fileID: 11400000, guid: 2639164949270b949abafb3c0653adb8, type: 2}
     - {fileID: 11400000, guid: a421cb7cfe540e5428196d3e359d2224, type: 2}
+    - {fileID: 11400000, guid: df86dd4a3fc59e549bfad5714d69f469, type: 2}
     heroImage: {fileID: 1258090235, guid: 21a6fb2b8e744d3439f09248ad82c8ee, type: 3}
     stamina: 10
     intellect: 10

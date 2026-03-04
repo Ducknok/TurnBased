@@ -5,9 +5,9 @@ using DG.Tweening;
 public class StormDance : SkillBehaviour
 {
     [Header("Storm Dance Settings")]
-    public int strikeCount = 4;         // Số lần chém xung quanh
-    public float teleportRadius = 1.5f; // Khoảng cách từ Hero đến Quái khi teleport
-    public float delayBetweenStrikes = 0.15f; // Tốc độ chém (Càng nhỏ càng ảo)
+    public int strikeCount = 4;        
+    public float teleportRadius = 1.5f;
+    public float delayBetweenStrikes = 0.15f; 
 
     public override IEnumerator Activate(GameObject attacker, GameObject target)
     {
@@ -19,7 +19,7 @@ public class StormDance : SkillBehaviour
         Vector3 startPos = body.position;
         Transform targetBody = target.transform.Find("Body");
         Vector3 targetPos = targetBody != null ? targetBody.position : target.transform.position;
-        targetPos.y += 0.5f; // Nâng tâm mục tiêu lên giữa bụng quái
+        targetPos.y += 0.5f;
 
         Vector3[] teleportOffsets = new Vector3[]
         {

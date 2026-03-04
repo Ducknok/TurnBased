@@ -15,7 +15,7 @@ MonoBehaviour:
   attackImage: {fileID: 930279301, guid: fb051ba9df7a2724e99ecb3019809887, type: 3}
   attackName: Water Ball
   attackDescription: Shoot a water ball towards target
-  attackDamage: 6
+  attackDamage: 5
   attackCost: 0
   maxEnemyCount: 1
   attackType: 1

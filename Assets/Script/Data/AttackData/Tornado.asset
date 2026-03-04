@@ -15,7 +15,7 @@ MonoBehaviour:
   attackImage: {fileID: 756673776, guid: fb051ba9df7a2724e99ecb3019809887, type: 3}
   attackName: Tornado
   attackDescription: Creates a tornado that deals continuous damage for 3 seconds.
-  attackDamage: 20
+  attackDamage: 10
   attackCost: 6
   maxEnemyCount: 3
   attackType: 1

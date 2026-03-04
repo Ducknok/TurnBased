@@ -170,10 +170,7 @@ public class HeroSkillManager : SkillManager
             }
         }
     }
-    public void StormDance()
-    {
 
-    }
     protected override void SpawnEffect(string prefab, Vector3 position)
     {
         base.SpawnEffect(prefab, position);

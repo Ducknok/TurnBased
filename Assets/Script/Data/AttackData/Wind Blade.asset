@@ -15,7 +15,7 @@ MonoBehaviour:
   attackImage: {fileID: 154783846, guid: fb051ba9df7a2724e99ecb3019809887, type: 3}
   attackName: Wind Blade
   attackDescription: Slash on ground
-  attackDamage: 15
+  attackDamage: 5
   attackCost: 3
   maxEnemyCount: 1
   attackType: 1

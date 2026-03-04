@@ -10,15 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8c5cd8b2141e4f941a2210d29baea2ce, type: 3}
-  m_Name: Shadow Triangle
-  m_EditorClassIdentifier: 
-  attackImage: {fileID: -2092929413, guid: fb051ba9df7a2724e99ecb3019809887, type: 3}
-  attackName: Shadow Triangle
-  attackDescription: 'Tao 3 shadow tao thanh hinh tam giac '
-  attackDamage: 20
-  attackCost: 4
-  maxEnemyCount: 1
+  m_Name: Thunder Bird
+  m_EditorClassIdentifier: Assembly-CSharp::BaseAttack
+  attackImage: {fileID: -1812733314322964255, guid: 2e8e950aa99e3384abbe7ff526529556,
+    type: 3}
+  attackName: Thunder Bird
+  attackDescription: 
+  attackDamage: 10
+  attackCost: 5
+  maxEnemyCount: 3
   attackType: 1
   effect1: 3
-  effect2: 0
+  effect2: 3
   hitParticleName: YellowHitParticle

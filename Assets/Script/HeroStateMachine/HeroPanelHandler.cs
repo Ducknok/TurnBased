@@ -51,7 +51,6 @@ public class HeroPanelHandler : DucMonobehaviour
     {
         heroHPBarFill = hpFill;
         heroMPBarFill = mpFill;
-        //this.DescreaseMana();
     }
     //TODO: Tach toan bo ham gay st, hoi mana, mau, tao panel ra 1 class rieng xong goi lai trong class hero hoac 1 class moi 
     //Create a player panel

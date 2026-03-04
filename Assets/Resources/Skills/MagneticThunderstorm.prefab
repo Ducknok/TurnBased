@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7904670462677150126}
-  - component: {fileID: -3038129253088275487}
+  - component: {fileID: 6400323688939588824}
   m_Layer: 0
-  m_Name: ShadowTriangle
+  m_Name: MagneticThunderstorm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -32,7 +32,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &-3038129253088275487
+--- !u!114 &6400323688939588824
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,7 +41,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 8493265163271724201}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb5ad2a7e5601824886d1b7ef502f7b8, type: 3}
+  m_Script: {fileID: 11500000, guid: 6dca5c73b6b4cee4cb6a07964518d118, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
-  skillData: {fileID: 11400000, guid: 858202e01b4d30d46b199e0f1e5c71c0, type: 2}
+  m_EditorClassIdentifier: Assembly-CSharp::MagneticThunderstorm
+  skillData: {fileID: 11400000, guid: 2ff4215bcc7bc4e4f86d1e38ea384c6b, type: 2}
+  aoeRadius: 8
+  pullDuration: 0.6
+  nukeOffsetY: 5

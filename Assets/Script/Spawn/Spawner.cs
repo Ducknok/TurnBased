@@ -132,7 +132,7 @@ public abstract class Spawner : DucMonobehaviour
     public virtual Transform GetPrefabByName(string prefabName)
     {
         string cleanPrefabName = prefabName.Trim();
-
+        //Debug.LogError(prefabName);
         foreach (Transform prefab in this.prefabs)
         {
             if (prefab.name.Contains(cleanPrefabName))

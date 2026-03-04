@@ -91,6 +91,7 @@ public class SkillMenuController : DucMonobehaviour
 
         foreach (var skill in hero.baseHero.specialAttacks)
         {
+            Debug.Log(skill);
             GameObject newSkillUI = Instantiate(this.skillUI, this.skillUISpacer);
             Image skillImage = newSkillUI.transform.Find("Button").Find("SkillImage").GetComponent<Image>();
             TextMeshProUGUI skillName = newSkillUI.transform.Find("SkillName").GetComponent<TextMeshProUGUI>();

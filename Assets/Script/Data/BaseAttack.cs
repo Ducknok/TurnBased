@@ -85,9 +85,6 @@ public abstract class SkillBehaviour : DucMonobehaviour
 
         }
     }
-
-
-
     protected virtual void ApplySingleTargetDamage(GameObject attacker, GameObject target)
     {
         float calDamage = skillData.attackDamage;
@@ -147,8 +144,6 @@ public abstract class SkillBehaviour : DucMonobehaviour
         if (heroAttacker != null && heroAttacker.heroPanelHandler != null)
             heroAttacker.heroPanelHandler.UpdateHeroPanel();
     }
-
-
     public virtual List<GameObject> GetTargetsInAoE(GameObject attacker, GameObject primaryTarget, Vector3 impactPoint, float aoeRadius)
     {
         List<GameObject> affectedTargets = new List<GameObject>();
@@ -176,14 +171,10 @@ public abstract class SkillBehaviour : DucMonobehaviour
 
         return affectedTargets;
     }
-
-
-
     protected virtual float GetAnimationDuration(Animator animator, string triggerName)
     {
         return 1.0f;
     }
-
     protected virtual bool MoveTowardsTarget(GameObject character, Vector3 target)
     {
         Transform body = character.transform.Find("Body");

@@ -15,7 +15,7 @@ MonoBehaviour:
   attackImage: {fileID: -2072138837, guid: 3db17c9b52b577a438833767985907ae, type: 3}
   attackName: Attack1
   attackDescription: Normal Attack
-  attackDamage: 5
+  attackDamage: 2
   attackCost: 0
   maxEnemyCount: 1
   attackType: 0
