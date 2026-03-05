@@ -17,9 +17,9 @@ public class MouseFollower : DucMonobehaviour
         this.inventoryItem = GetComponentInChildren<UIInventoryItem>();
     }
 
-    public void SetData(Sprite sprite, int quantity)
+    public void SetData(Sprite sprite, string itemName, int quantity)
     {
-        this.inventoryItem.SetData(sprite, quantity);
+        this.inventoryItem.SetData(sprite, itemName, quantity);
     }
     protected override void Update()
     {

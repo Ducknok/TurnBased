@@ -8,6 +8,15 @@ using UnityEngine.UI;
 //View (V) in MVC
 namespace Inventory.UI
 {
+    // =====================================
+    // 1. TẠO ENUM TAB ĐỂ DỄ QUẢN LÝ
+    // =====================================
+    public enum InventoryTab
+    {
+        Consumable,
+        Weapon
+    }
+
     public class UIInventoryPage : DucMonobehaviour
     {
         [Header("LinkClass")]
@@ -15,15 +24,19 @@ namespace Inventory.UI
         [SerializeField] private RectTransform contentPanel;
         [SerializeField] public UIInventoryDescription itemDescription;
         //[SerializeField] private MouseFollower mouseFollower;
-       
+
         [Header("ListOfUIItem")]
         List<UIInventoryItem> listOfUIItems = new List<UIInventoryItem>();
         private int currentIndex = 0; // Index của item đang chọn
 
-        // private int currentlyDraggedItemIndex = -1;
-        //Event
+        // =====================================
+        // 2. THÊM EVENT BÁO CHO CONTROLLER CHUYỂN TAB
+        // =====================================
         public event Action<int> OnItemActionRequested, OnDescriptionRequested /*OnStartDragging*/;
+        public event Action<InventoryTab> OnTabChanged; // 👈 Sự kiện mới
         private Action<HeroStateMachine> onHeroSelectedCallback;
+
+        private InventoryTab currentTab = InventoryTab.Consumable; // Tab mặc định
 
         [Header("ItemActionPanel")]
         [SerializeField] private ItemActionPanel itemActionPanel;
@@ -44,12 +57,22 @@ namespace Inventory.UI
         protected override void Awake()
         {
             Hide();
-            this.itemDescription.ResetDescription();
         }
+
+        protected override void Start()
+        {
+            if (this.itemDescription != null)
+            {
+                this.itemDescription.ResetDescription();
+            }
+            this.UpdateSelection();
+        }
+
         protected override void Update()
         {
             this.CheckState();
         }
+
         public override void CheckState()
         {
             base.CheckState();
@@ -62,27 +85,25 @@ namespace Inventory.UI
                 SelectItem();
             }
         }
+
         public void StartHeroSelection(Action<HeroStateMachine> onSelected)
         {
             this.isSelectingHero = true;
             this.currentHeroIndex = 0;
             this.onHeroSelectedCallback = onSelected;
-            HighlightHeroButton(this.currentHeroIndex); // Làm nổi bật hero đầu tiên
+            HighlightHeroButton(this.currentHeroIndex);
         }
+
         private void SelectHero()
         {
             if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
             {
                 this.currentHeroIndex = (this.currentHeroIndex + 1) % this.heroButtons.Count;
-                //Debug.LogWarning("Nut S");
-
                 HighlightHeroButton(this.currentHeroIndex);
             }
             else if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
             {
                 this.currentHeroIndex = (this.currentHeroIndex - 1 + this.heroButtons.Count) % this.heroButtons.Count;
-                ///Debug.LogWarning("Nut W");
-
                 HighlightHeroButton(this.currentHeroIndex);
             }
             else if (Input.GetKeyDown(KeyCode.Return))
@@ -93,40 +114,82 @@ namespace Inventory.UI
                 HeroStateMachine selectedHero = CombatController.Instance.CBM.playersInCombat[currentHeroIndex].GetComponent<HeroStateMachine>();
                 this.onHeroSelectedCallback?.Invoke(selectedHero);
             }
-            else if (Input.GetKeyDown(KeyCode.LeftControl)) // 👈 quay về chọn item
+            else if (Input.GetKeyDown(KeyCode.LeftControl))
             {
                 this.isSelectingHero = false;
                 this.UnHighlightHeroButton(this.currentHeroIndex);
                 this.SetSelectedIndex(0);
             }
         }
+
         private void SelectItem()
         {
-            if (Input.GetKeyDown(KeyCode.A))
+            // ĐÃ SỬA: Đổi sang dùng W/S (Lên/Xuống) để chọn Item trong danh sách dọc
+            if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
             {
-                //Debug.LogWarning("Nut A");
-
                 MoveSelection(-1);
             }
-            else if (Input.GetKeyDown(KeyCode.D))
+            else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
             {
-                //Debug.LogWarning("Nut D");
-
                 MoveSelection(1);
             }
-            else if (Input.GetKeyDown(KeyCode.Return))  // Nhấn Enter để mở menu hành động
+            // ĐÃ SỬA: Dùng A/D (Trái/Phải) hoặc Q/E để chuyển Tab (tự động xoay vòng)
+            else if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.Q))
             {
-                if (this.listOfUIItems.Count > 0)
+                SwitchToPreviousTab();
+            }
+            else if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.E))
+            {
+                SwitchToNextTab();
+            }
+            else if (Input.GetKeyDown(KeyCode.Return))
+            {
+                if (this.listOfUIItems.Count > 0 && this.listOfUIItems[currentIndex].gameObject.activeInHierarchy)
                 {
                     this.OnItemActionRequested?.Invoke(this.currentIndex);
                 }
             }
         }
+
+        // =====================================
+        // TÍNH NĂNG MỚI: TỰ ĐỘNG XOAY VÒNG TAB BẰNG PHÍM A/D
+        // =====================================
+        private void SwitchToNextTab()
+        {
+            // Lấy tổng số lượng Tab đang có trong Enum (hiện tại là 2)
+            int totalTabs = Enum.GetValues(typeof(InventoryTab)).Length;
+
+            // Chuyển sang Tab tiếp theo (nếu đang ở cuối thì quay lại đầu)
+            int nextTabIndex = ((int)currentTab + 1) % totalTabs;
+            ChangeTab((InventoryTab)nextTabIndex);
+        }
+
+        private void SwitchToPreviousTab()
+        {
+            int totalTabs = Enum.GetValues(typeof(InventoryTab)).Length;
+
+            // Chuyển về Tab trước đó (nếu đang ở đầu thì nhảy xuống cuối)
+            int prevTabIndex = ((int)currentTab - 1 + totalTabs) % totalTabs;
+            ChangeTab((InventoryTab)prevTabIndex);
+        }
+
+        private void ChangeTab(InventoryTab newTab)
+        {
+            if (this.currentTab == newTab) return; // Nếu đang ở tab đó rồi thì bỏ qua
+
+            this.currentTab = newTab;
+
+            // Xóa UI cũ trước khi load đồ mới
+            this.itemDescription.ResetDescription();
+
+            // Báo cho Controller biết để ném Data mới tương ứng với Tab này
+            this.OnTabChanged?.Invoke(this.currentTab);
+        }
+
         private void HighlightHeroButton(int index)
         {
             for (int i = 0; i < heroButtons.Count; i++)
             {
-                // ⚠️ Kiểm tra null hoặc bị destroy
                 if (heroButtons[i] == null || heroButtons[i].gameObject == null)
                     continue;
 
@@ -137,6 +200,7 @@ namespace Inventory.UI
                 }
             }
         }
+
         private void UnHighlightHeroButton(int index)
         {
             for (int i = 0; i < heroButtons.Count; i++)
@@ -151,42 +215,54 @@ namespace Inventory.UI
                 }
             }
         }
+
         private void MoveSelection(int direction)
         {
-            if (this.listOfUIItems.Count == 0) return; // Nếu inventory rỗng thì không làm gì
+            if (this.listOfUIItems.Count == 0) return;
 
-            // Bỏ chọn item hiện tại
+            int activeItemCount = 0;
+            for (int i = 0; i < this.listOfUIItems.Count; i++)
+            {
+                if (this.listOfUIItems[i].gameObject.activeInHierarchy)
+                {
+                    activeItemCount++;
+                }
+            }
+
+            if (activeItemCount == 0) return;
+
             this.listOfUIItems[currentIndex].Deselect();
 
-            // Cập nhật index
             this.currentIndex += direction;
             if (this.currentIndex < 0)
-                this.currentIndex = this.listOfUIItems.Count - 1;
-            else if (this.currentIndex >= this.listOfUIItems.Count)
+                this.currentIndex = activeItemCount - 1;
+            else if (this.currentIndex >= activeItemCount)
                 this.currentIndex = 0;
 
-            // Chọn item mới
             UpdateSelection();
         }
+
         private void UpdateSelection()
         {
-            //this.ResetAllItems();
             this.listOfUIItems[this.currentIndex].Select();
             this.OnDescriptionRequested?.Invoke(this.currentIndex);
         }
+
         public void InitializeInventoryUI(int inventorySize)
         {
             for (int i = 0; i < inventorySize; i++)
             {
                 UIInventoryItem uiItem = Instantiate(this.itemPrefab, Vector3.zero, Quaternion.identity);
                 uiItem.transform.SetParent(this.contentPanel);
+                uiItem.transform.localScale = Vector3.one;
+
+
+                uiItem.gameObject.SetActive(false);
+
                 this.listOfUIItems.Add(uiItem);
-                //uiItem.OnItemBeginDrag += HandleBeginDrag;
-                //uiItem.OnItemDroppedOn += HandleSwap;
-                //uiItem.OnItemEndDrag += HandleEndDrag;
             }
-            this.UpdateSelection();
         }
+
         public void InitializeHeroButton()
         {
             foreach (Transform child in this.heroButtonSpacer)
@@ -196,21 +272,16 @@ namespace Inventory.UI
 
             this.heroButtons.Clear();
 
-            // Instantiate button và fill dữ liệu
             for (int i = 0; i < CombatController.Instance.CBM.playersInCombat.Count; i++)
             {
                 HeroStateMachine hero = CombatController.Instance.CBM.playersInCombat[i].GetComponent<HeroStateMachine>();
                 Image newImage = Instantiate(this.heroImagePrefab, this.heroButtonSpacer);
                 this.heroButtons.Add(newImage);
 
-                // Gọi hàm fill dữ liệu vào button
                 this.itemDescription.SetHeroBarDescription(newImage, hero);
-
-                // Optional: Add onClick event
-                //int index = i;
-                //newButton.onClick.AddListener(() => OnHeroButtonClicked(index));
             }
         }
+
         public void InitializeHeroBar(ItemSO item)
         {
             foreach (Transform child in this.infoHeroPanelSpacer)
@@ -227,7 +298,6 @@ namespace Inventory.UI
                     Image newBar = Instantiate(bar, this.infoHeroPanelSpacer);
                     this.heroButtons.Add(newBar);
 
-                    // Chỉ hiển thị bonus nếu item là EquippableItemSO và hợp với hero
                     if (item is EquippableItemSO weapon)
                     {
                         if (hero.baseHero.heroType == weapon.allowedWeapons)
@@ -236,7 +306,7 @@ namespace Inventory.UI
                         }
                         else
                         {
-                            this.itemDescription.SetATKDescription(newBar, hero, null); // hoặc không set gì cả
+                            this.itemDescription.SetATKDescription(newBar, hero, null);
                         }
                     }
                     else
@@ -246,51 +316,62 @@ namespace Inventory.UI
                 }
             }
         }
-        internal void ResetAllItems()
+
+        // =====================================
+        // 4. HÀM DỌN DẸP UI MỖI KHI CHUYỂN TAB
+        // =====================================
+        public void ClearAndHideAllItems()
         {
             foreach (var item in this.listOfUIItems)
             {
                 item.ResetData();
                 item.Deselect();
+                item.gameObject.SetActive(false); // Ẩn ô đi
             }
         }
-        public void UpdateData(int itemIndex, Sprite itemImage, int itemQuantity)
+
+        public void UpdateData(int itemIndex, Sprite itemImage, string itemName, int itemQuantity)
         {
             if (listOfUIItems.Count > itemIndex)
             {
-                listOfUIItems[itemIndex].SetData(itemImage, itemQuantity);
+                listOfUIItems[itemIndex].gameObject.SetActive(true); // Có data thì bật ô lên
+                listOfUIItems[itemIndex].SetData(itemImage, itemName, itemQuantity);
             }
         }
+
         private void HandleShowItemActions(UIInventoryItem inventoryItemUI)
         {
             int index = listOfUIItems.IndexOf(inventoryItemUI);
-            if (index == -1)
-            {
-
-                return;
-            }
+            if (index == -1) return;
             OnItemActionRequested?.Invoke(index);
         }
+
         public void Show()
         {
-            //Debug.LogError("Show");
             this.gameObject.SetActive(true);
             ResetSelection();
+
+            // Ép buộc tải lại tab hiện tại khi bật túi đồ lên
+            OnTabChanged?.Invoke(this.currentTab);
         }
+
         public void ResetSelection()
         {
             this.itemDescription.ResetDescription();
             DeselectAllItems();
         }
+
         public void AddAction(string actionName, Action performAction)
         {
             this.itemActionPanel.AddButton(actionName, performAction);
         }
+
         public void ShowItemAction(int itemIndex)
         {
             this.itemActionPanel.Toggle(true);
             this.itemActionPanel.transform.position = listOfUIItems[itemIndex].transform.position;
         }
+
         private void DeselectAllItems()
         {
             foreach (UIInventoryItem item in listOfUIItems)
@@ -299,26 +380,23 @@ namespace Inventory.UI
             }
             this.itemActionPanel.Toggle(false);
         }
+
         public void SetSelectedIndex(int index)
         {
-            if (listOfUIItems.Count == 0) return;
+            if (listOfUIItems.Count == 0 || !listOfUIItems[index].gameObject.activeInHierarchy) return;
 
-            // Bỏ chọn item cũ
             listOfUIItems[currentIndex].Deselect();
-
-            // Cập nhật index mới
             currentIndex = index;
-
-            // Chọn item mới và hiển thị description đúng
             listOfUIItems[currentIndex].Select();
             OnDescriptionRequested?.Invoke(currentIndex);
         }
+
         public void Hide()
         {
             this.itemActionPanel.Toggle(false);
             gameObject.SetActive(false);
-            //ResetDraggedItem();
         }
+
         internal void UpdateItemDescription(int itemIndex, Sprite itemImage, string name, string receiveEffect, string description)
         {
             this.itemDescription.SetItemDescription(itemImage, name, receiveEffect, description);
@@ -326,50 +404,4 @@ namespace Inventory.UI
             this.listOfUIItems[itemIndex].Select();
         }
     }
-    //private void HandleEndDrag(UIInventoryItem inventoryItemUI)
-    //{
-    //    ResetDraggedItem();
-    //}
-
-    //private void HandleSwap(UIInventoryItem inventoryItemUI)
-    //{
-    //    int index = listOfUIItems.IndexOf(inventoryItemUI);
-    //    if (index == -1)
-    //    {
-
-    //        return;
-    //    }
-
-    //    OnSwapItems?.Invoke(currentlyDraggedItemIndex, index);
-    //    HandleItemSelection(inventoryItemUI);
-    //}
-
-    //private void ResetDraggedItem()
-    //{
-    //    //mouseFollower.Toggle(false);
-    //    //currentlyDraggedItemIndex = -1;
-    //}
-
-    //private void HandleBeginDrag(UIInventoryItem inventoryItemUI)
-    //{
-    //    int index = listOfUIItems.IndexOf(inventoryItemUI);
-    //    if (index == -1) return;
-    //    currentlyDraggedItemIndex = index;
-    //    HandleItemSelection(inventoryItemUI);
-    //    OnStartDragging?.Invoke(index);
-    //}
-
-    //public void CreatedDraggedItem(Sprite sprite, int quantity)
-    //{
-    //    mouseFollower.Toggle(true);
-    //    mouseFollower.SetData(sprite, quantity);
-    //}
-
-    //private void HandleItemSelection(UIInventoryItem inventoryItemUI)
-    //{
-    //    int index = listOfUIItems.IndexOf(inventoryItemUI);
-    //    if (index == -1) return;
-    //    OnDescriptionRequested?.Invoke(index);
-    //}
-
 }

@@ -1,0 +1,1405 @@
+fileFormatVersion: 2
+guid: f903b373dfa5c91499c87f5c549b60a7
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -4620331166963686343
+    second: UIartdeco_PIPO_pack2_white_0
+  - first:
+      213: -5049573525195611274
+    second: UIartdeco_PIPO_pack2_white_1
+  - first:
+      213: 7504929717079446766
+    second: UIartdeco_PIPO_pack2_white_2
+  - first:
+      213: 5653606363334377629
+    second: UIartdeco_PIPO_pack2_white_3
+  - first:
+      213: -757541734700551967
+    second: UIartdeco_PIPO_pack2_white_4
+  - first:
+      213: 5770027982799236137
+    second: UIartdeco_PIPO_pack2_white_5
+  - first:
+      213: -5133368868403256346
+    second: UIartdeco_PIPO_pack2_white_6
+  - first:
+      213: 5811593029712386711
+    second: UIartdeco_PIPO_pack2_white_7
+  - first:
+      213: 1538927155346668891
+    second: UIartdeco_PIPO_pack2_white_8
+  - first:
+      213: -3198825176284132671
+    second: UIartdeco_PIPO_pack2_white_9
+  - first:
+      213: -8217510747347491241
+    second: UIartdeco_PIPO_pack2_white_10
+  - first:
+      213: 8831961396642798499
+    second: UIartdeco_PIPO_pack2_white_11
+  - first:
+      213: 2386385725374976959
+    second: UIartdeco_PIPO_pack2_white_12
+  - first:
+      213: 8114413347684797058
+    second: UIartdeco_PIPO_pack2_white_13
+  - first:
+      213: -4358157002774160616
+    second: UIartdeco_PIPO_pack2_white_14
+  - first:
+      213: -2210371232129812861
+    second: UIartdeco_PIPO_pack2_white_15
+  - first:
+      213: 5345648261930701215
+    second: UIartdeco_PIPO_pack2_white_16
+  - first:
+      213: 817084731038800201
+    second: UIartdeco_PIPO_pack2_white_17
+  - first:
+      213: 6610888623891887614
+    second: UIartdeco_PIPO_pack2_white_18
+  - first:
+      213: -5069422251946203693
+    second: UIartdeco_PIPO_pack2_white_19
+  - first:
+      213: -4068533869189424493
+    second: UIartdeco_PIPO_pack2_white_20
+  - first:
+      213: -7961353405311198616
+    second: UIartdeco_PIPO_pack2_white_21
+  - first:
+      213: 7413266116568075622
+    second: UIartdeco_PIPO_pack2_white_22
+  - first:
+      213: -2779046561302099274
+    second: UIartdeco_PIPO_pack2_white_23
+  - first:
+      213: 4752959716695669836
+    second: UIartdeco_PIPO_pack2_white_24
+  - first:
+      213: 6798988489787371425
+    second: UIartdeco_PIPO_pack2_white_25
+  - first:
+      213: 6284957767770476378
+    second: UIartdeco_PIPO_pack2_white_26
+  - first:
+      213: 2485565611681165000
+    second: UIartdeco_PIPO_pack2_white_27
+  - first:
+      213: 4409722856984042750
+    second: UIartdeco_PIPO_pack2_white_28
+  - first:
+      213: 4717364101635914880
+    second: UIartdeco_PIPO_pack2_white_29
+  - first:
+      213: -3037048355647430761
+    second: UIartdeco_PIPO_pack2_white_30
+  - first:
+      213: -4205305526550055746
+    second: UIartdeco_PIPO_pack2_white_31
+  - first:
+      213: -3543093773969564585
+    second: UIartdeco_PIPO_pack2_white_32
+  - first:
+      213: 2826186096162126657
+    second: UIartdeco_PIPO_pack2_white_33
+  - first:
+      213: 8299265613400752881
+    second: UIartdeco_PIPO_pack2_white_34
+  - first:
+      213: -1636760735038940250
+    second: UIartdeco_PIPO_pack2_white_35
+  - first:
+      213: -7427410142435700385
+    second: UIartdeco_PIPO_pack2_white_36
+  - first:
+      213: -8640201649595720003
+    second: UIartdeco_PIPO_pack2_white_37
+  - first:
+      213: 3217174394400858650
+    second: UIartdeco_PIPO_pack2_white_38
+  - first:
+      213: -2581327220982887372
+    second: UIartdeco_PIPO_pack2_white_39
+  - first:
+      213: -3879422340258846969
+    second: UIartdeco_PIPO_pack2_white_40
+  - first:
+      213: 3927050825557253488
+    second: UIartdeco_PIPO_pack2_white_41
+  - first:
+      213: -7832671035174847188
+    second: UIartdeco_PIPO_pack2_white_42
+  - first:
+      213: -3918004702987448924
+    second: UIartdeco_PIPO_pack2_white_43
+  - first:
+      213: 8778710161676077812
+    second: UIartdeco_PIPO_pack2_white_44
+  - first:
+      213: 5564478595981796627
+    second: UIartdeco_PIPO_pack2_white_45
+  - first:
+      213: 9078958348587544569
+    second: UIartdeco_PIPO_pack2_white_46
+  - first:
+      213: 2763240913364837710
+    second: UIartdeco_PIPO_pack2_white_47
+  - first:
+      213: 6720002944436819345
+    second: UIartdeco_PIPO_pack2_white_48
+  - first:
+      213: 5970288374563041186
+    second: UIartdeco_PIPO_pack2_white_49
+  - first:
+      213: 7400126255497429243
+    second: UIartdeco_PIPO_pack2_white_50
+  - first:
+      213: -7021256360449496514
+    second: UIartdeco_PIPO_pack2_white_51
+  - first:
+      213: -366582936524305955
+    second: UIartdeco_PIPO_pack2_white_52
+  - first:
+      213: -3120911129561109137
+    second: UIartdeco_PIPO_pack2_white_53
+  - first:
+      213: 3482542511549499222
+    second: UIartdeco_PIPO_pack2_white_54
+  - first:
+      213: 4886966263022804929
+    second: UIartdeco_PIPO_pack2_white_55
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 0
+    wrapV: 0
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 0
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 16
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: iOS
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WindowsStoreApps
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: UIartdeco_PIPO_pack2_white_0
+      rect:
+        serializedVersion: 2
+        x: 18
+        y: 821
+        width: 118
+        height: 77
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 8, y: 9, z: 8, w: 9}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 934a670884941efb0800000000000000
+      internalID: -4620331166963686343
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UIartdeco_PIPO_pack2_white_1
+      rect:
+        serializedVersion: 2
+        x: 191
+        y: 729
+        width: 165
+        height: 169
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 20, y: 20, z: 16, w: 20}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 673af73f1af4ce9b0800000000000000
+      internalID: -5049573525195611274
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UIartdeco_PIPO_pack2_white_3
+      rect:
+        serializedVersion: 2
+        x: 420
+        y: 863
+        width: 112
+        height: 25
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 5, y: 7, z: 4, w: 5}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d900f6a8805a57e40800000000000000
+      internalID: 5653606363334377629
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UIartdeco_PIPO_pack2_white_6
+      rect:
+        serializedVersion: 2
+        x: 593
+        y: 868
+        width: 99
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6e366c1463c92c8b0800000000000000
+      internalID: -5133368868403256346
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UIartdeco_PIPO_pack2_white_7
+      rect:
+        serializedVersion: 2
+        x: 594
+        y: 827
+        width: 66
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 79a9423c11de6a050800000000000000
+      internalID: 5811593029712386711
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UIartdeco_PIPO_pack2_white_8
+      rect:
+        serializedVersion: 2
+        x: 17
+        y: 721
+        width: 107
+        height: 71
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 14, y: 14, z: 14, w: 14}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b5df3ad181e5b5510800000000000000
+      internalID: 1538927155346668891
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UIartdeco_PIPO_pack2_white_9
+      rect:
+        serializedVersion: 2
+        x: 411
+        y: 789
+        width: 123
+        height: 33
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 10, y: 10, z: 10, w: 10}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1ca0205437d7b93d0800000000000000
+      internalID: -3198825176284132671
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UIartdeco_PIPO_pack2_white_10
+      rect:
+        serializedVersion: 2
+        x: 592
+        y: 783
+        width: 58
+        height: 20
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 756e566738985fd80800000000000000
+      internalID: -8217510747347491241
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UIartdeco_PIPO_pack2_white_11
+      rect:
+        serializedVersion: 2
+        x: 463
+        y: 732
+        width: 30
+        height: 30
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 8, y: 9, z: 8, w: 9}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3ab5bd4b81e619a70800000000000000
+      internalID: 8831961396642798499
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UIartdeco_PIPO_pack2_white_12
+      rect:
+        serializedVersion: 2
+        x: 505
+        y: 732
+        width: 28
+        height: 29
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 9, y: 11, z: 6, w: 9}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fb3d9027c252e1120800000000000000
+      internalID: 2386385725374976959
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UIartdeco_PIPO_pack2_white_14
+      rect:
+        serializedVersion: 2
+        x: 229
+        y: 617
+        width: 86
+        height: 82
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 81bd346eb47b483c0800000000000000
+      internalID: -4358157002774160616
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UIartdeco_PIPO_pack2_white_17
+      rect:
+        serializedVersion: 2
+        x: 362
+        y: 605
+        width: 104
+        height: 101
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 21, y: 8, z: 21, w: 18}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 94996f8db3ed65b00800000000000000
+      internalID: 817084731038800201
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UIartdeco_PIPO_pack2_white_22
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 547
+        width: 162
+        height: 140
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 18, y: 14, z: 19, w: 15}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 66dca7f714631e660800000000000000
+      internalID: 7413266116568075622
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UIartdeco_PIPO_pack2_white_23
+      rect:
+        serializedVersion: 2
+        x: 526
+        y: 598
+        width: 181
+        height: 107
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 14, y: 14, z: 14, w: 23}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6ba415360e7de69d0800000000000000
+      internalID: -2779046561302099274
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UIartdeco_PIPO_pack2_white_24
+      rect:
+        serializedVersion: 2
+        x: 238
+        y: 517
+        width: 68
+        height: 66
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 10, y: 10, z: 10, w: 10}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c4cf2691ea7e5f140800000000000000
+      internalID: 4752959716695669836
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UIartdeco_PIPO_pack2_white_25
+      rect:
+        serializedVersion: 2
+        x: 370
+        y: 473
+        width: 94
+        height: 84
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1afeeb5420cda5e50800000000000000
+      internalID: 6798988489787371425
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UIartdeco_PIPO_pack2_white_26
+      rect:
+        serializedVersion: 2
+        x: 19
+        y: 417
+        width: 190
+        height: 81
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 14, y: 14, z: 14, w: 16}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a5f8a486ac7a83750800000000000000
+      internalID: 6284957767770476378
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UIartdeco_PIPO_pack2_white_27
+      rect:
+        serializedVersion: 2
+        x: 18
+        y: 166
+        width: 219
+        height: 190
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 12, y: 11, z: 12, w: 13}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8ceae2631c08e7220800000000000000
+      internalID: 2485565611681165000
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UIartdeco_PIPO_pack2_white_28
+      rect:
+        serializedVersion: 2
+        x: 283
+        y: 263
+        width: 182
+        height: 149
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 14, y: 9, z: 14, w: 19}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: efc5470239b723d30800000000000000
+      internalID: 4409722856984042750
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UIartdeco_PIPO_pack2_white_29
+      rect:
+        serializedVersion: 2
+        x: 304
+        y: 119
+        width: 19
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 08c303228a1777140800000000000000
+      internalID: 4717364101635914880
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UIartdeco_PIPO_pack2_white_30
+      rect:
+        serializedVersion: 2
+        x: 388
+        y: 136
+        width: 15
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 79f53fb8c9c3ad5d0800000000000000
+      internalID: -3037048355647430761
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UIartdeco_PIPO_pack2_white_31
+      rect:
+        serializedVersion: 2
+        x: 408
+        y: 138
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eb43ffd77e0c3a5c0800000000000000
+      internalID: -4205305526550055746
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UIartdeco_PIPO_pack2_white_32
+      rect:
+        serializedVersion: 2
+        x: 193
+        y: 112
+        width: 14
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 75c55a41cf664dec0800000000000000
+      internalID: -3543093773969564585
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UIartdeco_PIPO_pack2_white_33
+      rect:
+        serializedVersion: 2
+        x: 206
+        y: 120
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 14b34ead741a83720800000000000000
+      internalID: 2826186096162126657
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UIartdeco_PIPO_pack2_white_34
+      rect:
+        serializedVersion: 2
+        x: 305
+        y: 93
+        width: 22
+        height: 27
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1f2cd5f9a1aec2370800000000000000
+      internalID: 8299265613400752881
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UIartdeco_PIPO_pack2_white_35
+      rect:
+        serializedVersion: 2
+        x: 322
+        y: 119
+        width: 27
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6ab52bd88ce0949e0800000000000000
+      internalID: -1636760735038940250
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UIartdeco_PIPO_pack2_white_36
+      rect:
+        serializedVersion: 2
+        x: 411
+        y: 110
+        width: 15
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f519cfad3d98ce890800000000000000
+      internalID: -7427410142435700385
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UIartdeco_PIPO_pack2_white_37
+      rect:
+        serializedVersion: 2
+        x: 247
+        y: 88
+        width: 19
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dbe5a10a066d71880800000000000000
+      internalID: -8640201649595720003
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UIartdeco_PIPO_pack2_white_38
+      rect:
+        serializedVersion: 2
+        x: 388
+        y: 104
+        width: 15
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a12eebef013b5ac20800000000000000
+      internalID: 3217174394400858650
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UIartdeco_PIPO_pack2_white_39
+      rect:
+        serializedVersion: 2
+        x: 423
+        y: 99
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 43cc448a1984d2cd0800000000000000
+      internalID: -2581327220982887372
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UIartdeco_PIPO_pack2_white_40
+      rect:
+        serializedVersion: 2
+        x: 63
+        y: 95
+        width: 11
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 70728238fe5892ac0800000000000000
+      internalID: -3879422340258846969
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UIartdeco_PIPO_pack2_white_41
+      rect:
+        serializedVersion: 2
+        x: 388
+        y: 54
+        width: 15
+        height: 42
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 07d9e306befaf7630800000000000000
+      internalID: 3927050825557253488
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UIartdeco_PIPO_pack2_white_42
+      rect:
+        serializedVersion: 2
+        x: 46
+        y: 68
+        width: 23
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c2d79e95133cc4390800000000000000
+      internalID: -7832671035174847188
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UIartdeco_PIPO_pack2_white_43
+      rect:
+        serializedVersion: 2
+        x: 77
+        y: 75
+        width: 17
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4ad8f1a2b7370a9c0800000000000000
+      internalID: -3918004702987448924
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UIartdeco_PIPO_pack2_white_44
+      rect:
+        serializedVersion: 2
+        x: 100
+        y: 82
+        width: 11
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4fa80d4616e34d970800000000000000
+      internalID: 8778710161676077812
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UIartdeco_PIPO_pack2_white_45
+      rect:
+        serializedVersion: 2
+        x: 168
+        y: 50
+        width: 14
+        height: 39
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 31562c91dcff83d40800000000000000
+      internalID: 5564478595981796627
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UIartdeco_PIPO_pack2_white_46
+      rect:
+        serializedVersion: 2
+        x: 209
+        y: 58
+        width: 10
+        height: 26
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9ffa0220480fefd70800000000000000
+      internalID: 9078958348587544569
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UIartdeco_PIPO_pack2_white_47
+      rect:
+        serializedVersion: 2
+        x: 82
+        y: 56
+        width: 17
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e45efed68f0095620800000000000000
+      internalID: 2763240913364837710
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UIartdeco_PIPO_pack2_white_48
+      rect:
+        serializedVersion: 2
+        x: 115
+        y: 57
+        width: 17
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1955cb8e21f324d50800000000000000
+      internalID: 6720002944436819345
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UIartdeco_PIPO_pack2_white_49
+      rect:
+        serializedVersion: 2
+        x: 303
+        y: 21
+        width: 50
+        height: 51
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2af697c05a9bad250800000000000000
+      internalID: 5970288374563041186
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UIartdeco_PIPO_pack2_white_50
+      rect:
+        serializedVersion: 2
+        x: 434
+        y: 67
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bf047ff2f9782b660800000000000000
+      internalID: 7400126255497429243
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UIartdeco_PIPO_pack2_white_51
+      rect:
+        serializedVersion: 2
+        x: 52
+        y: 43
+        width: 23
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e3aa4765a8c7f8e90800000000000000
+      internalID: -7021256360449496514
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UIartdeco_PIPO_pack2_white_52
+      rect:
+        serializedVersion: 2
+        x: 91
+        y: 45
+        width: 11
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dd9cfbfe2c2a9eaf0800000000000000
+      internalID: -366582936524305955
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UIartdeco_PIPO_pack2_white_53
+      rect:
+        serializedVersion: 2
+        x: 227
+        y: 49
+        width: 23
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f6d62faecdb40b4d0800000000000000
+      internalID: -3120911129561109137
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UIartdeco_PIPO_pack2_white_54
+      rect:
+        serializedVersion: 2
+        x: 258
+        y: 49
+        width: 17
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 657ca1486f9745030800000000000000
+      internalID: 3482542511549499222
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UIartdeco_PIPO_pack2_white_55
+      rect:
+        serializedVersion: 2
+        x: 244
+        y: 31
+        width: 11
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1cfdac88cedf1d340800000000000000
+      internalID: 4886966263022804929
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 2d9c8218c598d3a458cedde694cbcb96
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      UIartdeco_PIPO_pack2_white_0: -4620331166963686343
+      UIartdeco_PIPO_pack2_white_1: -5049573525195611274
+      UIartdeco_PIPO_pack2_white_10: -8217510747347491241
+      UIartdeco_PIPO_pack2_white_11: 8831961396642798499
+      UIartdeco_PIPO_pack2_white_12: 2386385725374976959
+      UIartdeco_PIPO_pack2_white_13: 8114413347684797058
+      UIartdeco_PIPO_pack2_white_14: -4358157002774160616
+      UIartdeco_PIPO_pack2_white_15: -2210371232129812861
+      UIartdeco_PIPO_pack2_white_16: 5345648261930701215
+      UIartdeco_PIPO_pack2_white_17: 817084731038800201
+      UIartdeco_PIPO_pack2_white_18: 6610888623891887614
+      UIartdeco_PIPO_pack2_white_19: -5069422251946203693
+      UIartdeco_PIPO_pack2_white_2: 7504929717079446766
+      UIartdeco_PIPO_pack2_white_20: -4068533869189424493
+      UIartdeco_PIPO_pack2_white_21: -7961353405311198616
+      UIartdeco_PIPO_pack2_white_22: 7413266116568075622
+      UIartdeco_PIPO_pack2_white_23: -2779046561302099274
+      UIartdeco_PIPO_pack2_white_24: 4752959716695669836
+      UIartdeco_PIPO_pack2_white_25: 6798988489787371425
+      UIartdeco_PIPO_pack2_white_26: 6284957767770476378
+      UIartdeco_PIPO_pack2_white_27: 2485565611681165000
+      UIartdeco_PIPO_pack2_white_28: 4409722856984042750
+      UIartdeco_PIPO_pack2_white_29: 4717364101635914880
+      UIartdeco_PIPO_pack2_white_3: 5653606363334377629
+      UIartdeco_PIPO_pack2_white_30: -3037048355647430761
+      UIartdeco_PIPO_pack2_white_31: -4205305526550055746
+      UIartdeco_PIPO_pack2_white_32: -3543093773969564585
+      UIartdeco_PIPO_pack2_white_33: 2826186096162126657
+      UIartdeco_PIPO_pack2_white_34: 8299265613400752881
+      UIartdeco_PIPO_pack2_white_35: -1636760735038940250
+      UIartdeco_PIPO_pack2_white_36: -7427410142435700385
+      UIartdeco_PIPO_pack2_white_37: -8640201649595720003
+      UIartdeco_PIPO_pack2_white_38: 3217174394400858650
+      UIartdeco_PIPO_pack2_white_39: -2581327220982887372
+      UIartdeco_PIPO_pack2_white_4: -757541734700551967
+      UIartdeco_PIPO_pack2_white_40: -3879422340258846969
+      UIartdeco_PIPO_pack2_white_41: 3927050825557253488
+      UIartdeco_PIPO_pack2_white_42: -7832671035174847188
+      UIartdeco_PIPO_pack2_white_43: -3918004702987448924
+      UIartdeco_PIPO_pack2_white_44: 8778710161676077812
+      UIartdeco_PIPO_pack2_white_45: 5564478595981796627
+      UIartdeco_PIPO_pack2_white_46: 9078958348587544569
+      UIartdeco_PIPO_pack2_white_47: 2763240913364837710
+      UIartdeco_PIPO_pack2_white_48: 6720002944436819345
+      UIartdeco_PIPO_pack2_white_49: 5970288374563041186
+      UIartdeco_PIPO_pack2_white_5: 5770027982799236137
+      UIartdeco_PIPO_pack2_white_50: 7400126255497429243
+      UIartdeco_PIPO_pack2_white_51: -7021256360449496514
+      UIartdeco_PIPO_pack2_white_52: -366582936524305955
+      UIartdeco_PIPO_pack2_white_53: -3120911129561109137
+      UIartdeco_PIPO_pack2_white_54: 3482542511549499222
+      UIartdeco_PIPO_pack2_white_55: 4886966263022804929
+      UIartdeco_PIPO_pack2_white_6: -5133368868403256346
+      UIartdeco_PIPO_pack2_white_7: 5811593029712386711
+      UIartdeco_PIPO_pack2_white_8: 1538927155346668891
+      UIartdeco_PIPO_pack2_white_9: -3198825176284132671
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
