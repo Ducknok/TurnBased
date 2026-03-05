@@ -73,7 +73,6 @@ public class EnemyUI : DucMonobehaviour
 
     public void GrayOutAttackType(BaseAttack.Effect attackType1, BaseAttack.Effect attackType2)
     {
-        //Debug.LogWarning(attackType1 + " va " + attackType2);
 
         if (attackTypeIcons.ContainsKey(attackType1))
         {

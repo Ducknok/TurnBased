@@ -40,17 +40,14 @@ public class MainInventoryController : DucMonobehaviour
     private List<GameObject> heroUIList = new List<GameObject>();
     private bool isSelectingHero = false;
     private int currentHeroIndex = 0;
-    [SerializeField] private Color selectedColor = new Color(0.8f, 0.8f, 0.8f, 1f);   // Xám nhạt
-    [SerializeField] private Color unselectedColor = new Color(1f, 1f, 1f, 0f);     // Trắng nhạt (alpha thấp)
+    [SerializeField] private Color selectedColor = new Color(1f, 0.85f, 0.3f, 0.4f);
+    [SerializeField] private Color unselectedColor = new Color(1f, 1f, 1f, 0f); 
 
     [Header("MenuPanel")]
     [SerializeField] private GameObject mainManagePanel;
     [SerializeField] private GameObject equipPanel;
     [SerializeField] private GameObject skillsPanel;
     [SerializeField] private GameObject itemsPanel;
-
-
-
 
     protected override void Start()
     {
@@ -59,32 +56,38 @@ public class MainInventoryController : DucMonobehaviour
             SelectButton(0); // Chọn button đầu tiên khi mở lên
         }
     }
+
     protected override void Update()
     {
         this.CheckState();
     }
+
     protected override void Awake()
     {
         this.LoadComponent();
     }
+
     protected override void OnEnable()
     {
         base.OnEnable();
     }
+
     protected override void OnDisable()
     {
         base.OnDisable();
     }
+
     protected override void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         this.LoadComponent();
     }
+
     public override void CheckState()
     {
         if (CombatController.Instance.CBZ.isInCombat) return;
         else
         {
-            
+
             this.OpenMainMenu();
             // Khi đang ở menu chính
             if (!this.isSelectingHero && currentState == UIState.MainMenu)
@@ -106,6 +109,7 @@ public class MainInventoryController : DucMonobehaviour
             }
         }
     }
+
     //LoadComponent
     public void LoadComponent()
     {
@@ -113,16 +117,19 @@ public class MainInventoryController : DucMonobehaviour
         this.LoadEquipMenuController();
         this.LoadSkillMenuController();
     }
+
     private void LoadItemInventoryController()
     {
         if (this.itemInventoryController != null) return;
         this.itemInventoryController = ItemInventoryController.Instance;
     }
+
     private void LoadEquipMenuController()
     {
         if (this.equipMenuController != null) return;
         this.equipMenuController = FindAnyObjectByType<EquipMenuController>();
     }
+
     private void LoadSkillMenuController()
     {
         if (this.skillMenuController != null) return;
@@ -140,6 +147,7 @@ public class MainInventoryController : DucMonobehaviour
             LockSelectedButton();
         }
     }
+
     private void UndoSelectHero()
     {
         if (Input.GetKeyDown(KeyCode.LeftControl))
@@ -149,12 +157,14 @@ public class MainInventoryController : DucMonobehaviour
             SelectButton(currentSelectedIndex);
         }
     }
+
     // Kiểm tra xem đang ở UI phụ không
     private bool IsInSubUI()
     {
         return currentState == UIState.EquipUI || currentState == UIState.OrderUI ||
                currentState == UIState.SkillsUI || currentState == UIState.ItemUI;
     }
+
     // Quay lại menu chính
     private void ReturnToMainMenu()
     {
@@ -169,6 +179,7 @@ public class MainInventoryController : DucMonobehaviour
         ResetHeroHighlight();
         SelectButton(currentSelectedIndex);
     }
+
     // Ẩn tất cả các UI phụ
     private void CloseAllPanels()
     {
@@ -176,11 +187,13 @@ public class MainInventoryController : DucMonobehaviour
         skillsPanel.SetActive(false);
         itemsPanel.SetActive(false);
     }
+
     private void LockSelectedButton()
     {
         // Chỉ set lại selected GameObject đúng 1 lần
         EventSystem.current.SetSelectedGameObject(buttonUI[currentSelectedIndex].gameObject);
     }
+
     private void HandleButtonNavigation()
     {
         if (buttonUI.Count == 0 || this.isSelectingHero == true) return;
@@ -196,6 +209,7 @@ public class MainInventoryController : DucMonobehaviour
             SelectButton(currentSelectedIndex);
         }
     }
+
     private void HandleHeroNavigation()
     {
         if (heroUIList.Count == 0) return;
@@ -203,21 +217,19 @@ public class MainInventoryController : DucMonobehaviour
         if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
         {
             currentHeroIndex = (currentHeroIndex - 1 + heroUIList.Count) % heroUIList.Count;
-            //Debug.LogWarning("Nut len");
             HighlightHero(currentHeroIndex);
-           
+
         }
         else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
         {
             currentHeroIndex = (currentHeroIndex + 1) % heroUIList.Count;
-            //Debug.LogWarning("Nut xuong");
             HighlightHero(currentHeroIndex);
         }
 
         if ((Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter)))
         {
             var hero = CombatController.Instance.CBM.playersInCombat[currentHeroIndex].GetComponent<HeroStateMachine>();
-            
+
 
             switch (currentSelectedIndex)
             {
@@ -246,23 +258,25 @@ public class MainInventoryController : DucMonobehaviour
             }
         }
     }
+
     private void ShowEquipUI(HeroStateMachine hero)
     {
         Debug.Log("Hiện giao diện trang bị cho: " + hero.name);
         this.currentState = UIState.EquipUI;
         equipPanel.SetActive(true);
-        
+
         this.equipMenuController.LoadHero(hero);
         this.equipMenuController.LoadHeroStat(hero);
         this.equipMenuController.CreateHeroSwapButton(CombatController.Instance.CBM, hero);
-        // equipUI.LoadForHero(hero);
     }
+
     private void ShowOrderUI(HeroStateMachine hero)
     {
         Debug.Log("Hiện order cho: " + hero.name);
         this.currentState = UIState.OrderUI;
         this.ReorderHero(currentHeroIndex);
     }
+
     private void ShowSkillUI(HeroStateMachine hero)
     {
         Debug.Log("Hiện kỹ năng cho: " + hero.name);
@@ -271,8 +285,8 @@ public class MainInventoryController : DucMonobehaviour
         this.skillMenuController.LoadHero(hero);
         this.skillMenuController.LoadSkillUI(hero);
         this.skillMenuController.CreateHeroSwapButton(CombatController.Instance.CBM, hero);
-        // skillUI.LoadSkills(hero);
     }
+
     private void ShowItemUI(HeroStateMachine hero)
     {
         Debug.Log("Hiện item cho: " + hero.name);
@@ -280,6 +294,7 @@ public class MainInventoryController : DucMonobehaviour
         this.itemInventoryController.OpenItemInventory();
         itemsPanel.SetActive(true);
     }
+
     public void HighlightHero(int index)
     {
         for (int i = 0; i < heroUIList.Count; i++)
@@ -291,6 +306,7 @@ public class MainInventoryController : DucMonobehaviour
             }
         }
     }
+
     private void ResetHeroHighlight()
     {
         foreach (var heroUI in heroUIList)
@@ -300,6 +316,7 @@ public class MainInventoryController : DucMonobehaviour
                 bg.color = unselectedColor;
         }
     }
+
     private void SelectButton(int index)
     {
         // Chọn lại button và thay đổi màu sắc ngay lập tức
@@ -308,22 +325,24 @@ public class MainInventoryController : DucMonobehaviour
             EventSystem.current.SetSelectedGameObject(buttonUI[index].gameObject);
 
             // Đảm bảo rằng button hiện tại được highlight
-            UpdateButtonHighlight(index);
+            //UpdateButtonHighlight(index);
         }
     }
-    private void UpdateButtonHighlight(int selectedIndex)
-    {
-        // Duyệt qua tất cả các button và thay đổi màu sắc của chúng
-        for (int i = 0; i < buttonUI.Count; i++)
-        {
-            Image buttonImage = buttonUI[i].GetComponent<Image>();
-            if (buttonImage != null)
-            {
-                // Nếu button đang được chọn, thay đổi màu sắc
-                buttonImage.color = (i == selectedIndex) ? selectedColor : unselectedColor;
-            }
-        }
-    }
+
+    //private void UpdateButtonHighlight(int selectedIndex)
+    //{
+    //    // Duyệt qua tất cả các button và thay đổi màu sắc của chúng
+    //    for (int i = 0; i < buttonUI.Count; i++)
+    //    {
+    //        Image buttonImage = buttonUI[i].GetComponent<Image>();
+    //        if (buttonImage != null)
+    //        {
+    //            // Nếu button đang được chọn, thay đổi màu sắc
+    //            buttonImage.color = (i == selectedIndex) ? selectedColor : unselectedColor;
+    //        }
+    //    }
+    //}
+
     public void CreateHeroUI()
     {
         // Clear old buttons (nếu cần)
@@ -358,6 +377,7 @@ public class MainInventoryController : DucMonobehaviour
             this.itemDescription.SetHeroUIDescription(newHeroUINotInCombat, hero);
         }
     }
+
     public void ReorderHero(int selectedIndex)
     {
         var cbm = CombatController.Instance.CBM;
@@ -383,29 +403,32 @@ public class MainInventoryController : DucMonobehaviour
         currentHeroIndex = 0;
         this.HighlightHero(currentHeroIndex);
     }
+
     private void OpenMainMenu()
     {
         if (this.itemInventoryController.isItemInventoryOpen || this.equipMenuController.isEquipMenuOpen || this.skillMenuController.isSkillMenuOpen) return;
         if (Input.GetKeyDown(KeyCode.Tab))
         {
-            if(mainManagePanel.activeSelf)
+            if (mainManagePanel.activeSelf)
             {
-                
+
                 mainManagePanel.SetActive(false);
                 this.isMainInventoryOpen = false;
                 this.equipMenuController.isEquipMenuOpen = false;
                 this.skillMenuController.isSkillMenuOpen = false;
                 this.itemInventoryController.isItemInventoryOpen = false;
-                
+
             }
             else
             {
                 this.CreateHeroUI();
                 mainManagePanel.SetActive(true);
                 this.isMainInventoryOpen = true;
+
+                // FIX: Ép hệ thống chọn nút Equip (Index 0) mỗi khi vừa bấm TAB mở lên
+                this.currentSelectedIndex = 0;
+                this.SelectButton(this.currentSelectedIndex);
             }
         }
     }
-
-    
 }

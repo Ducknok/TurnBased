@@ -551,7 +551,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 340ea8da7a67e2c478c6330693a60c95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hsm: {fileID: 0}
+  hsm: {fileID: 3471530454638878831}
   heroHPBarFill: {fileID: 0}
   heroHPBarTrail: {fileID: 0}
   heroMPBarFill: {fileID: 0}

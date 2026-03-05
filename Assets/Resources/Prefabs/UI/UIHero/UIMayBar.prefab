@@ -1172,7 +1172,7 @@ GameObject:
   - component: {fileID: 5647752071666864423}
   - component: {fileID: 6590137676969546073}
   m_Layer: 5
-  m_Name: MayBar
+  m_Name: UIMayBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

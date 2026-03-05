@@ -8,7 +8,6 @@ public class HeroPanelHandler : DucMonobehaviour
 {
     public HeroStateMachine hsm;
     //For the Player Bar
-    
     public Image heroHPBarFill;
     public Image heroHPBarTrail;
     public Image heroMPBarFill;
@@ -19,27 +18,26 @@ public class HeroPanelHandler : DucMonobehaviour
     private GameObject playerPanelInstance;
     public Transform heroPanelSpacer;
     // Start is called before the first frame update
-
+    protected override void Awake()
+    {
+        this.LoadComponent();
+    }
     protected override void OnEnable()
     {
         base.OnEnable();
-    }
+        this.CreateHeroPanel();
 
-    protected override void OnDisable()
-    {
-        base.OnDisable();
     }
 
     protected override void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
 
-        this.LoadComponent();
         this.CreateHeroPanel();
     }
     private void LoadComponent()
     {
         this.hsm = this.gameObject.GetComponent<HeroStateMachine>();
-        this.playerPanel = Resources.Load<GameObject>($"Prefabs/UI/{this.hsm.baseHero.theName}Bar");
+        this.playerPanel = Resources.Load<GameObject>($"Prefabs/UI/UIHero/UI{this.hsm.baseHero.theName}Bar");
         this.heroPanelSpacer = GameObject.Find("BattleCanvas").transform.Find("Panel").transform.Find("UIHero").transform.Find("HeroPanelSpacer");
         if (heroPanelSpacer == null)
         {
