@@ -8,9 +8,6 @@ using UnityEngine.UI;
 //View (V) in MVC
 namespace Inventory.UI
 {
-    // =====================================
-    // 1. TẠO ENUM TAB ĐỂ DỄ QUẢN LÝ
-    // =====================================
     public enum InventoryTab
     {
         Consumable,
@@ -23,20 +20,16 @@ namespace Inventory.UI
         [SerializeField] private UIInventoryItem itemPrefab;
         [SerializeField] private RectTransform contentPanel;
         [SerializeField] public UIInventoryDescription itemDescription;
-        //[SerializeField] private MouseFollower mouseFollower;
 
         [Header("ListOfUIItem")]
         List<UIInventoryItem> listOfUIItems = new List<UIInventoryItem>();
-        private int currentIndex = 0; // Index của item đang chọn
+        private int currentIndex = 0; 
 
-        // =====================================
-        // 2. THÊM EVENT BÁO CHO CONTROLLER CHUYỂN TAB
-        // =====================================
-        public event Action<int> OnItemActionRequested, OnDescriptionRequested /*OnStartDragging*/;
-        public event Action<InventoryTab> OnTabChanged; // 👈 Sự kiện mới
+        public event Action<int> OnItemActionRequested, OnDescriptionRequested;
+        public event Action<InventoryTab> OnTabChanged; 
         private Action<HeroStateMachine> onHeroSelectedCallback;
 
-        private InventoryTab currentTab = InventoryTab.Consumable; // Tab mặc định
+        private InventoryTab currentTab = InventoryTab.Consumable;
 
         [Header("ItemActionPanel")]
         [SerializeField] private ItemActionPanel itemActionPanel;
@@ -45,7 +38,7 @@ namespace Inventory.UI
         [SerializeField] private Image heroImagePrefab;
         [SerializeField] private Transform heroButtonSpacer;
         private List<Image> heroButtons = new List<Image>();
-        private bool isSelectingHero = false;
+        public bool isSelectingHero = false;
         private int currentHeroIndex = 0;
 
         [Header("ItemInfoPanel")]
@@ -111,20 +104,37 @@ namespace Inventory.UI
                 this.isSelectingHero = false;
                 this.UnHighlightHeroButton(this.currentHeroIndex);
                 this.SetSelectedIndex(0);
-                HeroStateMachine selectedHero = CombatController.Instance.CBM.playersInCombat[currentHeroIndex].GetComponent<HeroStateMachine>();
-                this.onHeroSelectedCallback?.Invoke(selectedHero);
+
+                // Bẫy lỗi an toàn khi chọn Hero
+                if (this.currentHeroIndex >= 0 && this.currentHeroIndex < CombatController.Instance.CBM.playersInCombat.Count)
+                {
+                    HeroStateMachine selectedHero = CombatController.Instance.CBM.playersInCombat[currentHeroIndex].GetComponent<HeroStateMachine>();
+                    this.onHeroSelectedCallback?.Invoke(selectedHero);
+                }
             }
             else if (Input.GetKeyDown(KeyCode.LeftControl))
             {
                 this.isSelectingHero = false;
                 this.UnHighlightHeroButton(this.currentHeroIndex);
-                this.SetSelectedIndex(0);
+
+                if (this.infoHeroPanelSpacer != null)
+                {
+                    this.infoHeroPanelSpacer.gameObject.SetActive(false);
+                }
+
+                if (this.listOfUIItems != null && this.currentIndex >= 0 && this.currentIndex < this.listOfUIItems.Count)
+                {
+                    this.SetSelectedIndex(this.currentIndex);
+                }
+                else
+                {
+                    this.SetSelectedIndex(0);
+                }
             }
         }
 
         private void SelectItem()
         {
-            // ĐÃ SỬA: Đổi sang dùng W/S (Lên/Xuống) để chọn Item trong danh sách dọc
             if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
             {
                 MoveSelection(-1);
@@ -133,7 +143,6 @@ namespace Inventory.UI
             {
                 MoveSelection(1);
             }
-            // ĐÃ SỬA: Dùng A/D (Trái/Phải) hoặc Q/E để chuyển Tab (tự động xoay vòng)
             else if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.Q))
             {
                 SwitchToPreviousTab();
@@ -151,15 +160,10 @@ namespace Inventory.UI
             }
         }
 
-        // =====================================
-        // TÍNH NĂNG MỚI: TỰ ĐỘNG XOAY VÒNG TAB BẰNG PHÍM A/D
-        // =====================================
         private void SwitchToNextTab()
         {
-            // Lấy tổng số lượng Tab đang có trong Enum (hiện tại là 2)
             int totalTabs = Enum.GetValues(typeof(InventoryTab)).Length;
 
-            // Chuyển sang Tab tiếp theo (nếu đang ở cuối thì quay lại đầu)
             int nextTabIndex = ((int)currentTab + 1) % totalTabs;
             ChangeTab((InventoryTab)nextTabIndex);
         }
@@ -175,14 +179,12 @@ namespace Inventory.UI
 
         private void ChangeTab(InventoryTab newTab)
         {
-            if (this.currentTab == newTab) return; // Nếu đang ở tab đó rồi thì bỏ qua
+            if (this.currentTab == newTab) return; 
 
             this.currentTab = newTab;
 
-            // Xóa UI cũ trước khi load đồ mới
             this.itemDescription.ResetDescription();
 
-            // Báo cho Controller biết để ném Data mới tương ứng với Tab này
             this.OnTabChanged?.Invoke(this.currentTab);
         }
 
@@ -317,9 +319,6 @@ namespace Inventory.UI
             }
         }
 
-        // =====================================
-        // 4. HÀM DỌN DẸP UI MỖI KHI CHUYỂN TAB
-        // =====================================
         public void ClearAndHideAllItems()
         {
             foreach (var item in this.listOfUIItems)

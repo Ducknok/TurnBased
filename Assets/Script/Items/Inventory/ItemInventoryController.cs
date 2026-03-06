@@ -133,10 +133,13 @@ namespace Inventory
                     if (destroyableItem != null)
                     {
                         this.inventoryData.RemoveItem(inventoryItem.item, 1);
-                        UpdateFilteredInventoryUI(this.currentButtonIndex);
                     }
 
                     itemAction.PerformAction(itemIndex, selectedHero.gameObject);
+
+                    // Thêm dòng này: Cập nhật lại UI Kho đồ SAU KHI thực hiện hành động (Dùng máu hoặc Đổi vũ khí)
+                    UpdateFilteredInventoryUI(this.currentButtonIndex);
+
                     this.inventoryUI.ResetSelection();
                 });
             }

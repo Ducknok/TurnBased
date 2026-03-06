@@ -41,17 +41,13 @@ namespace Inventory.UI
         {
             Image heroButton = image.transform.Find("HeroIcon").Find("Icon").GetComponent<Image>();
             TextMeshProUGUI curHP = image.transform.Find("HP").Find("CurHPNumber").GetComponent<TextMeshProUGUI>();
-            TextMeshProUGUI maxHP = image.transform.Find("HP").Find("MaxHPNumber").GetComponent<TextMeshProUGUI>();
             TextMeshProUGUI curMP = image.transform.Find("MP").Find("CurMPNumber").GetComponent<TextMeshProUGUI>();
-            TextMeshProUGUI maxMP = image.transform.Find("MP").Find("MaxMPNumber").GetComponent<TextMeshProUGUI>();
             Image hpBarFill = image.transform.Find("HPBar").Find("Fill").GetComponent<Image>();
             Image mpBarFill = image.transform.Find("MPBar").Find("Fill").GetComponent<Image>();
 
             heroButton.sprite = hero.baseHero.heroImage;
-            curHP.text = hero.baseHero.curHP.ToString();
-            maxHP.text = hero.baseHero.baseHP.ToString();
-            curMP.text = hero.baseHero.curMP.ToString();
-            maxMP.text = hero.baseHero.baseMP.ToString();
+            curHP.text = $"{hero.baseHero.curHP}/{hero.baseHero.baseHP}";
+            curMP.text = $"{hero.baseHero.curMP}/{hero.baseHero.baseMP}";
             hpBarFill.fillAmount = 1f;
             mpBarFill.fillAmount = 1f;
             this.UpdateHPBar(hpBarFill, hero);
