@@ -277,35 +277,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30d004bbc980db5418080354bdcb99ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  agentWeapon: {fileID: 0}
-  baseHero:
-    theName: May
-    baseHP: 10
-    curHP: 10
-    baseMP: 10
-    curMP: 10
-    baseATK: 5
-    curATK: 5
-    baseMATK: 10
-    curMATK: 10
-    baseDEF: 10
-    curDEF: 10
-    baseMDEF: 7
-    curMDEF: 7
-    normalAttacks:
-    - {fileID: 11400000, guid: abb63d0e13900874aa554de502ab6287, type: 2}
-    specialAttacks:
-    - {fileID: 11400000, guid: 2c11521ece3505a4ea80a519ebc58315, type: 2}
-    - {fileID: 11400000, guid: 2639164949270b949abafb3c0653adb8, type: 2}
-    - {fileID: 11400000, guid: a421cb7cfe540e5428196d3e359d2224, type: 2}
-    - {fileID: 11400000, guid: df86dd4a3fc59e549bfad5714d69f469, type: 2}
-    heroImage: {fileID: 1258090235, guid: 21a6fb2b8e744d3439f09248ad82c8ee, type: 3}
-    stamina: 10
-    intellect: 10
-    dexterity: 10
-    agility: 10
-    heroType: 1
-    elemental: 0
+  agentWeapon: {fileID: 1351555703257543911}
+  baseHero: {fileID: 11400000, guid: f097843f152297c4cb53e4275bb1c94a, type: 2}
   inventoryController: {fileID: 0}
   currentAttack: {fileID: 0}
   heroPanelHandler: {fileID: 0}
@@ -414,12 +387,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 340ea8da7a67e2c478c6330693a60c95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hsm: {fileID: 0}
+  hsm: {fileID: 7619542038981189161}
   heroHPBarFill: {fileID: 0}
   heroHPBarTrail: {fileID: 0}
   heroMPBarFill: {fileID: 0}
   heroMPBarTrail: {fileID: 0}
-  playerPanel: {fileID: 0}
+  playerPanel: {fileID: 7564649012260675971, guid: 9bcfed45d8695c246a43c07c9f58c182,
+    type: 3}
   heroPanelSpacer: {fileID: 0}
 --- !u!1 &7003832406479960634
 GameObject:

@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8c5cd8b2141e4f941a2210d29baea2ce, type: 3}
-  m_Name: Lightning Strike
+  m_Name: Water Ball
   m_EditorClassIdentifier: 
-  attackImage: {fileID: 2086871339, guid: fb051ba9df7a2724e99ecb3019809887, type: 3}
-  attackName: Lightning Strike
-  attackDescription: Tao 1 tia sam set
-  attackDamage: 10
-  attackCost: 3
+  attackImage: {fileID: 930279301, guid: fb051ba9df7a2724e99ecb3019809887, type: 3}
+  attackName: Water Ball
+  attackDescription: Shoot a water ball towards target
+  attackDamage: 5
+  attackCost: 0
   maxEnemyCount: 1
   attackType: 1
-  effect1: 3
-  effect2: 3
-  hitParticleName: YellowHitParticle
+  effect1: 5
+  effect2: 5
+  hitParticleName: BlueHitParticle

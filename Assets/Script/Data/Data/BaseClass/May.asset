@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da9b048a811e9af4185099461449bb82, type: 3}
+  m_Name: May
+  m_EditorClassIdentifier: Assembly-CSharp::BaseHero
+  theName: May
+  baseHP: 500
+  curHP: 500
+  baseMP: 500
+  curMP: 500
+  baseATK: 5
+  curATK: 5
+  baseMATK: 5
+  curMATK: 5
+  baseDEF: 5
+  curDEF: 5
+  baseMDEF: 5
+  curMDEF: 5
+  normalAttacks:
+  - {fileID: 11400000, guid: abb63d0e13900874aa554de502ab6287, type: 2}
+  specialAttacks:
+  - {fileID: 11400000, guid: 2c11521ece3505a4ea80a519ebc58315, type: 2}
+  - {fileID: 11400000, guid: 2639164949270b949abafb3c0653adb8, type: 2}
+  - {fileID: 11400000, guid: a421cb7cfe540e5428196d3e359d2224, type: 2}
+  - {fileID: 11400000, guid: df86dd4a3fc59e549bfad5714d69f469, type: 2}
+  heroImage: {fileID: -1554920235, guid: 21a6fb2b8e744d3439f09248ad82c8ee, type: 3}
+  stamina: 10
+  intellect: 10
+  dexterity: 10
+  agility: 10
+  heroType: 1
+  elemental: 0

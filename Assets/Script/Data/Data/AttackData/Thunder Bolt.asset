@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8c5cd8b2141e4f941a2210d29baea2ce, type: 3}
-  m_Name: Water Ball
+  m_Name: Thunder Bolt
   m_EditorClassIdentifier: 
-  attackImage: {fileID: 930279301, guid: fb051ba9df7a2724e99ecb3019809887, type: 3}
-  attackName: Water Ball
-  attackDescription: Shoot a water ball towards target
-  attackDamage: 5
-  attackCost: 0
+  attackImage: {fileID: -983892325, guid: fb051ba9df7a2724e99ecb3019809887, type: 3}
+  attackName: Thunder Bolt
+  attackDescription: ' '
+  attackDamage: 2
+  attackCost: 4
   maxEnemyCount: 1
   attackType: 1
-  effect1: 3
+  effect1: 0
   effect2: 3
-  hitParticleName: BlueHitParticle
+  hitParticleName: YellowHitParticle

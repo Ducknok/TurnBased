@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8c5cd8b2141e4f941a2210d29baea2ce, type: 3}
-  m_Name: Attack1
+  m_Name: Lightning Strike
   m_EditorClassIdentifier: 
-  attackImage: {fileID: -2072138837, guid: 3db17c9b52b577a438833767985907ae, type: 3}
-  attackName: Attack1
-  attackDescription: Normal Attack
-  attackDamage: 2
-  attackCost: 0
+  attackImage: {fileID: 2086871339, guid: fb051ba9df7a2724e99ecb3019809887, type: 3}
+  attackName: Lightning Strike
+  attackDescription: Tao 1 tia sam set
+  attackDamage: 10
+  attackCost: 3
   maxEnemyCount: 1
-  attackType: 0
-  effect1: 0
-  effect2: 0
-  hitParticleName: SlashHitParticle
+  attackType: 1
+  effect1: 3
+  effect2: 5
+  hitParticleName: YellowHitParticle

@@ -20,6 +20,6 @@ MonoBehaviour:
   attackCost: 5
   maxEnemyCount: 3
   attackType: 1
-  effect1: 3
+  effect1: 0
   effect2: 3
   hitParticleName: YellowHitParticle

@@ -3,14 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-[Serializable]
+[CreateAssetMenu(fileName = "New Hero data", menuName = "RPG/Base Data/New Hero Base Data")]
 public class BaseHero : BaseClass
 {
     public Sprite heroImage;
-    public int stamina;     //Suc ben
-    public int intellect;   //Tri tue
-    public int dexterity;   //Kheo leo
-    public int agility;     //Lanh le
+    public int stamina;     
+    public int intellect;   
+    public int dexterity;   
+    public int agility;     
 
     
     public HeroType heroType;

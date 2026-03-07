@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8c5cd8b2141e4f941a2210d29baea2ce, type: 3}
-  m_Name: Magnetic Thunderstorm
-  m_EditorClassIdentifier: Assembly-CSharp::BaseAttack
-  attackImage: {fileID: -663133087, guid: fb051ba9df7a2724e99ecb3019809887, type: 3}
-  attackName: Magnetic Thunderstorm
-  attackDescription: 
-  attackDamage: 10
-  attackCost: 7
-  maxEnemyCount: 3
+  m_Name: Fire Ball
+  m_EditorClassIdentifier: 
+  attackImage: {fileID: 1979346094, guid: fb051ba9df7a2724e99ecb3019809887, type: 3}
+  attackName: Fire Ball
+  attackDescription: Shoot a fire ball towards target
+  attackDamage: 5
+  attackCost: 0
+  maxEnemyCount: 1
   attackType: 1
-  effect1: 3
-  effect2: 0
-  hitParticleName: YellowHitParticle
+  effect1: 5
+  effect2: 5
+  hitParticleName: FireHitParticle

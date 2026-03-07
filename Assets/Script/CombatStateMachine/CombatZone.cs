@@ -67,21 +67,16 @@ public class CombatZone : DucMonobehaviour
             if (bodyTransform != null)
             {
                 bodies[i] = bodyTransform.gameObject;
-                // Debug.Log($"Body found for {hero.name}: {bodyTransform.name}");
             }
             else
             {
                 Debug.LogWarning($"Body not found for hero {hero.name}");
             }
-            // 🔽 Gọi HeroPosition() ở đây
+
             var heroSM = hero.GetComponent<HeroStateMachine>();
             if (heroSM != null)
             {
-                heroSM.HeroPosition(); // 👈 Gọi hàm bạn đã viết
-            }
-            else
-            {
-                Debug.LogWarning($"Không tìm thấy HeroCombatStateMachine trên {hero.name}");
+                heroSM.HeroPosition();
             }
         }
     }
@@ -96,10 +91,9 @@ public class CombatZone : DucMonobehaviour
     }
     private IEnumerator InitiateCombat()
     {
-        //Debug.Log("Combat Started!");
         this.LoadHeroList();
         CameraController.Instance.SetCameraForCombat(this.centerPosition);
-        // Kiểm tra kích thước mảng trước khi di chuyển
+
         if (heros.Length > playerPositions.Length || enemies.Length > enemyPositions.Length)
         {
             yield break;
@@ -108,7 +102,6 @@ public class CombatZone : DucMonobehaviour
         // Move players
         for (int i = 0; i < heros.Length; i++)
         {
-            //Debug.Log($"Player {i} move to {playerPositions[i].position}");
             MoveToPosition(bodies[i].transform, playerPositions[i].position);
         }
 
@@ -122,10 +115,9 @@ public class CombatZone : DucMonobehaviour
 
         StartCombat();
     }
-    // Move a character to a target position with a jump animation
+
     private void MoveToPosition(Transform character, Vector3 targetPosition)
     {
-        //Debug.Log($"Moving {character.name} from {character.position} to {targetPosition}");
         Vector3[] path = new Vector3[]
         {
         character.position,
@@ -133,26 +125,39 @@ public class CombatZone : DucMonobehaviour
         targetPosition
         };
 
-        character.DOPath(path, movementDuration, PathType.CatmullRom).SetEase(Ease.InOutQuad); // .OnComplete( /*=> Debug.Log($"{character.name} reached {targetPosition}")*/);
+        character.DOPath(path, movementDuration, PathType.CatmullRom).SetEase(Ease.InOutQuad);
     }
 
-    // Logic to handle the actual combat after positioning
     private void StartCombat()
     {
-
         this.isInCombat = true;
         foreach (var hero in PlayerController.Instance.HeroSMList)
         {
             hero.anim.SetFloat("Speed", 0);
             hero.anim.SetBool("IdleBattle", this.isInCombat);
         }
+
+        // ========================================================
+        // TÍNH NĂNG MỚI: Đánh thức quái vật sau khi đã vào vị trí!
+        // ========================================================
+        foreach (var enemy in enemies)
+        {
+            if (enemy != null)
+            {
+                var esm = enemy.GetComponent<EnemyStateMachine>();
+                if (esm != null)
+                {
+                    esm.StartCombatFlow(); // Lệnh cho quái thức dậy và sinh UI
+                }
+            }
+        }
     }
-    // End the combat
+
     public void EndCombat()
     {
         Debug.Log("Combat Ended!");
         isInCombat = false;
-        foreach(var hero in PlayerController.Instance.HeroSMList)
+        foreach (var hero in PlayerController.Instance.HeroSMList)
         {
             hero.anim.SetBool("IdleBattle", this.isInCombat);
         }
@@ -160,7 +165,6 @@ public class CombatZone : DucMonobehaviour
         this.cbm.playerInput = CombatStateMachine.PlayerGUI.ACTIVATE;
         cameraCtrl.SetCameraFollowHero(PartyManager.Instance.currentLeader.transform.parent.GetComponent<HeroStateMachine>());
         this.DisActiveObject();
-        // Reset positions, handle rewards, etc.
     }
     private void DisActiveObject()
     {
@@ -183,5 +187,5 @@ public class CombatZone : DucMonobehaviour
         {
             if (pos != null) Gizmos.DrawSphere(pos.position, 0.2f);
         }
-    } 
+    }
 }

@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1670911796101893341}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: TimerIcon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -24,8 +24,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 360838477840464493}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.778, y: 1.47, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 1.709, y: 0.91, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -42,7 +42,7 @@ GameObject:
   - component: {fileID: 561793110583759179}
   - component: {fileID: 570553779078143346}
   - component: {fileID: 1232120776932535572}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: ChooseEnemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -154,7 +154,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1168878446091702414}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Skills
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -185,7 +185,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 875027752313880410}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SkillPosition
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -222,7 +222,7 @@ GameObject:
   - component: {fileID: 7384152831364537805}
   - component: {fileID: 4729928080192093633}
   - component: {fileID: 8942142690041362521}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -294,15 +294,15 @@ SpriteRenderer:
   m_SortingLayer: 5
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -1119420272, guid: f38201baf9d614746b5e68323e4dd4ba, type: 3}
+  m_Sprite: {fileID: -1833820122, guid: f9b04e52cd7165f46a2a0d9126dfaa69, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 2.9375, y: 2}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
 --- !u!50 &5652390686625285270
 Rigidbody2D:
@@ -341,7 +341,7 @@ Animator:
   m_GameObject: {fileID: 6426753507620981047}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: e987978ea611e3e40b2d400d4ada7adb, type: 2}
+  m_Controller: {fileID: 9100000, guid: 93e6cd2d0fa40124586b098bdd8a6821, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -391,8 +391,8 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 4, y: 4}
-    newSize: {x: 1, y: 1}
+    oldSize: {x: 2.9375, y: 2}
+    newSize: {x: 2.9375, y: 2}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
@@ -427,7 +427,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   esm: {fileID: 0}
-  position: {fileID: 0}
+  position: {fileID: 875027752313880410}
 --- !u!1 &8075015674674520003
 GameObject:
   m_ObjectHideFlags: 0
@@ -437,7 +437,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7912458398261778992}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Movement
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -468,7 +468,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 456949372782958824}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: AttackTypeIcon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -508,13 +508,13 @@ GameObject:
   - component: {fileID: 3468509149680871524}
   - component: {fileID: 8184352183484721710}
   - component: {fileID: 8431067809827491904}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Enemy
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3024651085888802613
 Transform:
   m_ObjectHideFlags: 0
@@ -549,28 +549,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   combatStateMachine: {fileID: 0}
-  baseEnemy:
-    theName: Enemy
-    baseHP: 0
-    curHP: 0
-    baseMP: 0
-    curMP: 0
-    baseATK: 0
-    curATK: 0
-    baseMATK: 0
-    curMATK: 0
-    baseDEF: 0
-    curDEF: 0
-    baseMDEF: 0
-    curMDEF: 0
-    normalAttacks: []
-    specialAttacks: []
-    enemyType: 1
-    rarity: 0
+  baseEnemy: {fileID: 11400000, guid: cd34ac1f52ad5f14b8760ac77902849a, type: 2}
   currentAttack: {fileID: 0}
   enemyMoveToCombat: {fileID: 0}
   currentState: 0
-  choose: {fileID: 0}
+  choose: {fileID: 2492053440520354036}
   enemyHPBarFill: {fileID: 0}
   curHpNumber: {fileID: 0}
   savedAttack:
@@ -658,6 +641,15 @@ MonoBehaviour:
   timerIcon: {fileID: 360838477840464493}
   iconsToDestroy: []
   timerIconToDestroy: []
+  baseIconPrefab: {fileID: 6877176847297739159, guid: 9b37e40d6684cdb42bee2b6a6cb777ef,
+    type: 3}
+  iconDatabase:
+  - effect: 2
+    iconSprite: {fileID: 756673776, guid: fb051ba9df7a2724e99ecb3019809887, type: 3}
+  - effect: 3
+    iconSprite: {fileID: 2086871339, guid: fb051ba9df7a2724e99ecb3019809887, type: 3}
+  - effect: 1
+    iconSprite: {fileID: 379642529, guid: fb051ba9df7a2724e99ecb3019809887, type: 3}
 --- !u!114 &8184352183484721710
 MonoBehaviour:
   m_ObjectHideFlags: 0
