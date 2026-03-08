@@ -14,19 +14,17 @@ public class EquipMenuController : DucMonobehaviour
     [SerializeField] private Image heroImage;
     [SerializeField] private TextMeshProUGUI heroName;
     [SerializeField] private TextMeshProUGUI heroType;
+
     [Header("Weapon UI")]
     [SerializeField] private GameObject weaponUI;
     [SerializeField] private Transform weaponUISpacer;
     private List<GameObject> currentWeaponUIs = new List<GameObject>();
     private int currentWeaponIndex = 0;
     public List<EquippableItemSO> currentWeapon = new List<EquippableItemSO>();
-
-    // THÊM DÒNG NÀY: Để lưu lại vị trí chính xác của ô chứa đồ (tránh nhầm lẫn 2 nhẫn giống nhau)
     private List<int> currentWeaponSlotIndexes = new List<int>();
 
-    [Header("Armor")]
-    [SerializeField] private Transform armorUISpacer;
-    [Header("Ring")]
+    [Header("Shield & Ring UI")]
+    [SerializeField] private Transform shieldUISpacer;
     [SerializeField] private Transform ringUISpacer;
 
     [Header("Hero Stat")]
@@ -64,13 +62,12 @@ public class EquipMenuController : DucMonobehaviour
         base.CheckState();
         if (!this.isEquipMenuOpen || heroSwapButtons.Count == 0 || currentWeaponUIs.Count == 0)
         {
-            Debug.LogWarning("Equip inventory dang dong");
             return;
         }
         if (isItemPanel)
         {
             HandleItemPanelInput();
-            return; // Không xử lý hero hay weapon khi đang mở itemPanel
+            return;
         }
 
         this.HandleSelectHero();
@@ -94,25 +91,19 @@ public class EquipMenuController : DucMonobehaviour
         if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
         {
             this.currentWeaponIndex = (currentWeaponIndex - 1 + currentWeaponUIs.Count) % currentWeaponUIs.Count;
-            //Debug.LogWarning("Nut len");
             this.UpdateWeaponSelectionVisual();
         }
 
         if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
         {
             currentWeaponIndex = (currentWeaponIndex + 1) % currentWeaponUIs.Count;
-            //Debug.LogWarning("Nut xuong");
             this.UpdateWeaponSelectionVisual();
         }
         if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
         {
-            // Giả lập click vào button hiện tại
             if (currentWeaponIndex >= 0 && currentWeaponIndex < currentWeaponUIs.Count)
             {
-                if (currentWeaponIndex >= 0 && currentWeaponIndex < currentWeaponUIs.Count)
-                {
-                    ShowEquipmentOfType(currentWeapon[currentWeaponIndex].itemType);
-                }
+                ShowEquipmentOfType(currentWeapon[currentWeaponIndex].itemType);
             }
         }
     }
@@ -139,7 +130,6 @@ public class EquipMenuController : DucMonobehaviour
             var itemUI = itemPanelUIs[currentItemPanelIndex].GetComponent<EquipableItemUI>();
             if (itemUI != null)
             {
-                // FIX LỖI: Gọi hàm xử lý Thay Đồ
                 this.ApplyEquip(currentItemPanelItems[currentItemPanelIndex]);
             }
         }
@@ -151,17 +141,11 @@ public class EquipMenuController : DucMonobehaviour
         }
     }
 
-    // ==========================================
-    // LOGIC THAY ĐỒ, THÊM CHỈ SỐ, TRẢ ĐỒ VỀ KHO
-    // ==========================================
     private void ApplyEquip(EquippableItemSO newItem)
     {
         HeroStateMachine currentHero = heroesInCombat[currentSwapIndex];
-
-        // Món đồ cũ ở vị trí UI hiện tại đang chọn (vị trí lúc bạn bấm Enter để mở bảng)
         EquippableItemSO oldItem = currentWeapon[currentWeaponIndex];
 
-        // 1. Kiểm tra trùng lặp: Nếu đã mặc món này rồi thì đóng luôn
         if (oldItem == newItem)
         {
             Debug.Log("Hero đã trang bị món này rồi!");
@@ -169,49 +153,33 @@ public class EquipMenuController : DucMonobehaviour
             return;
         }
 
-        // ĐÃ SỬA LỖI TẠI ĐÂY: Lấy thẳng vị trí Slot chính xác đã được lưu lúc tạo UI
         int slotIndex = currentWeaponSlotIndexes[currentWeaponIndex];
 
         if (slotIndex != -1)
         {
-            // 2. Trừ chỉ số món đồ cũ (Truyền số âm)
             if (oldItem != null)
             {
                 foreach (var mod in oldItem.Modifiers)
-                {
                     mod.stat.AffectCharacter(currentHero.gameObject, -mod.val1, -mod.val2);
-                }
             }
 
-            // 3. Cộng chỉ số món mới (Truyền số dương)
             if (newItem != null)
             {
                 foreach (var mod in newItem.Modifiers)
-                {
                     mod.stat.AffectCharacter(currentHero.gameObject, mod.val1, mod.val2);
-                }
             }
 
-            // 4. Gán món mới vào người (Hàm SetWeapon của bạn sẽ tự động lấy món cũ ném vào lại Kho đồ)
             currentHero.agentWeapon.SetWeapon(slotIndex, newItem);
 
-            // 5. Xóa món mới khỏi kho đồ chung
-            // Dùng Reflection để "lách" qua biến private inventoryData lấy quyền xóa đồ
             var field = typeof(ItemInventoryController).GetField("inventoryData", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
             if (field != null)
             {
                 InventorySO invData = field.GetValue(ItemInventoryController.Instance) as InventorySO;
-                if (invData != null)
-                {
-                    invData.RemoveItem(newItem, 1);
-                }
+                if (invData != null) invData.RemoveItem(newItem, 1);
             }
 
-            // 6. Cập nhật lại UI và đóng bảng Chọn
             this.LoadCurrentHeroUI();
             this.ClearEquipmentOfType();
-
-            Debug.Log($"Đã thay {oldItem?.Name} bằng {newItem?.Name}");
         }
     }
 
@@ -230,95 +198,58 @@ public class EquipMenuController : DucMonobehaviour
         if (mAtkValue != null) this.mAtkValue.text = "";
         if (mDefValue != null) this.mDefValue.text = "";
     }
+
     public void LoadEquipmentUI(HeroStateMachine hero, string typeStr, GameObject uiPrefab, Transform spacer, List<GameObject> uiList)
     {
-        // Xóa UI cũ trong Spacer
-        foreach (Transform child in spacer)
-        {
-            Destroy(child.gameObject);
-        }
+        foreach (Transform child in spacer) Destroy(child.gameObject);
 
-        // Chuyển string sang Enum ItemType
-        if (!System.Enum.TryParse(typeStr, out ItemType type))
-        {
-            Debug.LogError("Sai kiểu item type: " + typeStr);
-            return;
-        }
+        if (!System.Enum.TryParse(typeStr, out ItemType type)) return;
 
-        // Lấy danh sách item đang được trang bị
         var equipItems = hero.agentWeapon.weaponItemSO;
 
-        // Khởi tạo bộ đếm số lượng Ring theo độ hiếm
         Dictionary<Rarity, int> ringRarityCount = new Dictionary<Rarity, int>
         {
-            { Rarity.Normal, 0 },
-            { Rarity.Rare, 0 },
-            { Rarity.Epic, 0 }
+            { Rarity.Normal, 0 }, { Rarity.Rare, 0 }, { Rarity.Epic, 0 }
         };
 
-        int ringIndexCounter = 1; // Thêm biến đếm để hiển thị Nhẫn 1, Nhẫn 2
+        int ringIndexCounter = 1;
 
-        // ĐÃ SỬA: Đổi sang vòng lặp for để lấy được biến 'i' (vị trí chính xác của ô đồ)
         for (int i = 0; i < equipItems.Length; i++)
         {
             var item = equipItems[i];
+            if (item == null || item.itemType != type) continue;
 
-            if (item == null)
-                continue;
+            if (item.allowedWeapons != hero.baseHero.heroType && item.allowedWeapons != HeroType.All) continue;
 
-            // Loại item không khớp
-            if (item.itemType != type)
-                continue;
-
-            // Không tương thích với hero
-            if (item.allowedWeapons != hero.baseHero.heroType && item.allowedWeapons != HeroType.All)
-                continue;
-
-            // Xử lý riêng với Ring: giới hạn số lượng theo độ hiếm
             if (type == ItemType.Ring)
             {
                 Rarity rarity = item.rarity;
                 int maxAllowed = (rarity == Rarity.Normal) ? 2 : 1;
-
-                if (ringRarityCount[rarity] >= maxAllowed)
-                    continue;
-
+                if (ringRarityCount[rarity] >= maxAllowed) continue;
                 ringRarityCount[rarity]++;
             }
             else
             {
-                // Weapon/Armor không được trùng tên
-                if (currentWeapon.Any(x => x.Name == item.Name))
-                    continue;
+                if (currentWeapon.Any(x => x.Name == item.Name)) continue;
             }
 
-            // Tạo UI cho item
             GameObject newUI = Instantiate(uiPrefab, spacer);
             EquipableItemUI itemUI = newUI.GetComponent<EquipableItemUI>();
-            if (itemUI != null)
-            {
-                itemUI.Setup(item, this);
-            }
+            if (itemUI != null) itemUI.Setup(item, this);
 
-            // --- TÍNH NĂNG MỚI: Thêm tiền tố [Nhẫn 1], [Nhẫn 2] để dễ phân biệt ---
             if (type == ItemType.Ring)
             {
                 TextMeshProUGUI nameText = newUI.GetComponentInChildren<TextMeshProUGUI>();
-                if (nameText != null)
-                {
-                    nameText.text = $"[Nhẫn {ringIndexCounter}] " + item.Name;
-                }
+                if (nameText != null) nameText.text = $"[Nhẫn {ringIndexCounter}] " + item.Name;
                 ringIndexCounter++;
             }
 
-            uiList.Add(newUI);          // Thêm vào danh sách UI
-            currentWeapon.Add(item);    // Thêm vào danh sách tạm
-
-            // LƯU LẠI VỊ TRÍ GỐC: Tránh lỗi trùng đồ khi tháo/mặc
+            uiList.Add(newUI);
+            currentWeapon.Add(item);
             currentWeaponSlotIndexes.Add(i);
         }
-
     }
+
     public void LoadHero(HeroStateMachine hero)
     {
         this.ClearHero();
@@ -326,6 +257,7 @@ public class EquipMenuController : DucMonobehaviour
         this.heroName.text = hero.baseHero.theName;
         this.heroType.text = hero.baseHero.heroType.ToString() + "/" + hero.baseHero.elemental.ToString();
     }
+
     public void LoadHeroStat(HeroStateMachine hero)
     {
         this.ClearHeroStat();
@@ -336,12 +268,10 @@ public class EquipMenuController : DucMonobehaviour
         this.mAtkValue.text = hero.baseHero.curMATK.ToString();
         this.mDefValue.text = hero.baseHero.curMDEF.ToString();
     }
+
     public void CreateHeroSwapButton(CombatStateMachine cbm, HeroStateMachine selectedHero)
     {
-        foreach (Transform child in this.heroSwapButtonSpacer.transform)
-        {
-            Destroy(child.gameObject);
-        }
+        foreach (Transform child in this.heroSwapButtonSpacer.transform) Destroy(child.gameObject);
 
         heroSwapButtons.Clear();
         heroesInCombat.Clear();
@@ -369,17 +299,15 @@ public class EquipMenuController : DucMonobehaviour
             });
         }
 
-        // 🔥 Xác định hero đang được chọn khi vào Equip
         currentSwapIndex = heroesInCombat.IndexOf(selectedHero);
-        if (currentSwapIndex < 0) currentSwapIndex = 0; // fallback nếu không tìm thấy
+        if (currentSwapIndex < 0) currentSwapIndex = 0;
         LoadCurrentHeroUI();
     }
+
     private void LoadCurrentHeroUI()
     {
         this.currentWeaponUIs.Clear();
         this.currentWeapon.Clear();
-
-        // Nhớ clear thêm list chứa Index này mỗi khi đổi nhân vật nhé
         this.currentWeaponSlotIndexes.Clear();
 
         if (currentSwapIndex < 0 || currentSwapIndex >= heroesInCombat.Count) return;
@@ -387,75 +315,74 @@ public class EquipMenuController : DucMonobehaviour
         HeroStateMachine currentHero = heroesInCombat[currentSwapIndex];
         LoadHero(currentHero);
         LoadHeroStat(currentHero);
+
+        // Load Vũ Khí
         LoadEquipmentUI(currentHero, "Weapon", this.weaponUI, this.weaponUISpacer, this.currentWeaponUIs);
-        LoadEquipmentUI(currentHero, "Armor", this.weaponUI, this.armorUISpacer, this.currentWeaponUIs);
+
+        // Hỗ trợ cả 2 tên đề phòng bạn đặt Enum là Armor hoặc Shield
+        if (System.Enum.IsDefined(typeof(ItemType), "Shield"))
+            LoadEquipmentUI(currentHero, "Shield", this.weaponUI, this.shieldUISpacer, this.currentWeaponUIs);
+        else
+            LoadEquipmentUI(currentHero, "Armor", this.weaponUI, this.shieldUISpacer, this.currentWeaponUIs);
+
+        // Load Nhẫn
         LoadEquipmentUI(currentHero, "Ring", this.weaponUI, this.ringUISpacer, this.currentWeaponUIs);
+
         this.currentWeaponIndex = 0;
         this.UpdateWeaponSelectionVisual();
-        // Cập nhật màu icon của nút chọn hero
+
         for (int i = 0; i < heroSwapButtons.Count; i++)
         {
             Button btn = heroSwapButtons[i];
             Transform iconTransform = btn.transform.Find("Icon");
-
             if (iconTransform != null)
             {
                 Image iconImage = iconTransform.GetComponent<Image>();
-                if (iconImage != null)
-                {
-                    // Nếu là hero đang được chọn thì sáng, ngược lại thì tối
-                    if (i == currentSwapIndex)
-                    {
-                        iconImage.color = Color.white; // hoặc new Color(1f, 1f, 1f, 1f)
-                    }
-                    else
-                    {
-                        iconImage.color = new Color(1f, 1f, 1f, 0.3f); // alpha thấp để tối đi
-                    }
-                }
+                if (iconImage != null) iconImage.color = (i == currentSwapIndex) ? Color.white : new Color(1f, 1f, 1f, 0.3f);
             }
-
         }
     }
+
     private void UpdateWeaponSelectionVisual()
     {
         for (int i = 0; i < currentWeaponUIs.Count; i++)
         {
             GameObject weaponUI = currentWeaponUIs[i];
-            //Debug.LogError(weaponUI);
             Image bg = weaponUI.GetComponent<Image>();
-            if (bg != null)
-            {
-                // Màu xám nhạt cho skill được chọn, và trong suốt nhẹ cho skill không chọn
-                bg.color = (i == currentWeaponIndex) ? new Color(1f, 1f, 1f, 0.2f) : new Color(0f, 0f, 0f, 0f);
-            }
+            if (bg != null) bg.color = (i == currentWeaponIndex) ? new Color(1f, 1f, 1f, 0.2f) : new Color(0f, 0f, 0f, 0f);
         }
         if (currentWeaponIndex >= 0 && currentWeaponIndex < currentWeapon.Count)
         {
-            UpdateWeapontDescription(currentWeapon[currentWeaponIndex]); // 💥 Gọi mô tả
+            UpdateWeapontDescription(currentWeapon[currentWeaponIndex]);
         }
     }
+
     private void UpdateWeapontDescription(EquippableItemSO curWeapon)
     {
         if (this.desText == null) return;
         this.desText.text = curWeapon.Description;
     }
+
     private void UpdateItemDetail(EquippableItemSO curWeapon)
     {
         HeroStateMachine currentHero = heroesInCombat[currentSwapIndex];
-        switch (curWeapon.itemType)
+        string typeName = curWeapon.itemType.ToString();
+
+        // Kiểm tra an toàn loại Item để hiển thị đúng chỉ số tương ứng
+        if (typeName == "Weapon")
         {
-            case ItemType.Weapon:
-                this.SetWeaponItemDetail(currentHero, curWeapon);
-                break;
-            case ItemType.Armor:
-                this.SetArmorItemDetail(currentHero, curWeapon);
-                break;
-            case ItemType.Ring:
-                this.SetRingItemDetail(currentHero, curWeapon);
-                break;
+            this.SetWeaponItemDetail(currentHero, curWeapon);
+        }
+        else if (typeName == "Armor" || typeName == "Shield")
+        {
+            this.SetShieldItemDetail(currentHero, curWeapon);
+        }
+        else if (typeName == "Ring")
+        {
+            this.SetRingItemDetail(currentHero, curWeapon);
         }
     }
+
     private void SetWeaponItemDetail(HeroStateMachine hero, EquippableItemSO curWeapon)
     {
         this.LoadHeroStat(hero);
@@ -464,61 +391,52 @@ public class EquipMenuController : DucMonobehaviour
 
         foreach (var mod in curWeapon.Modifiers)
         {
-            if (mod.stat != null)
-            {
-                bonusATK += mod.val1;
-                bonusMATK += mod.val2;
-            }
+            if (mod.stat != null) { bonusATK += mod.val1; bonusMATK += mod.val2; }
         }
 
         atkValue.text = FormatStatWithBonus(hero.baseHero.baseATK, bonusATK);
         mAtkValue.text = FormatStatWithBonus(hero.baseHero.baseMATK, bonusMATK);
     }
-    private void SetArmorItemDetail(HeroStateMachine hero, EquippableItemSO curWeapon)
+
+    private void SetShieldItemDetail(HeroStateMachine hero, EquippableItemSO curWeapon)
     {
         this.LoadHeroStat(hero);
         float bonusDEF = 0f;
         float bonusMDEF = 0f;
 
+        // Quy ước của Shield: Val1 = Phóng Thủ Vật Lý (DEF), Val2 = Kháng Phép (MDEF)
         foreach (var mod in curWeapon.Modifiers)
         {
-            if (mod.stat != null)
-            {
-                bonusDEF += mod.val1;
-                bonusMDEF += mod.val2;
-            }
+            if (mod.stat != null) { bonusDEF += mod.val1; bonusMDEF += mod.val2; }
         }
 
+        // Tô màu và hiển thị cho dòng DEF / MDEF
         defValue.text = FormatStatWithBonus(hero.baseHero.baseDEF, bonusDEF);
         mDefValue.text = FormatStatWithBonus(hero.baseHero.baseMDEF, bonusMDEF);
     }
+
     private void SetRingItemDetail(HeroStateMachine hero, EquippableItemSO curWeapon)
     {
         this.LoadHeroStat(hero);
         float bonusATK = 0f;
         float bonusMATK = 0f;
 
+        // Quy ước của Nhẫn: Val1 = Sát Thương (ATK), Val2 = Sức mạnh Phép (MATK)
         foreach (var mod in curWeapon.Modifiers)
         {
-            if (mod.stat != null)
-            {
-                bonusATK += mod.val1;
-                bonusMATK += mod.val2;
-            }
+            if (mod.stat != null) { bonusATK += mod.val1; bonusMATK += mod.val2; }
         }
 
         atkValue.text = FormatStatWithBonus(hero.baseHero.baseATK, bonusATK);
         mAtkValue.text = FormatStatWithBonus(hero.baseHero.baseMATK, bonusMATK);
     }
+
     private void UpdateItemPanelSelectionVisual()
     {
         for (int i = 0; i < itemPanelUIs.Count; i++)
         {
             Image bg = itemPanelUIs[i].GetComponentInParent<Image>();
-            if (bg != null)
-            {
-                bg.color = (i == currentItemPanelIndex) ? new Color(1f, 1f, 1f, 0.2f) : new Color(0f, 0f, 0f, 0f);
-            }
+            if (bg != null) bg.color = (i == currentItemPanelIndex) ? new Color(1f, 1f, 1f, 0.2f) : new Color(0f, 0f, 0f, 0f);
         }
 
         if (currentItemPanelIndex >= 0 && currentItemPanelIndex < currentItemPanelItems.Count)
@@ -526,41 +444,32 @@ public class EquipMenuController : DucMonobehaviour
             UpdateWeapontDescription(currentItemPanelItems[currentItemPanelIndex]);
         }
     }
+
     public void ShowEquipmentOfType(ItemType type)
     {
         this.itemPanel.SetActive(true);
         this.isItemPanel = true;
 
         HeroStateMachine currentHero = heroesInCombat[currentSwapIndex];
-
         Transform spacer = itemPanel.transform.Find("Scroll View").Find("Viewport").Find("Content");
 
-        // Xóa UI cũ
-        foreach (Transform child in spacer)
-        {
-            Destroy(child.gameObject);
-        }
+        foreach (Transform child in spacer) Destroy(child.gameObject);
         itemPanelUIs.Clear();
         currentItemPanelItems.Clear();
 
         if (spacer != null)
         {
             var equipItems = ItemInventoryController.Instance.GetEquipableItemsByType(type);
-
-            // Lấy ra món đồ (Vũ khí/Giáp/Nhẫn) hiện tại mà bạn đang bấm vào để thay thế
             EquippableItemSO itemToReplace = currentWeapon[currentWeaponIndex];
 
             foreach (var item in equipItems)
             {
+                // Cho phép mặc nếu đúng HeroType HOẶC đồ đó dành cho mọi người (HeroType.All)
                 if (item.itemType == type && (item.allowedWeapons == currentHero.baseHero.heroType || item.allowedWeapons == HeroType.All))
                 {
-                    // TÍNH NĂNG MỚI: Nếu là Nhẫn, yêu cầu phải CÙNG ĐỘ HIẾM với ô đang chọn (Bạc đổi Bạc, Vàng đổi Vàng)
                     if (type == ItemType.Ring && itemToReplace != null)
                     {
-                        if (item.rarity != itemToReplace.rarity)
-                        {
-                            continue; // Bỏ qua, không hiển thị nhẫn khác loại lên UI
-                        }
+                        if (item.rarity != itemToReplace.rarity) continue;
                     }
 
                     GameObject newUI = Instantiate(weaponUI, spacer);
@@ -575,33 +484,27 @@ public class EquipMenuController : DucMonobehaviour
             }
 
             currentItemPanelIndex = 0;
-            if (currentItemPanelItems.Count > 0)
-            {
-                this.UpdateItemDetail(currentItemPanelItems[currentItemPanelIndex]);
-            }
+            if (currentItemPanelItems.Count > 0) this.UpdateItemDetail(currentItemPanelItems[currentItemPanelIndex]);
             UpdateItemPanelSelectionVisual();
         }
     }
+
     public void ClearEquipmentOfType()
     {
         Transform spacer = itemPanel.transform.Find("Scroll View").Find("Viewport").Find("Content");
-        foreach (Transform child in spacer)
-        {
-            GameObject.Destroy(child.gameObject);
-        }
+        foreach (Transform child in spacer) GameObject.Destroy(child.gameObject);
         this.isItemPanel = false;
         this.itemPanel.SetActive(false);
     }
+
     private string FormatStatWithBonus(float baseValue, float bonus)
     {
-        if (bonus == 0)
-            return baseValue.ToString();
+        if (bonus == 0) return baseValue.ToString();
 
         string sign = bonus > 0 ? "+" : "-";
-        string bonusColor = bonus > 0 ? "#58C7E2" : "#FF4C4C"; // xanh da trời nhạt và đỏ nhạt
+        string bonusColor = bonus > 0 ? "#58C7E2" : "#FF4C4C";
         float absBonus = Mathf.Abs(bonus);
 
         return $"<color={bonusColor}>{baseValue}</color> <color={bonusColor}>{sign}{absBonus}</color>";
     }
-
 }

@@ -14,6 +14,7 @@ public class BaseAttack : ScriptableObject
     public enum AttackType { NormalAttack, SpecialAttack }
     public Sprite attackImage;
     public string attackName;
+    [TextArea]
     public string attackDescription;
     public float attackDamage;
     public float attackCost;

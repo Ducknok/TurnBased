@@ -211,8 +211,6 @@ namespace Inventory
 
             if (this.currentFilteredItems.Count > 0)
             {
-                // FIX LỖI TUYỆT ĐỐI: Dùng Coroutine đợi 1 nhịp để các script khác xóa bảng xong xuôi
-                // rồi mình mới nhảy vào ném thông tin lên. Chống xung đột bắt phím 100%!
                 StartCoroutine(ForceSelectFirstItemDelayed());
             }
             else
@@ -221,9 +219,7 @@ namespace Inventory
             }
         }
 
-        // ==========================================
-        // COROUTINE GIÚP UI LUÔN HIỂN THỊ CHÍNH XÁC
-        // ==========================================
+
         private IEnumerator ForceSelectFirstItemDelayed()
         {
             // Đợi đến những mili-giây cuối cùng của frame (WaitForEndOfFrame)

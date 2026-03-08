@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 //Model (M) in MVC
@@ -46,6 +47,25 @@ namespace Inventory.Model
         public List<ItemParameter> DefaultParameterList { get; set; }
         [field: SerializeField]
         public List<ModifierData> Modifiers { get; set; } = new List<ModifierData>();
+
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            if (Application.isPlaying || string.IsNullOrWhiteSpace(Name)) return;
+            string assetPath = AssetDatabase.GetAssetPath(this);
+            if (string.IsNullOrEmpty(assetPath)) return;
+            string currentFileName = System.IO.Path.GetFileNameWithoutExtension(assetPath);
+            if (currentFileName != Name)
+            {
+                EditorApplication.delayCall += () =>
+                {
+                    if (this == null) return;
+                    AssetDatabase.RenameAsset(assetPath, Name);
+                    AssetDatabase.SaveAssets();
+                };
+            }
+        }
+#endif
 
     }
     [Serializable]

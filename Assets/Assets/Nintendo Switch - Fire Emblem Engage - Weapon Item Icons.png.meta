@@ -196,10 +196,10 @@ TextureImporter:
       name: Nintendo Switch - Fire Emblem Engage - Weapon Item Icons_2
       rect:
         serializedVersion: 2
-        x: 2
-        y: 20
+        x: 88
+        y: 19
         width: 41
-        height: 40
+        height: 41
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -258,6 +258,534 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: Nintendo Switch - Fire Emblem Engage - Weapon Item Icons_5
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 20
+        width: 41
+        height: 40
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8f657e5c6c1660346aa82432546a83b1
+      internalID: 1908288677
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nintendo Switch - Fire Emblem Engage - Weapon Item Icons_6
+      rect:
+        serializedVersion: 2
+        x: 45
+        y: 19
+        width: 41
+        height: 41
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fae6f504b4cf6664b89b68d5a6f75f6a
+      internalID: -141753779
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nintendo Switch - Fire Emblem Engage - Weapon Item Icons_7
+      rect:
+        serializedVersion: 2
+        x: 131
+        y: 19
+        width: 41
+        height: 41
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5588114619609424f8b1cbf99c448df9
+      internalID: -1780774710
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nintendo Switch - Fire Emblem Engage - Weapon Item Icons_8
+      rect:
+        serializedVersion: 2
+        x: 56
+        y: 930
+        width: 57
+        height: 57
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b3200948719bace40b48f148ce9feb8f
+      internalID: -998384524
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nintendo Switch - Fire Emblem Engage - Weapon Item Icons_9
+      rect:
+        serializedVersion: 2
+        x: 115
+        y: 926
+        width: 61
+        height: 61
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ef2ea7184048c4e48806e856d448d182
+      internalID: 1962047495
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nintendo Switch - Fire Emblem Engage - Weapon Item Icons_10
+      rect:
+        serializedVersion: 2
+        x: 178
+        y: 924
+        width: 63
+        height: 63
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c69faa5c9250fb249ac7b17c178d1fa1
+      internalID: 91747945
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nintendo Switch - Fire Emblem Engage - Weapon Item Icons_11
+      rect:
+        serializedVersion: 2
+        x: 243
+        y: 923
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b4ed41d6f0356474dad3d85793376cca
+      internalID: 978043824
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nintendo Switch - Fire Emblem Engage - Weapon Item Icons_12
+      rect:
+        serializedVersion: 2
+        x: 309
+        y: 923
+        width: 62
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 74a154e1533d214419d0c52facf815e6
+      internalID: 2122794065
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nintendo Switch - Fire Emblem Engage - Weapon Item Icons_13
+      rect:
+        serializedVersion: 2
+        x: 373
+        y: 925
+        width: 60
+        height: 62
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b7fd87be06e986d41a314aa15e5b833e
+      internalID: -2039691729
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nintendo Switch - Fire Emblem Engage - Weapon Item Icons_14
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 840
+        width: 63
+        height: 63
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f997355b9703c03458bb110a9aa53408
+      internalID: 678560530
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nintendo Switch - Fire Emblem Engage - Weapon Item Icons_15
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 839
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4a7000116a0c8ae46b4abdf6326da99f
+      internalID: 1141631215
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nintendo Switch - Fire Emblem Engage - Weapon Item Icons_16
+      rect:
+        serializedVersion: 2
+        x: 133
+        y: 840
+        width: 63
+        height: 63
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b68a04355919ec64c9c0250e256ab5ff
+      internalID: -452810620
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nintendo Switch - Fire Emblem Engage - Weapon Item Icons_17
+      rect:
+        serializedVersion: 2
+        x: 198
+        y: 839
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 51d841dfc1d2d204a8586be53976c6e2
+      internalID: 1430504148
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nintendo Switch - Fire Emblem Engage - Weapon Item Icons_18
+      rect:
+        serializedVersion: 2
+        x: 264
+        y: 839
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3e8decaad047f2f419dc32f702bfd024
+      internalID: 1212944471
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nintendo Switch - Fire Emblem Engage - Weapon Item Icons_19
+      rect:
+        serializedVersion: 2
+        x: 330
+        y: 839
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f29bde16386b82047b4cbdeed975dbc0
+      internalID: -751204746
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nintendo Switch - Fire Emblem Engage - Weapon Item Icons_20
+      rect:
+        serializedVersion: 2
+        x: 396
+        y: 839
+        width: 63
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 93ca4a6ea848b4346ac4ca43f4699370
+      internalID: -88233074
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nintendo Switch - Fire Emblem Engage - Weapon Item Icons_21
+      rect:
+        serializedVersion: 2
+        x: 853
+        y: 839
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7c09c91d0bce01e4ea36e67f78d3b549
+      internalID: -613717238
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nintendo Switch - Fire Emblem Engage - Weapon Item Icons_22
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 435
+        width: 60
+        height: 60
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9eb2e5cc29cf73144a29dac566e538f5
+      internalID: -731206187
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nintendo Switch - Fire Emblem Engage - Weapon Item Icons_23
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 434
+        width: 61
+        height: 61
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9ca719a2ffc07c844b45c93cbef3a828
+      internalID: -1053430251
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nintendo Switch - Fire Emblem Engage - Weapon Item Icons_24
+      rect:
+        serializedVersion: 2
+        x: 127
+        y: 431
+        width: 62
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0c97fe8735a061f49bd6041c8f90c3f6
+      internalID: 1522393870
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nintendo Switch - Fire Emblem Engage - Weapon Item Icons_25
+      rect:
+        serializedVersion: 2
+        x: 191
+        y: 434
+        width: 62
+        height: 61
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a901a2be493afc645b39843654d4b409
+      internalID: 558470202
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nintendo Switch - Fire Emblem Engage - Weapon Item Icons_26
+      rect:
+        serializedVersion: 2
+        x: 255
+        y: 431
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bbb796b05c8b07f448f972d2852ed7ab
+      internalID: 1132809894
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nintendo Switch - Fire Emblem Engage - Weapon Item Icons_27
+      rect:
+        serializedVersion: 2
+        x: 376
+        y: 434
+        width: 61
+        height: 61
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 37836feb294eecc4cb9f3ff835317837
+      internalID: -444426294
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nintendo Switch - Fire Emblem Engage - Weapon Item Icons_28
+      rect:
+        serializedVersion: 2
+        x: 504
+        y: 431
+        width: 62
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f8bde4f5b30eeaa45a3c9a36ea2bcea9
+      internalID: 344552247
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -274,9 +802,33 @@ TextureImporter:
     nameFileIdTable:
       Nintendo Switch - Fire Emblem Engage - Weapon Item Icons_0: 254677325
       Nintendo Switch - Fire Emblem Engage - Weapon Item Icons_1: 845128245
+      Nintendo Switch - Fire Emblem Engage - Weapon Item Icons_10: 91747945
+      Nintendo Switch - Fire Emblem Engage - Weapon Item Icons_11: 978043824
+      Nintendo Switch - Fire Emblem Engage - Weapon Item Icons_12: 2122794065
+      Nintendo Switch - Fire Emblem Engage - Weapon Item Icons_13: -2039691729
+      Nintendo Switch - Fire Emblem Engage - Weapon Item Icons_14: 678560530
+      Nintendo Switch - Fire Emblem Engage - Weapon Item Icons_15: 1141631215
+      Nintendo Switch - Fire Emblem Engage - Weapon Item Icons_16: -452810620
+      Nintendo Switch - Fire Emblem Engage - Weapon Item Icons_17: 1430504148
+      Nintendo Switch - Fire Emblem Engage - Weapon Item Icons_18: 1212944471
+      Nintendo Switch - Fire Emblem Engage - Weapon Item Icons_19: -751204746
       Nintendo Switch - Fire Emblem Engage - Weapon Item Icons_2: 2136223142
+      Nintendo Switch - Fire Emblem Engage - Weapon Item Icons_20: -88233074
+      Nintendo Switch - Fire Emblem Engage - Weapon Item Icons_21: -613717238
+      Nintendo Switch - Fire Emblem Engage - Weapon Item Icons_22: -731206187
+      Nintendo Switch - Fire Emblem Engage - Weapon Item Icons_23: -1053430251
+      Nintendo Switch - Fire Emblem Engage - Weapon Item Icons_24: 1522393870
+      Nintendo Switch - Fire Emblem Engage - Weapon Item Icons_25: 558470202
+      Nintendo Switch - Fire Emblem Engage - Weapon Item Icons_26: 1132809894
+      Nintendo Switch - Fire Emblem Engage - Weapon Item Icons_27: -444426294
+      Nintendo Switch - Fire Emblem Engage - Weapon Item Icons_28: 344552247
       Nintendo Switch - Fire Emblem Engage - Weapon Item Icons_3: -738977892
       Nintendo Switch - Fire Emblem Engage - Weapon Item Icons_4: -1556173034
+      Nintendo Switch - Fire Emblem Engage - Weapon Item Icons_5: 1908288677
+      Nintendo Switch - Fire Emblem Engage - Weapon Item Icons_6: -141753779
+      Nintendo Switch - Fire Emblem Engage - Weapon Item Icons_7: -1780774710
+      Nintendo Switch - Fire Emblem Engage - Weapon Item Icons_8: -998384524
+      Nintendo Switch - Fire Emblem Engage - Weapon Item Icons_9: 1962047495
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
