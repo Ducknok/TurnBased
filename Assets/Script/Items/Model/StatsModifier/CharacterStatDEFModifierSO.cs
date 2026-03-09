@@ -5,7 +5,7 @@ using UnityEngine;
 [CreateAssetMenu]
 public class CharacterStatDEFModifierSO : CharacterStatModifierSO
 {
-    public override void AffectCharacter(GameObject character, float defVal, float mDefVal)
+    public override void AffectCharacter(GameObject character, int defVal, int mDefVal)
     {
         HeroStateMachine hsm = character.GetComponent<HeroStateMachine>();
         Debug.Log("CharacterStatDefModifierSO: AffectCharacter: " + hsm);
@@ -13,7 +13,10 @@ public class CharacterStatDEFModifierSO : CharacterStatModifierSO
         {
             hsm.baseHero.baseDEF += defVal;
             hsm.baseHero.baseMDEF += mDefVal;
+
+            hsm.baseHero.curDEF = hsm.baseHero.baseDEF;
+            hsm.baseHero.curMDEF = hsm.baseHero.baseMDEF;
         }
-        else Debug.Log("CharacterStatHealthModifierSO: AffectCharacter: No HeroStateMachine found in parent");
+        else Debug.Log("CharacterStatDEFModifierSO: AffectCharacter: No HeroStateMachine found in parent");
     }
 }

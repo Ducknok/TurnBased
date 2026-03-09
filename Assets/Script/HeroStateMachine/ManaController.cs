@@ -32,7 +32,7 @@ public class ManaController : Singleton<ManaController>
 
     public void RestoreMana(HeroStateMachine hsm)
     {
-        hsm.baseHero.curMP += 3f;
+        hsm.baseHero.curMP += 3;
 
         if (hsm.baseHero.curMP > hsm.baseHero.baseMP)
         {

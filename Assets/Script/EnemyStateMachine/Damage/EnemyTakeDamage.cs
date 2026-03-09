@@ -12,12 +12,12 @@ public class EnemyTakeDamage : TakeDamageController
     {
         this.impulseSource = this.transform.GetComponent<CinemachineImpulseSource>();
     }
-    public override void TakeDamage(GameObject target, float getDamageAmount)
+    public override void TakeDamage(GameObject target, int getDamageAmount)
     {
         throw new System.NotImplementedException();
     }
 
-    public override void TakeDamage(GameObject target, float getDamageAmount, BaseAttack.Effect attackType1, BaseAttack.Effect attackType2)
+    public override void TakeDamage(GameObject target, int getDamageAmount, BaseAttack.Effect attackType1, BaseAttack.Effect attackType2)
     {
         CameraShakeManager.instance.CameraShake(impulseSource);
         EnemyStateMachine esm = target.GetComponent<EnemyStateMachine>();

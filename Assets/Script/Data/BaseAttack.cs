@@ -16,8 +16,8 @@ public class BaseAttack : ScriptableObject
     public string attackName;
     [TextArea]
     public string attackDescription;
-    public float attackDamage;
-    public float attackCost;
+    public int attackDamage;
+    public int attackCost;
     public int maxEnemyCount;
     public AttackType attackType;
     public Effect effect1;
@@ -88,7 +88,7 @@ public abstract class SkillBehaviour : DucMonobehaviour
         return finalInfo;
     }
 
-    protected virtual void ApplyDamageToTarget(GameObject attacker, GameObject target, float calDamage)
+    protected virtual void ApplyDamageToTarget(GameObject attacker, GameObject target, int calDamage)
     {
         Transform body = target.transform.Find("Body");
         Vector3 targetPosition = body != null ? body.position : target.transform.position;
@@ -127,7 +127,7 @@ public abstract class SkillBehaviour : DucMonobehaviour
 
     protected virtual void ApplySingleTargetDamage(GameObject attacker, GameObject target)
     {
-        float calDamage = skillData.attackDamage;
+        int calDamage = skillData.attackDamage;
 
         HeroStateMachine heroAttacker = attacker.GetComponent<HeroStateMachine>();
         EnemyStateMachine enemyAttacker = attacker.GetComponent<EnemyStateMachine>();
@@ -153,7 +153,7 @@ public abstract class SkillBehaviour : DucMonobehaviour
     {
         int maxTargets = skillData.maxEnemyCount > 0 ? skillData.maxEnemyCount : 99;
         int hitCount = 0;
-        float calDamage = skillData.attackDamage;
+        int calDamage = skillData.attackDamage;
 
         HeroStateMachine heroAttacker = attacker.GetComponent<HeroStateMachine>();
         if (heroAttacker != null) calDamage += heroAttacker.baseHero.curATK;

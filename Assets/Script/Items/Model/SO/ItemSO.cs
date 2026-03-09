@@ -83,8 +83,8 @@ namespace Inventory.Model
     public class ModifierData
     {
         public CharacterStatModifierSO stat;
-        public float val1;
-        public float val2;
+        public int val1;
+        public int val2;
     }
 }
 

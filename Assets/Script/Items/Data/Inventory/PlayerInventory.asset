@@ -26,12 +26,7 @@ MonoBehaviour:
     itemState:
     - itemParameter: {fileID: 11400000, guid: 9201eba36d55d714db818ff484519046, type: 2}
       value: 100
-  - quantity: 1
-    item: {fileID: 11400000, guid: 1ee7bc09b57db5742b75380a12ccb243, type: 2}
-    itemState:
-    - itemParameter: {fileID: 11400000, guid: 9201eba36d55d714db818ff484519046, type: 2}
-      value: 100
-  - quantity: 1
+  - quantity: 2
     item: {fileID: 11400000, guid: 1ee7bc09b57db5742b75380a12ccb243, type: 2}
     itemState:
     - itemParameter: {fileID: 11400000, guid: 9201eba36d55d714db818ff484519046, type: 2}
@@ -60,4 +55,34 @@ MonoBehaviour:
   - quantity: 0
     item: {fileID: 0}
     itemState: []
-  <Size>k__BackingField: 11
+  - quantity: 0
+    item: {fileID: 0}
+    itemState: []
+  - quantity: 0
+    item: {fileID: 0}
+    itemState: []
+  - quantity: 0
+    item: {fileID: 0}
+    itemState: []
+  - quantity: 0
+    item: {fileID: 0}
+    itemState: []
+  - quantity: 0
+    item: {fileID: 0}
+    itemState: []
+  - quantity: 0
+    item: {fileID: 0}
+    itemState: []
+  - quantity: 0
+    item: {fileID: 0}
+    itemState: []
+  - quantity: 0
+    item: {fileID: 0}
+    itemState: []
+  - quantity: 0
+    item: {fileID: 0}
+    itemState: []
+  - quantity: 0
+    item: {fileID: 0}
+    itemState: []
+  <Size>k__BackingField: 20

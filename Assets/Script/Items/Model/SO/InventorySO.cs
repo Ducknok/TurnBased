@@ -17,7 +17,6 @@ namespace Inventory.Model
 
         public event Action<Dictionary<int, InventoryItem>> OnInventoryUpdated;
 
-        //Khởi tạo và truyền giá trị null vào các slot trong kho đồ
         public void Initialize()
         {
             this.inventoryItems = new List<InventoryItem>();
@@ -33,7 +32,6 @@ namespace Inventory.Model
             {
                 for (int i = 0; i < this.inventoryItems.Count; i++)
                 {
-                    // Kiểm tra số lương và kho đồ vẫn còn slot
                     while(quantity > 0 && !this.IsInventoryFull()) 
                     {
                         quantity -= this.AddItemToFirstFreeSlot(item, 1, itemState);
@@ -48,8 +46,6 @@ namespace Inventory.Model
             return quantity;
         }
 
-
-        //thêm item vào ô trống được duyệt thấy đầu tiên
         public int AddItemToFirstFreeSlot(ItemSO item, int quantity
             , List<ItemParameter> itemState = null)
         {
@@ -70,7 +66,6 @@ namespace Inventory.Model
             return 0;
         }
 
-        //Trả về danh sách chứa ô trống
         private bool IsInventoryFull()
             => !this.inventoryItems.Where(item => item.IsEmpty).Any();
         //(parameters) => expression

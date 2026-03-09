@@ -264,8 +264,7 @@ namespace Inventory.UI
         // =====================================
         public void InitializeHeroBar(ItemSO item)
         {
-            // --- FIX DỨT ĐIỂM: NHẬN DIỆN PANEL DỰA TRÊN LOẠI MÓN ĐỒ ---
-            // Bất kể bạn bấm phím Q/E hay click chuột, loại món đồ luôn chính xác 100%
+            // Bật Panel chứa tùy theo loại (Thuốc hoặc Trang bị)
             if (item != null)
             {
                 foreach (GameObject panel in this.heroInfoPanelList)
@@ -273,15 +272,9 @@ namespace Inventory.UI
                     if (panel == null) continue;
 
                     if (item is EquippableItemSO)
-                    {
-                        // Nếu là Vũ Khí, Khiên, Nhẫn -> Bật Weapon Panel
                         panel.SetActive(panel.name.Contains("Weapon"));
-                    }
                     else
-                    {
-                        // Nếu là Thuốc -> Bật Consumable Panel
                         panel.SetActive(panel.name.Contains("Consumable"));
-                    }
                 }
             }
 
@@ -296,15 +289,20 @@ namespace Inventory.UI
 
             this.heroPanel.Clear();
 
-            // Nhận diện xem có phải đang hiển thị Nhẫn không
             bool isRingUI = false;
+            bool isShieldUI = false;
+
             if (item != null && item is EquippableItemSO checkEq)
             {
-                if (checkEq.itemType == ItemType.Ring) isRingUI = true;
+                string itemTypeStr = checkEq.itemType.ToString();
+                if (itemTypeStr == "Ring") isRingUI = true;
+                else if (itemTypeStr == "Armor") isShieldUI = true;
             }
-            else if (this.currentTab == InventoryTab.Ring)
+            else
             {
-                isRingUI = true; // Fallback khi tab rỗng
+                // Fallback nếu người chơi đang ở trong Tab nhưng chưa chọn/hoặc tab rỗng
+                if (this.currentTab == InventoryTab.Ring) isRingUI = true;
+                else if (this.currentTab == InventoryTab.Shield || this.currentTab == InventoryTab.Armor) isShieldUI = true;
             }
 
             for (int i = 0; i < CombatController.Instance.CBM.playersInCombat.Count; i++)
@@ -315,22 +313,23 @@ namespace Inventory.UI
 
                 if (isRingUI)
                 {
-                    // Chắc chắn lấy RingHeroBar (Prefab số 1)
-                    if (this.heroInfoPanelPrefab.Count > 1)
-                        selectedPrefab = this.heroInfoPanelPrefab[1];
+                    // Lấy RingHeroBar (Prefab số 1)
+                    if (this.heroInfoPanelPrefab.Count > 1) selectedPrefab = this.heroInfoPanelPrefab[1];
+                }
+                else if (isShieldUI)
+                {
+                    // Lấy ShieldHeroBar (Prefab số 2)
+                    if (this.heroInfoPanelPrefab.Count > 2) selectedPrefab = this.heroInfoPanelPrefab[2];
+                    // Nếu lỡ quên chưa kéo vào Inspector thì fallback lấy số 0
+                    else if (this.heroInfoPanelPrefab.Count > 0) selectedPrefab = this.heroInfoPanelPrefab[0];
                 }
                 else
                 {
                     // Lấy WeaponHeroBar (Prefab số 0)
-                    if (this.heroInfoPanelPrefab.Count > 0)
-                        selectedPrefab = this.heroInfoPanelPrefab[0];
+                    if (this.heroInfoPanelPrefab.Count > 0) selectedPrefab = this.heroInfoPanelPrefab[0];
                 }
 
-                // Bảo hiểm nếu lỡ rớt Index
-                if (selectedPrefab == null && this.heroInfoPanelPrefab.Count > 0)
-                {
-                    selectedPrefab = this.heroInfoPanelPrefab[0];
-                }
+                if (selectedPrefab == null && this.heroInfoPanelPrefab.Count > 0) selectedPrefab = this.heroInfoPanelPrefab[0];
 
                 if (selectedPrefab != null)
                 {
@@ -338,21 +337,21 @@ namespace Inventory.UI
                     Image newBar = Instantiate(selectedPrefab, this.infoHeroPanelSpacer);
                     this.heroPanel.Add(newBar);
 
-                    // ĐỔ DỮ LIỆU
+                    // --- PHÂN LUỒNG ĐỔ DỮ LIỆU ---
                     if (isRingUI)
                     {
-                        this.SetupRingHeroBarUI(newBar, hero);
+                        this.itemDescription.SetupRingHeroBarUI(newBar, hero);
                     }
-                    else if (item is EquippableItemSO equipItem) // Các Tab khác
+                    else if (isShieldUI)
+                    {
+                        this.itemDescription.SetupShieldHeroBarUI(newBar, hero, item as EquippableItemSO);
+                    }
+                    else if (item is EquippableItemSO equipItem) // Tab Weapon (Sử dụng code cũ)
                     {
                         if (hero.baseHero.heroType == equipItem.allowedWeapons || equipItem.allowedWeapons == HeroType.All)
-                        {
                             this.itemDescription.SetATKDescription(newBar, hero, equipItem);
-                        }
                         else
-                        {
                             this.itemDescription.SetATKDescription(newBar, hero, null);
-                        }
                     }
                     else
                     {
@@ -361,79 +360,6 @@ namespace Inventory.UI
                 }
             }
         }
-
-        // --- HÀM XỬ LÝ ĐỔ DỮ LIỆU VÀO ĐÚNG CẤU TRÚC RING HEROBAR CỦA BẠN ---
-        private void SetupRingHeroBarUI(Image ringBar, HeroStateMachine hero)
-        {
-            // 1. Lấy danh sách các nhẫn Normal đang mặc
-            List<EquippableItemSO> equippedRings = new List<EquippableItemSO>();
-            AgentWeapon agentWeapon = hero.GetComponent<AgentWeapon>();
-
-            if (agentWeapon != null)
-            {
-                foreach (var eqItem in agentWeapon.weaponItemSO)
-                {
-                    if (eqItem != null && eqItem.itemType == ItemType.Ring && eqItem.rarity == Rarity.Normal)
-                    {
-                        equippedRings.Add(eqItem);
-                    }
-                }
-            }
-
-            // 2. Gán Avatar khuôn mặt Hero vào ô HeroIcon
-            Transform heroIconParent = ringBar.transform.Find("HeroIcon");
-            if (heroIconParent != null)
-            {
-                Image hIcon = heroIconParent.Find("Icon")?.GetComponent<Image>();
-                if (hIcon != null && hero.baseHero != null && hero.baseHero.heroImage != null)
-                {
-                    hIcon.sprite = hero.baseHero.heroImage;
-                    hIcon.color = Color.white;
-                }
-            }
-
-            // 3. Đổ dữ liệu vào ô Nhẫn 1 (RingBG1)
-            Transform ringBG1 = ringBar.transform.Find("RingBG1");
-            if (ringBG1 != null)
-            {
-                TextMeshProUGUI nameTxt = ringBG1.Find("RingName_txt")?.GetComponent<TextMeshProUGUI>();
-                Image iconImg = ringBG1.Find("Icon")?.GetComponent<Image>();
-
-                if (equippedRings.Count > 0)
-                {
-                    if (nameTxt != null) { nameTxt.text = equippedRings[0].Name.ToUpper(); nameTxt.color = Color.white; }
-                    if (iconImg != null) { iconImg.sprite = equippedRings[0].ItemImage; iconImg.color = Color.white; }
-                }
-                else
-                {
-                    if (nameTxt != null) { nameTxt.text = "------"; nameTxt.color = new Color(0.5f, 0.5f, 0.5f, 1f); }
-                    if (iconImg != null) { iconImg.color = new Color(1f, 1f, 1f, 0f); }
-                }
-            }
-
-            // 4. Đổ dữ liệu vào ô Nhẫn 2 (RingBG2)
-            Transform ringBG2 = ringBar.transform.Find("RingBG2");
-            if (ringBG2 != null)
-            {
-                TextMeshProUGUI nameTxt = ringBG2.Find("RingName_txt")?.GetComponent<TextMeshProUGUI>();
-                Image iconImg = ringBG2.Find("Icon")?.GetComponent<Image>();
-
-                if (equippedRings.Count > 1)
-                {
-                    if (nameTxt != null) { nameTxt.text = equippedRings[1].Name.ToUpper(); nameTxt.color = Color.white; }
-                    if (iconImg != null) { iconImg.sprite = equippedRings[1].ItemImage; iconImg.color = Color.white; }
-                }
-                else
-                {
-                    if (nameTxt != null) { nameTxt.text = "------"; nameTxt.color = new Color(0.5f, 0.5f, 0.5f, 1f); }
-                    if (iconImg != null) { iconImg.color = new Color(1f, 1f, 1f, 0f); }
-                }
-            }
-        }
-
-        // =====================================
-        // HÀM DỌN DẸP VÀ HIỂN THỊ UI
-        // =====================================
         public void ClearAndHideAllItems()
         {
             foreach (var item in this.listOfUIItems)

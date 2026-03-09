@@ -7,23 +7,23 @@ using UnityEngine;
 public class BaseClass : ScriptableObject
 {
     public string theName;
-    public float baseHP;
-    public float curHP;
+    public int baseHP;
+    public int curHP;
 
-    public float baseMP;
-    public float curMP;
+    public int baseMP;
+    public int curMP;
 
-    public float baseATK;
-    public float curATK;
+    public int baseATK;
+    public int curATK;
 
-    public float baseMATK;
-    public float curMATK;
+    public int baseMATK;
+    public int curMATK;
 
-    public float baseDEF;
-    public float curDEF;
+    public int baseDEF;
+    public int curDEF;
 
-    public float baseMDEF;
-    public float curMDEF;
+    public int baseMDEF;
+    public int curMDEF;
 
     public List<BaseAttack> normalAttacks = new List<BaseAttack>();
     public List<BaseAttack> specialAttacks = new List<BaseAttack>();

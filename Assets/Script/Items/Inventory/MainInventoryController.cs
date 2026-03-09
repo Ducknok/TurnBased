@@ -101,7 +101,7 @@ public class MainInventoryController : DucMonobehaviour
             if (currentState == UIState.ItemUI)
             {
                 // Dùng FindObjectOfType quét toàn bộ màn hình để đảm bảo 100% tìm thấy UIInventoryPage
-                UIInventoryPage invUI = FindObjectOfType<UIInventoryPage>(true);
+                UIInventoryPage invUI = FindAnyObjectByType<UIInventoryPage>();
                 if (invUI != null)
                 {
                     isItemHeroSelecting = invUI.isSelectingHero;
