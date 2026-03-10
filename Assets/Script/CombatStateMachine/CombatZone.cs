@@ -44,14 +44,15 @@ public class CombatZone : DucMonobehaviour
         yield return null; // đợi 1 frame
         this.cameraCtrl = CameraController.Instance;
     }
+
     private void LoadHeroList()
     {
-
         var players = this.cbm.playersInCombat;
 
         this.heros = new GameObject[players.Count];
         this.bodies = new GameObject[players.Count];
 
+        // SỬA LỖI: Thay hàm lồng nhau bằng vòng lặp for
         for (int i = 0; i < players.Count; i++)
         {
             GameObject hero = players[i];
@@ -85,10 +86,20 @@ public class CombatZone : DucMonobehaviour
     {
         if (collider.CompareTag("Body") && !isInCombat)
         {
+            StartCombatEncounter(); // Gọi hàm mới thay vì tự xử lý
+        }
+    }
+
+    // HÀM MỚI: Cho phép quái vật tự động kích hoạt Combat khi rượt kịp người chơi
+    public void StartCombatEncounter()
+    {
+        if (!isInCombat)
+        {
             isInCombat = true;
             StartCoroutine(InitiateCombat());
         }
     }
+
     private IEnumerator InitiateCombat()
     {
         this.LoadHeroList();

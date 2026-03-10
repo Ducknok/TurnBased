@@ -20,5 +20,5 @@ MonoBehaviour:
   maxEnemyCount: 1
   attackType: 0
   effect1: 1
-  effect2: 1
+  effect2: 5
   hitParticleName: SlashHitParticle

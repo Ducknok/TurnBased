@@ -68,9 +68,7 @@ public class EnemyStateMachine : DucMonobehaviour
         this.choose.SetActive(false);
     }
 
-    // =============================================================
-    // ĐƯỢC COMBAT ZONE GỌI KHI QUÁI ĐÃ ĐỨNG ĐÚNG VỊ TRÍ CHIẾN ĐẤU
-    // =============================================================
+
     public void StartCombatFlow()
     {
         // Lưu lại vị trí đã xếp đội hình

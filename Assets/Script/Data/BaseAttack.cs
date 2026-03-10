@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using System.Linq; // Thêm cái này để lọc danh sách cho gọn
+using System.Linq;
 
 [CreateAssetMenu(fileName = "New Skill", menuName = "RPG/Skills/New Skill")]
 [Serializable]
@@ -14,7 +14,6 @@ public class BaseAttack : ScriptableObject
     public enum AttackType { NormalAttack, SpecialAttack }
     public Sprite attackImage;
     public string attackName;
-    [TextArea]
     public string attackDescription;
     public int attackDamage;
     public int attackCost;
@@ -53,42 +52,50 @@ public abstract class SkillBehaviour : DucMonobehaviour
         yield return new WaitForSeconds(0f);
     }
 
-    // =================================================================
-    // HÀM FIX LỖI: Tự động gom Hệ từ Skill + Hệ của bản thân Hero
-    // =================================================================
     protected virtual List<BaseAttack.Effect> GetCombinedEffects(GameObject attacker)
     {
-        HashSet<BaseAttack.Effect> effects = new HashSet<BaseAttack.Effect>();
+        List<BaseAttack.Effect> effects = new List<BaseAttack.Effect>();
 
-        // 1. Lấy từ kỹ năng (Bỏ qua None/Physical nếu có thể để ưu tiên hệ nguyên tố)
-        if (skillData.effect1 != BaseAttack.Effect.None && skillData.effect1 != BaseAttack.Effect.Physical)
+        if (skillData.effect1 != BaseAttack.Effect.None)
             effects.Add(skillData.effect1);
-        if (skillData.effect2 != BaseAttack.Effect.None && skillData.effect2 != BaseAttack.Effect.Physical)
+
+        if (skillData.effect2 != BaseAttack.Effect.None && !effects.Contains(skillData.effect2))
             effects.Add(skillData.effect2);
 
-        // 2. Lấy từ bản thân Hero (Elemental & HeroType)
-        HeroStateMachine hsm = attacker.GetComponent<HeroStateMachine>();
-        if (hsm != null && hsm.baseHero != null)
+        if (effects.Count == 0)
         {
-            // Lấy nguyên tố (Wind, Lightning...)
-            if (Enum.TryParse(hsm.baseHero.elemental.ToString(), out BaseAttack.Effect elem))
+            HeroStateMachine hsm = attacker.GetComponent<HeroStateMachine>();
+            if (hsm != null && hsm.baseHero != null)
             {
-                if (elem != BaseAttack.Effect.None) effects.Add(elem);
+                string hType = hsm.baseHero.heroType.ToString();
+                if (hType == "Warrior") effects.Add(BaseAttack.Effect.Sword);
+                else if (hType == "Lancer") effects.Add(BaseAttack.Effect.Lance);
             }
 
-            // Lấy loại vũ khí (Warrior -> Sword, Lancer -> Lance)
-            string hType = hsm.baseHero.heroType.ToString();
-            if (hType == "Warrior") effects.Add(BaseAttack.Effect.Sword);
-            else if (hType == "Lancer") effects.Add(BaseAttack.Effect.Lance);
+            if (effects.Count == 0) effects.Add(BaseAttack.Effect.Physical);
         }
 
-        List<BaseAttack.Effect> finalInfo = effects.ToList();
-        if (finalInfo.Count == 0) finalInfo.Add(BaseAttack.Effect.Physical);
-
-        return finalInfo;
+        return effects;
     }
 
-    protected virtual void ApplyDamageToTarget(GameObject attacker, GameObject target, int calDamage)
+    // =================================================================
+    // TÍNH NĂNG MỚI: PHÂN LOẠI SÁT THƯƠNG VẬT LÝ / PHÉP THUẬT
+    // =================================================================
+    protected virtual bool IsMagicalAttack()
+    {
+        // Nếu chiêu có mang hệ nguyên tố -> Là sát thương Phép Thuật
+        if (skillData.effect1 == BaseAttack.Effect.Wind || skillData.effect1 == BaseAttack.Effect.Lightning)
+        {
+            return true;
+        }
+        // Sword, Lance, Physical, None -> Là sát thương Vật lý
+        return false;
+    }
+
+    // =================================================================
+    // TÍNH NĂNG MỚI: TÍNH CÔNG THỨC SÁT THƯƠNG & TRỪ GIÁP (DEF)
+    // =================================================================
+    protected virtual void ApplyDamageToTarget(GameObject attacker, GameObject target, int rawDamage)
     {
         Transform body = target.transform.Find("Body");
         Vector3 targetPosition = body != null ? body.position : target.transform.position;
@@ -103,45 +110,72 @@ public abstract class SkillBehaviour : DucMonobehaviour
 
         EnemyStateMachine esm = target.GetComponent<EnemyStateMachine>();
         HeroStateMachine hsm = target.GetComponent<HeroStateMachine>();
+        //BossStateMachine bsm = target.GetComponent<BossStateMachine>();
 
+        // 1. CHỌN CHỈ SỐ PHÒNG THỦ CỦA MỤC TIÊU
+        bool isMagic = IsMagicalAttack();
+        int targetDefense = 0;
+
+        if (esm != null && esm.baseEnemy != null)
+            targetDefense = isMagic ? esm.baseEnemy.curMDEF : esm.baseEnemy.curDEF;
+        else if (hsm != null && hsm.baseHero != null)
+            targetDefense = isMagic ? hsm.baseHero.curMDEF : hsm.baseHero.curDEF;
+        //else if (bsm != null && bsm.bossStats != null)
+        //    targetDefense = isMagic ? bsm.bossStats.curMDEF : bsm.bossStats.curDEF;
+
+        // 2. CÔNG THỨC SÁT THƯƠNG: Sát thương thực tế = Tấn công - Phòng thủ
+        // Tối thiểu là 1 để tránh tình trạng chém không xi nhê (0 máu) hoặc âm máu
+        int finalDamage = Mathf.Max(1, rawDamage - targetDefense);
+
+        // Bỏ qua nếu là chiêu Buff/Hồi máu (Raw Damage <= 0)
+        if (rawDamage <= 0) finalDamage = 0;
+
+        // In ra Console để bạn dễ debug theo dõi vũ khí & giáp hoạt động thế nào
+        //Debug.Log($"<color=orange>[Chiến Đấu] {attacker.name} -> {target.name} | Sát Thương: {rawDamage} - Giáp Địch: {targetDefense} = <b>{finalDamage} Dmg cuối</b> (Phép: {isMagic})</color>");
+
+        // 3. TRUYỀN SÁT THƯƠNG VÀO HỆ THỐNG MẤT MÁU
         if (esm != null)
         {
             EnemyTakeDamage takeDamageComp = esm.GetComponent<EnemyTakeDamage>();
             if (takeDamageComp != null)
             {
-                // THAY ĐỔI TẠI ĐÂY: Lấy danh sách hệ đã gộp (Skill + Hero)
                 List<BaseAttack.Effect> combined = GetCombinedEffects(attacker);
-
-                // Gửi 2 hệ đầu tiên (thường là Nguyên tố và Vũ khí) sang cho quái
                 BaseAttack.Effect eff1 = combined[0];
                 BaseAttack.Effect eff2 = combined.Count > 1 ? combined[1] : BaseAttack.Effect.None;
 
-                takeDamageComp.TakeDamage(esm.gameObject, calDamage, eff1, eff2);
+                takeDamageComp.TakeDamage(esm.gameObject, finalDamage, eff1, eff2);
             }
         }
         else if (hsm != null)
         {
-            hsm.GetComponent<HeroTakeDamage>().TakeDamage(hsm.gameObject, calDamage);
+            HeroTakeDamage heroTakeDamageComp = hsm.GetComponent<HeroTakeDamage>();
+            if (heroTakeDamageComp != null) heroTakeDamageComp.TakeDamage(hsm.gameObject, finalDamage);
         }
+        //else if (bsm != null)
+        //{
+        //    bsm.TakeDamage(finalDamage);
+        //}
     }
 
     protected virtual void ApplySingleTargetDamage(GameObject attacker, GameObject target)
     {
-        int calDamage = skillData.attackDamage;
+        int rawDamage = skillData.attackDamage;
 
         HeroStateMachine heroAttacker = attacker.GetComponent<HeroStateMachine>();
         EnemyStateMachine enemyAttacker = attacker.GetComponent<EnemyStateMachine>();
+        //BossStateMachine bossAttacker = attacker.GetComponent<BossStateMachine>();
 
-        if (heroAttacker != null)
-        {
-            calDamage += heroAttacker.baseHero.curATK;
-        }
-        else if (enemyAttacker != null)
-        {
-            calDamage += enemyAttacker.baseEnemy.curATK;
-        }
+        bool isMagic = IsMagicalAttack();
 
-        ApplyDamageToTarget(attacker, target, calDamage);
+        // CỘNG CHỈ SỐ TẤN CÔNG (ATK hoặc MATK) TỪ NHÂN VẬT & VŨ KHÍ
+        if (heroAttacker != null && heroAttacker.baseHero != null)
+            rawDamage += isMagic ? heroAttacker.baseHero.curMATK : heroAttacker.baseHero.curATK;
+        else if (enemyAttacker != null && enemyAttacker.baseEnemy != null)
+            rawDamage += isMagic ? enemyAttacker.baseEnemy.curMATK : enemyAttacker.baseEnemy.curATK;
+        //else if (bossAttacker != null && bossAttacker.bossStats != null)
+        //    rawDamage += isMagic ? bossAttacker.bossStats.curMATK : bossAttacker.bossStats.curATK;
+
+        ApplyDamageToTarget(attacker, target, rawDamage);
 
         if (heroAttacker != null && heroAttacker.heroPanelHandler != null)
         {
@@ -153,14 +187,25 @@ public abstract class SkillBehaviour : DucMonobehaviour
     {
         int maxTargets = skillData.maxEnemyCount > 0 ? skillData.maxEnemyCount : 99;
         int hitCount = 0;
-        int calDamage = skillData.attackDamage;
+        int rawDamage = skillData.attackDamage;
 
         HeroStateMachine heroAttacker = attacker.GetComponent<HeroStateMachine>();
-        if (heroAttacker != null) calDamage += heroAttacker.baseHero.curATK;
+        EnemyStateMachine enemyAttacker = attacker.GetComponent<EnemyStateMachine>();
+        //BossStateMachine bossAttacker = attacker.GetComponent<BossStateMachine>();
+
+        bool isMagic = IsMagicalAttack();
+
+        // CỘNG CHỈ SỐ TẤN CÔNG CHO ĐÒN AOE
+        if (heroAttacker != null && heroAttacker.baseHero != null)
+            rawDamage += isMagic ? heroAttacker.baseHero.curMATK : heroAttacker.baseHero.curATK;
+        else if (enemyAttacker != null && enemyAttacker.baseEnemy != null)
+            rawDamage += isMagic ? enemyAttacker.baseEnemy.curMATK : enemyAttacker.baseEnemy.curATK;
+        //else if (bossAttacker != null && bossAttacker.bossStats != null)
+        //    rawDamage += isMagic ? bossAttacker.bossStats.curMATK : bossAttacker.bossStats.curATK;
 
         if (primaryTarget != null)
         {
-            ApplyDamageToTarget(attacker, primaryTarget, calDamage);
+            ApplyDamageToTarget(attacker, primaryTarget, rawDamage);
             hitCount++;
         }
 
@@ -170,13 +215,13 @@ public abstract class SkillBehaviour : DucMonobehaviour
         foreach (GameObject t in allTargets)
         {
             if (hitCount >= maxTargets) break;
-            if (t == primaryTarget) continue;
+            if (t == primaryTarget || t == null || !t.activeInHierarchy) continue;
 
             float distance = Vector2.Distance(impactPoint, t.transform.position);
 
             if (distance <= aoeRadius)
             {
-                ApplyDamageToTarget(attacker, t, calDamage);
+                ApplyDamageToTarget(attacker, t, rawDamage);
                 hitCount++;
             }
         }
@@ -201,7 +246,7 @@ public abstract class SkillBehaviour : DucMonobehaviour
         foreach (GameObject t in allTargets)
         {
             if (affectedTargets.Count >= maxTargets) break;
-            if (t == primaryTarget) continue;
+            if (t == primaryTarget || t == null || !t.activeInHierarchy) continue;
 
             float distance = Vector2.Distance(impactPoint, t.transform.position);
             if (distance <= aoeRadius)

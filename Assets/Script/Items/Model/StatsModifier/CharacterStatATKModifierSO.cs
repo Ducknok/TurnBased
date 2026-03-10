@@ -8,7 +8,7 @@ public class CharacterStatATKModifierSO : CharacterStatModifierSO
     public override void AffectCharacter(GameObject character, int atkVal, int apVal)
     {
         HeroStateMachine hsm = character.GetComponent<HeroStateMachine>();
-        Debug.Log("CharacterStatHealthModifierSO: AffectCharacter: " + hsm);
+        //Debug.Log("CharacterStatHealthModifierSO: AffectCharacter: " + hsm);
         if (hsm != null)
         {
             hsm.baseHero.baseATK += atkVal;

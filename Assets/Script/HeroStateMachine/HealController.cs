@@ -13,7 +13,7 @@ public class HealController : Singleton<HealController>
     }
     public void HPBar(HeroStateMachine hsm)
     {
-        float ratio = hsm.baseHero.curHP / hsm.baseHero.baseHP;
+        float ratio = (float)hsm.baseHero.curHP / hsm.baseHero.baseHP;
         Sequence sequence = DOTween.Sequence();
         sequence.Append(hsm.heroPanelHandler.heroHPBarFill.DOFillAmount(ratio, 0.25f)).SetEase(Ease.InOutSine);
         sequence.AppendInterval(this.trailDelay);
@@ -38,7 +38,7 @@ public class HealController : Singleton<HealController>
         }
 
         // T¨ªnh t? l? mana ?? c?p nh?t thanh UI
-        float ratio = hsm.baseHero.curHP / hsm.baseHero.baseHP;
+        float ratio = (float)hsm.baseHero.curHP / hsm.baseHero.baseHP;
 
         // T?o Sequence ?? l¨¤m animation
         Sequence sequence = DOTween.Sequence();

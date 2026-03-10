@@ -8,7 +8,7 @@ public class CharacterStatDEFModifierSO : CharacterStatModifierSO
     public override void AffectCharacter(GameObject character, int defVal, int mDefVal)
     {
         HeroStateMachine hsm = character.GetComponent<HeroStateMachine>();
-        Debug.Log("CharacterStatDefModifierSO: AffectCharacter: " + hsm);
+        //Debug.Log("CharacterStatDefModifierSO: AffectCharacter: " + hsm);
         if (hsm != null)
         {
             hsm.baseHero.baseDEF += defVal;

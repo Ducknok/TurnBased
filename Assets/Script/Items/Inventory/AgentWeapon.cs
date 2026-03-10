@@ -61,7 +61,7 @@ public class AgentWeapon : DucMonobehaviour
                         mod.stat.AffectCharacter(this.gameObject, mod.val1, mod.val2);
                     }
                 }
-                Debug.Log($"[AgentWeapon] Đã nạp chỉ số của {item.Name} cho {gameObject.name}");
+                //Debug.Log($"[AgentWeapon] Đã nạp chỉ số của {item.Name} cho {gameObject.name}");
             }
         }
     }

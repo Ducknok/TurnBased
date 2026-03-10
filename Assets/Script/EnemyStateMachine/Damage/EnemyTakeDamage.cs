@@ -23,7 +23,7 @@ public class EnemyTakeDamage : TakeDamageController
         EnemyStateMachine esm = target.GetComponent<EnemyStateMachine>();
         this.CheckLock(esm, getDamageAmount, attackType1, attackType2);
         this.DamagePop(esm, getDamageAmount);   
-        float ratio = esm.baseEnemy.curHP /  esm.baseEnemy.baseHP;
+        float ratio = (float)esm.baseEnemy.curHP /  esm.baseEnemy.baseHP;
         if (esm.enemyHPBarFill != null)
         {
             Sequence sequence = DOTween.Sequence();
@@ -91,7 +91,7 @@ public class EnemyTakeDamage : TakeDamageController
 
         if (esm.enemyHPBarFill != null && esm.baseEnemy != null)
         {
-            esm.enemyHPBarFill.fillAmount = esm.baseEnemy.curHP / esm.baseEnemy.baseHP;
+            esm.enemyHPBarFill.fillAmount = (float)esm.baseEnemy.curHP / esm.baseEnemy.baseHP;
         }
     }
     IEnumerator DeadSequence(EnemyStateMachine esm)

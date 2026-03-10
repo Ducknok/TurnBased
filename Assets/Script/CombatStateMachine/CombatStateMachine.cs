@@ -467,7 +467,7 @@ public class CombatStateMachine : DucMonobehaviour
         this.enemyStats.enemyHP.text = etm.baseEnemy.curHP.ToString();
         etm.enemyHPBarFill = this.enemyStats.hpBarFill;
         etm.curHpNumber = this.enemyStats.enemyHP;
-        etm.enemyHPBarFill.fillAmount = etm.baseEnemy.curHP / etm.baseEnemy.baseHP;
+        etm.enemyHPBarFill.fillAmount = (float)etm.baseEnemy.curHP / etm.baseEnemy.baseHP;
 
         enemyInfo.transform.SetParent(this.enemyInfoSpacer, false);
         this.enemyInfoList.Add(enemyInfo);

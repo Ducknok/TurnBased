@@ -69,7 +69,7 @@ public class ManaController : Singleton<ManaController>
             hsm.baseHero.curMP = hsm.baseHero.baseMP;
         }
 
-        float ratio = hsm.baseHero.curMP / hsm.baseHero.baseMP;
+        float ratio = (float)hsm.baseHero.curMP / hsm.baseHero.baseMP;
 
         hsm.heroPanelHandler.heroMPBarFill.DOKill();
         hsm.heroPanelHandler.heroMPBarTrail.DOKill();
