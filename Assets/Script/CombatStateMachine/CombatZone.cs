@@ -148,9 +148,6 @@ public class CombatZone : DucMonobehaviour
             hero.anim.SetBool("IdleBattle", this.isInCombat);
         }
 
-        // ========================================================
-        // TÍNH NĂNG MỚI: Đánh thức quái vật sau khi đã vào vị trí!
-        // ========================================================
         foreach (var enemy in enemies)
         {
             if (enemy != null)
@@ -158,7 +155,7 @@ public class CombatZone : DucMonobehaviour
                 var esm = enemy.GetComponent<EnemyStateMachine>();
                 if (esm != null)
                 {
-                    esm.StartCombatFlow(); // Lệnh cho quái thức dậy và sinh UI
+                    esm.StartCombatFlow();
                 }
             }
         }

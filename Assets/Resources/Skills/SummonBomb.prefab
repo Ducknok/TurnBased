@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7904670462677150126}
-  - component: {fileID: 2856277006773171676}
+  - component: {fileID: -4742669465483171108}
   m_Layer: 0
-  m_Name: ThunderBird
+  m_Name: SummonBomb
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -32,7 +32,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2856277006773171676
+--- !u!114 &-4742669465483171108
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,11 +41,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 8493265163271724201}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9f12b63dee9c8324183d09e2485cccaa, type: 3}
+  m_Script: {fileID: 11500000, guid: 75ddcd0c90c9f0b4182c19fc785a3e21, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ThunderBird
-  skillData: {fileID: 11400000, guid: 40402374b495e384d847145442ed793e, type: 2}
-  flightDuration: 0.6
-  hitRadius: 2
-  aoeRadius: 5
-  maxFlightDistance: 15
+  m_EditorClassIdentifier: Assembly-CSharp::MommySlimeSummonBombs
+  skillData: {fileID: 11400000, guid: c97112468d0acd645a90109f4a990224, type: 2}
+  bombSlimePrefab: {fileID: 5905225176564296450, guid: 6fc0017e797ccb74ebbb2df968642aa1,
+    type: 3}
+  spawnCount: 2

@@ -63,7 +63,6 @@ public class EnemyStateMachine : DucMonobehaviour
         this.baseEnemy.curHP = this.baseEnemy.baseHP;
         this.timer = Random.Range(1, this.combatStateMachine.playersInCombat.Count + 1);
 
-        // Cập nhật: Bắt quái "Ngủ đông" (PROCESSING) chờ CombatZone gọi dậy!
         this.currentState = TurnState.PROCESSING;
         this.choose.SetActive(false);
     }
@@ -71,13 +70,10 @@ public class EnemyStateMachine : DucMonobehaviour
 
     public void StartCombatFlow()
     {
-        // Lưu lại vị trí đã xếp đội hình
         this.initialPosition = this.transform.position;
 
-        // Bắt đầu bốc thăm chiêu và sinh ra Icon/Timer
         this.ChooseAction();
 
-        // Đổi trạng thái sang chờ đánh
         this.currentState = TurnState.WAITING;
     }
 
@@ -120,10 +116,6 @@ public class EnemyStateMachine : DucMonobehaviour
             //this.currentState = TurnState.ACTION;
         }
     }
-
-    // =============================================================
-    // ĐÃ FIX: CHỈNH LẠI HÀM CHẾT ĐỂ HIỂN THỊ KHÓA VỠ
-    // =============================================================
     private void CheckAlive()
     {
         if (!this.alive)
@@ -132,7 +124,6 @@ public class EnemyStateMachine : DucMonobehaviour
         }
         else
         {
-            // 1. NGAY LẬP TỨC GẠCH TÊN ĐỂ HERO KHÁC KHÔNG ĐÁNH NHẦM
             this.alive = false;
             this.combatStateMachine.enemiesInCombat.Remove(this.gameObject);
 
@@ -158,11 +149,8 @@ public class EnemyStateMachine : DucMonobehaviour
 
     private IEnumerator DeathRoutine()
     {
-        // ĐỢI 0.6 GIÂY: Lúc này máu đã = 0, nhưng xác vẫn đứng yên để người chơi 
-        // kịp nhìn thấy sự thỏa mãn khi icon Khóa (Lock) nứt vỡ!
-        yield return new WaitForSeconds(0.6f);
 
-        // KẾT THÚC THỜI GIAN ĐỢI: Chạy hoạt ảnh ngã xuống và báo hệ thống qua turn
+        yield return new WaitForSeconds(0.6f);
         this.anim.Play("Dead");
 
         StartCoroutine(this.ClearEnemyInfo());
@@ -170,11 +158,9 @@ public class EnemyStateMachine : DucMonobehaviour
 
         this.combatStateMachine.combatState = CombatStateMachine.PerformAction.CHECKALIVE;
     }
-    // =============================================================
-
-    // Choose enemy
     public void ChooseAction()
     {
+        
         this.savedAttack = new HandleTurn();
         if (this.savedAttack.Attacker != null) return;
         HandleTurn myAttack = new HandleTurn();
@@ -212,7 +198,7 @@ public class EnemyStateMachine : DucMonobehaviour
     }
 
     // Attack
-    private IEnumerator TimeForAction()
+    protected virtual IEnumerator TimeForAction()
     {
         if (this.actionStarted || !this.enemyAttacked || this.isLockBrokenOnce)
         {
@@ -232,13 +218,13 @@ public class EnemyStateMachine : DucMonobehaviour
         this.combatStateMachine.ClearEnemyInfoPanel();
     }
 
-    IEnumerator DestroyObject()
+    protected IEnumerator DestroyObject()
     {
         yield return new WaitForSeconds(0.75f);
         Destroy(this.gameObject);
     }
 
-    IEnumerator MoveTowardsStart()
+    protected virtual IEnumerator MoveTowardsStart()
     {
 
         yield return new WaitForSeconds(0.6f);
@@ -318,8 +304,9 @@ public class EnemyStateMachine : DucMonobehaviour
     }
 
     //-----------------------------GENERATE-------------------------
-    public void GenerateLocks()
+    public virtual void GenerateLocks()
     {
+       
         this.activeLocks.Clear();
 
         // 1. TÌM HỆ PHÁI CỦA CÁC HERO ĐANG CÓ TRÊN SÂN MỘT CÁCH CHẮC CHẮN NHẤT
@@ -394,8 +381,9 @@ public class EnemyStateMachine : DucMonobehaviour
             activeLocks.Add(new LockSystem(types));
         }
     }
-    public void GenerateTimerIcon()
+    public virtual void GenerateTimerIcon()
     {
+        
         this.enemyUI.SetTimerIcon(this.timer);
     }
     public SkillBehaviour GetSkillBehaviourForAttack(BaseAttack baseAttack)

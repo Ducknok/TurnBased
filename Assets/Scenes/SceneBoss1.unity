@@ -54489,12 +54489,17 @@ PrefabInstance:
     - target: {fileID: 1158787306518676781, guid: 2828413524d0c254a8da979a185093e9,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 21.3
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1550642192517557547, guid: 2828413524d0c254a8da979a185093e9,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 59
       objectReference: {fileID: 0}
     - target: {fileID: 1550642192517557547, guid: 2828413524d0c254a8da979a185093e9,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2942021682672258470, guid: 2828413524d0c254a8da979a185093e9,
         type: 3}
@@ -54504,7 +54509,7 @@ PrefabInstance:
     - target: {fileID: 3124976985613348264, guid: 2828413524d0c254a8da979a185093e9,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 16
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3236976197755014771, guid: 2828413524d0c254a8da979a185093e9,
         type: 3}
@@ -54523,9 +54528,14 @@ PrefabInstance:
       objectReference: {fileID: 1542875319}
     - target: {fileID: 7229564321441920029, guid: 2828413524d0c254a8da979a185093e9,
         type: 3}
+      propertyPath: enemies.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7229564321441920029, guid: 2828413524d0c254a8da979a185093e9,
+        type: 3}
       propertyPath: 'enemies.Array.data[0]'
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 4375776130998228887}
     - target: {fileID: 7229564321441920029, guid: 2828413524d0c254a8da979a185093e9,
         type: 3}
       propertyPath: 'enemies.Array.data[1]'
@@ -54536,15 +54546,20 @@ PrefabInstance:
       propertyPath: 'enemies.Array.data[2]'
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 7229564321441920029, guid: 2828413524d0c254a8da979a185093e9,
+        type: 3}
+      propertyPath: enemyPositions.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8536570624886851611, guid: 2828413524d0c254a8da979a185093e9,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -5.75
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8536570624886851611, guid: 2828413524d0c254a8da979a185093e9,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.94
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8536570624886851611, guid: 2828413524d0c254a8da979a185093e9,
         type: 3}
@@ -68281,8 +68296,8 @@ Transform:
   m_GameObject: {fileID: 4375776130998228887}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 14.21, y: 3.61, z: 0}
-  m_LocalScale: {x: 3, y: 3, z: 1}
+  m_LocalPosition: {x: 11.48, y: 4.35, z: 0}
+  m_LocalScale: {x: 2, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5237395922082672388}
@@ -68325,7 +68340,7 @@ GameObject:
   - component: {fileID: 2393107029942991910}
   - component: {fileID: 993809834554170876}
   m_Layer: 7
-  m_Name: MommySlime
+  m_Name: Mommy Slime
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -68751,30 +68766,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BossStateMachine
   combatStateMachine: {fileID: 0}
-  bossName: "H\u1EAFc Long V\u01B0\u01A1ng"
-  bossStats: {fileID: 0}
-  normalAttacks: []
-  specialAttacks: []
+  baseEnemy: {fileID: 11400000, guid: c427034513f2f5b46b44d8240e44d527, type: 2}
   currentAttack: {fileID: 0}
+  enemyMoveToCombat: {fileID: 0}
   currentState: 0
-  bossHPSlider: {fileID: 0}
-  bossNameText: {fileID: 0}
-  choose: {fileID: 0}
+  choose: {fileID: 4179017840954911800}
+  enemyHPBarFill: {fileID: 0}
+  curHpNumber: {fileID: 0}
   savedAttack:
     Attacker: 
     Type: 
     AttacksGameObject: {fileID: 0}
     AttackerTarget: {fileID: 0}
     choosenAttack: {fileID: 0}
-  anim: {fileID: 0}
+  anim: {fileID: 3546518676037521642}
   playerToAttack: {fileID: 0}
   actionStarted: 0
   enemyAttacked: 0
-  enemyUI: {fileID: 0}
+  enemyUI: {fileID: 8455714622050137392}
   activeLocks: []
-  maxAttackType: 2
+  maxAttackType: 6
   timer: 0
   isLockBrokenOnce: 0
+  activeBombs: 2
+  isWaitingForBombs: 0
 --- !u!212 &8664269349922887913
 SpriteRenderer:
   serializedVersion: 2
@@ -68859,7 +68874,7 @@ Transform:
   m_GameObject: {fileID: 4179017840954911800}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: -1.03, y: 0.22, z: 0}
+  m_LocalPosition: {x: -2.2, y: -0.1, z: 0}
   m_LocalScale: {x: 0.15, y: 0.15, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -68875,7 +68890,7 @@ Animator:
   m_GameObject: {fileID: 4179017840954911800}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 989b68ed3a91574408d85b5706174bb2, type: 2}
+  m_Controller: {fileID: 9100000, guid: ac9a3c90c6b30a24b848066328940da7, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

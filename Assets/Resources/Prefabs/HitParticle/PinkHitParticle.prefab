@@ -24561,7 +24561,7 @@ GameObject:
   - component: {fileID: 2394977427374824775}
   - component: {fileID: 6293483073608436024}
   m_Layer: 0
-  m_Name: FX_Dark_Hit_02
+  m_Name: PinkHitParticle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

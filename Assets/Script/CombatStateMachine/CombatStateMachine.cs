@@ -179,7 +179,7 @@ public class CombatStateMachine : DucMonobehaviour
             return;
         }
 
-        GameObject enemyPerformer = GameObject.Find(performList[0].Attacker);
+        GameObject enemyPerformer = performList[0].AttacksGameObject;
 
         if (enemyPerformer == null)
         {

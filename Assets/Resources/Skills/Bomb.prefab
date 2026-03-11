@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7904670462677150126}
-  - component: {fileID: 2856277006773171676}
+  - component: {fileID: 6752630989620560428}
   m_Layer: 0
-  m_Name: ThunderBird
+  m_Name: Bomb
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -32,7 +32,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2856277006773171676
+--- !u!114 &6752630989620560428
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,11 +41,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 8493265163271724201}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9f12b63dee9c8324183d09e2485cccaa, type: 3}
+  m_Script: {fileID: 11500000, guid: 41db76e8bfa1d9441ab097689024cb59, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ThunderBird
-  skillData: {fileID: 11400000, guid: 40402374b495e384d847145442ed793e, type: 2}
-  flightDuration: 0.6
-  hitRadius: 2
-  aoeRadius: 5
-  maxFlightDistance: 15
+  m_EditorClassIdentifier: Assembly-CSharp::BabyBombExplosion
+  skillData: {fileID: 11400000, guid: 462b7eda1e3f28c4591c7898f57cb0b4, type: 2}
+  explosionDamage: 15

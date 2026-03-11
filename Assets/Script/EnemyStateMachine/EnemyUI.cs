@@ -64,7 +64,7 @@ public class EnemyUI : DucMonobehaviour
     // =====================================================================
     public void SetAttackTypes(List<BaseAttack.Effect> attackTypes)
     {
-        // 1. NGỪNG CÁC COROUTINE ĐANG CHẠY (Nếu quái đang xoay icon cũ thì dừng ngay)
+        // 1. NGỪNG CÁC COROUTINE ĐANG CHẠY 
         StopAllCoroutines();
 
         // 2. DỌN DẸP TRIỆT ĐỂ ĐỒ CŨ
@@ -72,20 +72,36 @@ public class EnemyUI : DucMonobehaviour
         this.iconsToDestroy.Clear();
         this.attackTypeIcons.Clear();
 
-        if (spriteDictionary.Count == 0 || baseIconPrefab == null) return;
+        if (attackTypes.Count == 0 || baseIconPrefab == null) return;
 
-        float spacing = 1.03f;
-        float startX = -(attackTypes.Count - 1) * spacing / 2f;
+        // --- BẮT ĐẦU FIX LỖI KÍCH CỠ & KHOẢNG CÁCH ---
+        float worldSpacing = 1f; // Khoảng cách CỐ ĐỊNH trong không gian (bạn có thể tinh chỉnh số này)
+        float startX = -(attackTypes.Count - 1) * worldSpacing / 2f;
 
-        // 3. TẠO ICON VÀ GÁN VÀO DICTIONARY LUÔN (KHÔNG ĐỢI XOAY XONG)
+        // 3. TẠO ICON VÀ GÁN VÀO DICTIONARY LUÔN
         for (int i = 0; i < attackTypes.Count; i++)
         {
             BaseAttack.Effect type = attackTypes[i];
-            GameObject iconObj = Instantiate(baseIconPrefab, attacktypesIconPosition.position, Quaternion.identity);
-            iconObj.transform.SetParent(attacktypesIconPosition, true);
-            iconObj.transform.localPosition += new Vector3(startX + i * spacing, 0, 0);
 
-            // Đăng ký vào Dictionary ngay để logic chém trúng là nhận diện được liền
+            // Tính toán vị trí chính xác ở ngoài môi trường thực
+            Vector3 spawnPos = attacktypesIconPosition.position + new Vector3(startX + i * worldSpacing, 0, 0);
+
+            // Spawn icon ở đúng vị trí đó
+            GameObject iconObj = Instantiate(baseIconPrefab, spawnPos, Quaternion.identity);
+
+            // Set parent nhưng GIAO KÈO giữ nguyên vị trí World Space (true)
+            iconObj.transform.SetParent(attacktypesIconPosition, true);
+
+            // BÍ QUYẾT: Ép Scale của icon về kích thước chuẩn của Prefab, KHỬ toàn bộ ảnh hưởng từ Boss
+            // Dù Boss có to bằng cái nhà hay nhỏ như con kiến, icon vẫn luôn hiển thị đúng 1 kích cỡ!
+            Vector3 originalScale = baseIconPrefab.transform.localScale;
+            iconObj.transform.localScale = new Vector3(
+                originalScale.x / attacktypesIconPosition.lossyScale.x,
+                originalScale.y / attacktypesIconPosition.lossyScale.y,
+                originalScale.z / attacktypesIconPosition.lossyScale.z
+            );
+
+            // Đăng ký vào Dictionary ngay
             if (!attackTypeIcons.ContainsKey(type)) attackTypeIcons[type] = new List<GameObject>();
             attackTypeIcons[type].Add(iconObj);
 

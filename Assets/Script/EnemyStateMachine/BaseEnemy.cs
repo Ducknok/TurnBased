@@ -12,6 +12,7 @@ public class BaseEnemy: BaseClass
         Fire,
         Water,
         ELETRIC,
+        None,
     }
 
     public enum Rarity

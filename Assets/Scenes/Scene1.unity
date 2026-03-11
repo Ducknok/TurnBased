@@ -34322,7 +34322,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4b7805ba65fd9d4f9a2d13ab5fc7b15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneToLoad: Scene2
+  sceneToLoad: SceneBoss1
   sceneTransitionName: WEntry
 --- !u!61 &613844545
 BoxCollider2D:
@@ -35806,6 +35806,12 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &1128547474 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6374804413476040121, guid: 2828413524d0c254a8da979a185093e9,
+    type: 3}
+  m_PrefabInstance: {fileID: 1386943235}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1148042212
 GameObject:
   m_ObjectHideFlags: 0
@@ -52361,16 +52367,26 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 908362862469577026, guid: 2828413524d0c254a8da979a185093e9,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3236976197755014771, guid: 2828413524d0c254a8da979a185093e9,
         type: 3}
       propertyPath: m_Name
       value: CombatArea
       objectReference: {fileID: 0}
+    - target: {fileID: 5665582876988714583, guid: 2828413524d0c254a8da979a185093e9,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7229564321441920029, guid: 2828413524d0c254a8da979a185093e9,
         type: 3}
       propertyPath: centerPosition
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1128547474}
     - target: {fileID: 7229564321441920029, guid: 2828413524d0c254a8da979a185093e9,
         type: 3}
       propertyPath: 'enemies.Array.data[0]'
@@ -52409,12 +52425,12 @@ PrefabInstance:
     - target: {fileID: 8536570624886851611, guid: 2828413524d0c254a8da979a185093e9,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -47.4
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8536570624886851611, guid: 2828413524d0c254a8da979a185093e9,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 5.4
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8536570624886851611, guid: 2828413524d0c254a8da979a185093e9,
         type: 3}
@@ -67880,20 +67896,25 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2513847647757698277, guid: ef69c066e875b484f8b304c7dc73e963,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2513847647757698277, guid: ef69c066e875b484f8b304c7dc73e963,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2513847647757698277, guid: ef69c066e875b484f8b304c7dc73e963,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 2654396500654486437, guid: ef69c066e875b484f8b304c7dc73e963,
         type: 3}
       propertyPath: m_Name
       value: VFXSpawner
-      objectReference: {fileID: 0}
-    - target: {fileID: 4834038567013409068, guid: ef69c066e875b484f8b304c7dc73e963,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6331186613126034706, guid: ef69c066e875b484f8b304c7dc73e963,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6517589400579139472, guid: ef69c066e875b484f8b304c7dc73e963,
         type: 3}
@@ -67943,6 +67964,11 @@ PrefabInstance:
     - target: {fileID: 6517589400579139472, guid: ef69c066e875b484f8b304c7dc73e963,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7111948485988771820, guid: ef69c066e875b484f8b304c7dc73e963,
+        type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
