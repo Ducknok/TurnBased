@@ -23,30 +23,37 @@ public class CameraController : Singleton<CameraController>
     protected override void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         base.OnSceneLoaded(scene, mode);
+        RefreshCamera();
+    }
+    protected override void Start()
+    {
+        base.Start();
+        RefreshCamera();
+    }
+    public void RefreshCamera()
+    {
+        StopAllCoroutines();
         StartCoroutine(WaitToSetCamera());
     }
-
     IEnumerator WaitToSetCamera()
     {
-        // Đợi 1 frame để đảm bảo các Manager khác (như PartyManager) đã khởi tạo xong
-        yield return null;
+        if (this.virtualCamera == null)
+        {
+            this.virtualCamera = FindAnyObjectByType<CinemachineVirtualCamera>();
+        }
 
-        this.virtualCamera = FindAnyObjectByType<CinemachineVirtualCamera>();
+        yield return new WaitUntil(() => PartyManager.Instance != null && PartyManager.Instance.currentLeader != null);
 
-        // Gọi hàm setup riêng biệt và an toàn
         this.SetCameraFollowCurrentLeader();
     }
 
-    // --- HÀM MỚI: Tự động tìm và set Camera theo Đội trưởng hiện tại ---
     public void SetCameraFollowCurrentLeader()
     {
         if (PartyManager.Instance == null || PartyManager.Instance.currentLeader == null)
         {
-            Debug.LogWarning("[CameraController] PartyManager hoặc currentLeader đang rỗng. Chưa thể bám theo Đội trưởng!");
             return;
         }
 
-        // Lấy HeroStateMachine từ cấu trúc object Đội trưởng
         HeroStateMachine leaderHero = PartyManager.Instance.currentLeader.transform.parent.parent.GetComponent<HeroStateMachine>();
 
         if (leaderHero != null)
@@ -57,18 +64,15 @@ public class CameraController : Singleton<CameraController>
 
     public void SetCameraFollowHero(HeroStateMachine heroSelected)
     {
-        // 1. Tự động tìm lại Camera nếu bị null (do load map chậm hoặc rớt tham chiếu)
         if (virtualCamera == null)
         {
             virtualCamera = FindAnyObjectByType<CinemachineVirtualCamera>();
             if (virtualCamera == null)
             {
-                Debug.LogWarning("Virtual Camera is not assigned and could not be found.");
                 return;
             }
         }
 
-        // 2. An toàn rồi mới gọi Reset
         this.ResetCamera();
 
         if (heroSelected == null)
@@ -86,13 +90,11 @@ public class CameraController : Singleton<CameraController>
 
         virtualCamera.Follow = body;
 
-        // Focus ngay lập tức (Xóa độ trễ lúc chuyển map hoặc đổi đội trưởng)
         virtualCamera.OnTargetObjectWarped(body, body.position);
     }
 
     public void SetCameraForCombat(Transform obj)
     {
-        // Tự động tìm lại Camera nếu bị null
         if (virtualCamera == null)
         {
             virtualCamera = FindAnyObjectByType<CinemachineVirtualCamera>();
@@ -112,13 +114,11 @@ public class CameraController : Singleton<CameraController>
         }
 
         virtualCamera.Follow = obj;
-        // Focus ngay lập tức
         virtualCamera.OnTargetObjectWarped(obj, obj.position);
     }
 
     public void ResetCamera()
     {
-        // 3. THÊM ĐIỀU KIỆN IF NÀY: Để đảm bảo không bao giờ bị NullReferenceException
         if (this.virtualCamera != null)
         {
             this.virtualCamera.Follow = null;

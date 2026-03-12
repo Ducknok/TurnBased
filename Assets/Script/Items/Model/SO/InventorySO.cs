@@ -107,6 +107,10 @@ namespace Inventory.Model
         internal void AddItem(InventoryItem item)
         {
             this.AddItem(item.item, item.quantity);
+            if (SaveManager.Instance != null)
+            {
+                SaveManager.Instance.SaveGame();
+            }
         }
 
         //trả về danh sách dạng key-value

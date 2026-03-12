@@ -13,14 +13,14 @@ MonoBehaviour:
   m_Name: Fire Slime
   m_EditorClassIdentifier: Assembly-CSharp::BaseEnemy
   theName: Fire Slime
-  baseHP: 500
-  curHP: 500
-  baseMP: 500
-  curMP: 500
-  baseATK: 5
-  curATK: 5
-  baseMATK: 5
-  curMATK: 5
+  baseHP: 100
+  curHP: 100
+  baseMP: 0
+  curMP: 0
+  baseATK: 15
+  curATK: 15
+  baseMATK: 15
+  curMATK: 15
   baseDEF: 5
   curDEF: 5
   baseMDEF: 5

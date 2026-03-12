@@ -68632,12 +68632,17 @@ PrefabInstance:
     - target: {fileID: 1531080643295129585, guid: c91244ce86f19e44f8a82c50fa964995,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 4.61
+      value: 58.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531080643295129585, guid: c91244ce86f19e44f8a82c50fa964995,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 4.8
       objectReference: {fileID: 0}
     - target: {fileID: 1571241016565710040, guid: c91244ce86f19e44f8a82c50fa964995,
         type: 3}
       propertyPath: transitionName
-      value: WEntry
+      value: EEntry
       objectReference: {fileID: 0}
     - target: {fileID: 3141721925017441720, guid: c91244ce86f19e44f8a82c50fa964995,
         type: 3}
@@ -68647,7 +68652,7 @@ PrefabInstance:
     - target: {fileID: 3141721925017441720, guid: c91244ce86f19e44f8a82c50fa964995,
         type: 3}
       propertyPath: sceneTransitionName
-      value: EEntry
+      value: WEntry
       objectReference: {fileID: 0}
     - target: {fileID: 4005378139684002685, guid: c91244ce86f19e44f8a82c50fa964995,
         type: 3}
@@ -68657,12 +68662,12 @@ PrefabInstance:
     - target: {fileID: 4987407248161636984, guid: c91244ce86f19e44f8a82c50fa964995,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -34.58
+      value: -33.41
       objectReference: {fileID: 0}
     - target: {fileID: 4987407248161636984, guid: c91244ce86f19e44f8a82c50fa964995,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 5.94
+      value: 6.01
       objectReference: {fileID: 0}
     - target: {fileID: 4987407248161636984, guid: c91244ce86f19e44f8a82c50fa964995,
         type: 3}

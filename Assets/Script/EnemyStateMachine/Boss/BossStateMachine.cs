@@ -19,33 +19,44 @@ public class BossStateMachine : EnemyStateMachine
         activeBombs--;
         if (activeBombs <= 0)
         {
-            isWaitingForBombs = false; // Mở khóa cho Boss đánh tiếp
+            isWaitingForBombs = false;
             Debug.Log("Boss đã hết chờ, quay lại chiến đấu!");
+            this.ChooseAction();
         }
     }
     public override void GenerateLocks()
     {
-        if (isWaitingForBombs) return; // Đang đợi bom thì không làm gì cả
+        if (isWaitingForBombs) return; 
 
-        base.GenerateLocks(); // Ngược lại thì gọi logic gốc của lớp cha
+        base.GenerateLocks(); 
     }
 
     public override void GenerateTimerIcon()
     {
-        if (isWaitingForBombs) return; // Đang đợi bom thì không hiện số
+        if (isWaitingForBombs) return;
 
-        base.GenerateTimerIcon(); // Ngược lại thì gọi logic gốc của lớp cha
+        base.GenerateTimerIcon(); 
     }
-    // ==========================================
-
     protected override IEnumerator TimeForAction()
     {
-        if (this.actionStarted || !this.enemyAttacked || this.isLockBrokenOnce)
+        if (this.actionStarted || !this.enemyAttacked)
         {
             yield break;
         }
+
+        // 1. KIỂM TRA LOẠI TẤN CÔNG: Đang dùng chiêu Đặc biệt hay chiêu Thường?
+        bool isSpecialAttack = this.savedAttack.choosenAttack.attackType == BaseAttack.AttackType.SpecialAttack;
+
+        // 2. CHỈ BỎ QUA LƯỢT NẾU: Đang dùng chiêu Đặc biệt VÀ đã bị vỡ khóa
+        if (isSpecialAttack && this.isLockBrokenOnce)
+        {
+            this.CheckCombatState();
+            yield break;
+        }
+
         this.actionStarted = true;
 
+        // Logic Bom riêng của Boss
         if (this.isWaitingForBombs)
         {
             Debug.Log("Boss đang ngồi nhìn đống bom... Bỏ qua lượt đánh!");
@@ -54,6 +65,7 @@ public class BossStateMachine : EnemyStateMachine
         }
         else
         {
+            // Tung đòn đánh (Lúc này Normal Attack sẽ luôn được thực thi vì không bị chặn bởi isLockBrokenOnce nữa)
             yield return StartCoroutine(this.currentAttack.Activate(this.gameObject, this.playerToAttack));
         }
 

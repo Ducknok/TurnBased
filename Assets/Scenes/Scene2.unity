@@ -68345,12 +68345,22 @@ PrefabInstance:
     - target: {fileID: 1531080643295129585, guid: c91244ce86f19e44f8a82c50fa964995,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 4.61
+      value: -60.16
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531080643295129585, guid: c91244ce86f19e44f8a82c50fa964995,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -5.04
       objectReference: {fileID: 0}
     - target: {fileID: 1571241016565710040, guid: c91244ce86f19e44f8a82c50fa964995,
         type: 3}
       propertyPath: transitionName
       value: WEntry
+      objectReference: {fileID: 0}
+    - target: {fileID: 3141721925017441720, guid: c91244ce86f19e44f8a82c50fa964995,
+        type: 3}
+      propertyPath: sceneToLoad
+      value: SceneBoss1
       objectReference: {fileID: 0}
     - target: {fileID: 3141721925017441720, guid: c91244ce86f19e44f8a82c50fa964995,
         type: 3}
@@ -68365,12 +68375,12 @@ PrefabInstance:
     - target: {fileID: 4987407248161636984, guid: c91244ce86f19e44f8a82c50fa964995,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -34.58
+      value: 27.15
       objectReference: {fileID: 0}
     - target: {fileID: 4987407248161636984, guid: c91244ce86f19e44f8a82c50fa964995,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 5.94
+      value: 10.84
       objectReference: {fileID: 0}
     - target: {fileID: 4987407248161636984, guid: c91244ce86f19e44f8a82c50fa964995,
         type: 3}

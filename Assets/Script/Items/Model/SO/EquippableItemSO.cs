@@ -58,23 +58,6 @@ namespace Inventory.Model
 
                 if (slotIndex != -1)
                 {
-                    // 3. Trừ chỉ số của món đồ cũ ở ô này (nếu có)
-                    //EquippableItemSO oldItem = weaponSystem.weaponItemSO[slotIndex];
-                    //if (oldItem != null)
-                    //{
-                    //    foreach (var mod in oldItem.Modifiers)
-                    //    {
-                    //        mod.stat.AffectCharacter(character, -mod.val1, -mod.val2);
-                    //    }
-                    //}
-
-                    //// 4. Cộng chỉ số của món đồ mới
-                    //foreach (var mod in this.Modifiers)
-                    //{
-                    //    mod.stat.AffectCharacter(character, mod.val1, mod.val2);
-                    //}
-
-                    // 5. Gán món đồ mới vào ô (Hàm SetWeapon sẽ tự động trả đồ cũ vào Kho)
                     weaponSystem.SetWeapon(slotIndex, this);
                     return true;
                 }

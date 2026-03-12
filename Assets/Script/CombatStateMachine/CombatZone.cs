@@ -165,15 +165,24 @@ public class CombatZone : DucMonobehaviour
     {
         Debug.Log("Combat Ended!");
         isInCombat = false;
+
         foreach (var hero in PlayerController.Instance.HeroSMList)
         {
             hero.anim.SetBool("IdleBattle", this.isInCombat);
         }
+
         this.cbm.combatState = CombatStateMachine.PerformAction.WAIT;
         this.cbm.playerInput = CombatStateMachine.PlayerGUI.ACTIVATE;
-        cameraCtrl.SetCameraFollowHero(PartyManager.Instance.currentLeader.transform.parent.GetComponent<HeroStateMachine>());
+
+        if (this.cameraCtrl != null)
+        {
+            this.cameraCtrl.RefreshCamera();
+        }
+
         this.DisActiveObject();
     }
+
+   
     private void DisActiveObject()
     {
         this.gameObject.SetActive(false);

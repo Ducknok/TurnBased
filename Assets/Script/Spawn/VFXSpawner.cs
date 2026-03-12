@@ -36,6 +36,7 @@ public class VFXSpawner : Spawner
     public static string fireHitParticle = "FireHitParticle";
     public static string windHitParticle = "WindHitParticle";
     public static string slashHitParticle = "SlashHitParticle";
+    public static string pinkHitParticle = "PinkHitParticle";
 
     protected override void Awake()
     {

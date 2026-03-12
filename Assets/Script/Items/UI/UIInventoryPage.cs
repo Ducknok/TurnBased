@@ -143,9 +143,6 @@ namespace Inventory.UI
             }
         }
 
-        // =====================================
-        // CHUYỂN TAB TỪ GIAO DIỆN (NÚT BẤM)
-        // =====================================
         public void ClickConsumableTab() { ChangeTab(InventoryTab.Consumable); }
         public void ClickWeaponTab() { ChangeTab(InventoryTab.Weapon); }
         public void ClickShieldTab() { ChangeTab(InventoryTab.Shield); }
@@ -259,12 +256,8 @@ namespace Inventory.UI
             }
         }
 
-        // =====================================
-        // KHỞI TẠO BẢNG THÔNG TIN HERO BÊN PHẢI (HERO BAR)
-        // =====================================
         public void InitializeHeroBar(ItemSO item)
         {
-            // Bật Panel chứa tùy theo loại (Thuốc hoặc Trang bị)
             if (item != null)
             {
                 foreach (GameObject panel in this.heroInfoPanelList)
@@ -280,7 +273,6 @@ namespace Inventory.UI
 
             this.infoHeroPanelSpacer.gameObject.SetActive(true);
 
-            // Xóa sạch các Hero Bar cũ trong Spacer
             foreach (Transform child in this.infoHeroPanelSpacer)
             {
                 Destroy(child.gameObject);
@@ -300,7 +292,6 @@ namespace Inventory.UI
             }
             else
             {
-                // Fallback nếu người chơi đang ở trong Tab nhưng chưa chọn/hoặc tab rỗng
                 if (this.currentTab == InventoryTab.Ring) isRingUI = true;
                 else if (this.currentTab == InventoryTab.Shield || this.currentTab == InventoryTab.Armor) isShieldUI = true;
             }
@@ -313,19 +304,16 @@ namespace Inventory.UI
 
                 if (isRingUI)
                 {
-                    // Lấy RingHeroBar (Prefab số 1)
                     if (this.heroInfoPanelPrefab.Count > 1) selectedPrefab = this.heroInfoPanelPrefab[1];
                 }
                 else if (isShieldUI)
                 {
-                    // Lấy ShieldHeroBar (Prefab số 2)
                     if (this.heroInfoPanelPrefab.Count > 2) selectedPrefab = this.heroInfoPanelPrefab[2];
-                    // Nếu lỡ quên chưa kéo vào Inspector thì fallback lấy số 0
                     else if (this.heroInfoPanelPrefab.Count > 0) selectedPrefab = this.heroInfoPanelPrefab[0];
                 }
                 else
                 {
-                    // Lấy WeaponHeroBar (Prefab số 0)
+
                     if (this.heroInfoPanelPrefab.Count > 0) selectedPrefab = this.heroInfoPanelPrefab[0];
                 }
 
@@ -333,11 +321,10 @@ namespace Inventory.UI
 
                 if (selectedPrefab != null)
                 {
-                    // Đẻ Prefab vào bên trong Spacer
+
                     Image newBar = Instantiate(selectedPrefab, this.infoHeroPanelSpacer);
                     this.heroPanel.Add(newBar);
 
-                    // --- PHÂN LUỒNG ĐỔ DỮ LIỆU ---
                     if (isRingUI)
                     {
                         this.itemDescription.SetupRingHeroBarUI(newBar, hero);
@@ -374,7 +361,7 @@ namespace Inventory.UI
         {
             if (listOfUIItems.Count > itemIndex)
             {
-                listOfUIItems[itemIndex].gameObject.SetActive(true); // Có data thì bật ô lên
+                listOfUIItems[itemIndex].gameObject.SetActive(true); 
                 listOfUIItems[itemIndex].SetData(itemImage, itemName, itemQuantity);
             }
         }
@@ -443,4 +430,5 @@ namespace Inventory.UI
             this.listOfUIItems[itemIndex].Select();
         }
     }
+
 }

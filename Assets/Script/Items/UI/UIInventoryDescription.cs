@@ -308,32 +308,46 @@ namespace Inventory.UI
         }
         public void UpdateHPBar(Image hpBar, HeroStateMachine hero)
         {
-            float ratio = hero.baseHero.curHP / hero.baseHero.baseHP;
+            if (hero.baseHero.curHP > hero.baseHero.baseHP)
+            {
+                hero.baseHero.curHP = hero.baseHero.baseHP;
+            }
+
+
+            if (hero.baseHero.curHP <= 0)
+            {
+                hero.baseHero.curHP = 0;
+            }
+
+
+            float ratio = (float)hero.baseHero.curHP / hero.baseHero.baseHP;
+
             Sequence sequence = DOTween.Sequence();
             sequence.Append(hpBar.DOFillAmount(ratio, 0.25f)).SetEase(Ease.InOutSine);
             sequence.AppendInterval(this.trailDelay);
             sequence.Append(hpBar.DOFillAmount(ratio, 0.3f)).SetEase(Ease.InOutSine);
             sequence.Play();
-            if (hero.baseHero.curHP <= 0)
-            {
-                hero.baseHero.curHP = 0;
-            }
         }
+
         public void UpdateMPBar(Image mpBar, HeroStateMachine hero)
         {
-            float ratio = hero.baseHero.curMP / hero.baseHero.baseMP;
+            if (hero.baseHero.curMP > hero.baseHero.baseMP)
+            {
+                hero.baseHero.curMP = hero.baseHero.baseMP;
+            }
 
+            if (hero.baseHero.curMP <= 0)
+            {
+                hero.baseHero.curMP = 0; 
+            }
+
+            float ratio = (float)hero.baseHero.curMP / hero.baseHero.baseMP;
 
             Sequence sequence = DOTween.Sequence();
             sequence.Append(mpBar.DOFillAmount(ratio, 0.25f)).SetEase(Ease.InOutSine);
             sequence.AppendInterval(this.trailDelay);
             sequence.Append(mpBar.DOFillAmount(ratio, 0.3f)).SetEase(Ease.InOutSine);
             sequence.Play();
-
-            if (hero.baseHero.curMP <= 0)
-            {
-                hero.baseHero.baseMP = 0;
-            }
         }
         private string FormatStatComparison(float currentVal, float projectedVal)
         {

@@ -21,4 +21,4 @@ MonoBehaviour:
   attackType: 0
   effect1: 0
   effect2: 5
-  hitParticleName: SlashHitParticle
+  hitParticleName: YellowHitParticle

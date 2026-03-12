@@ -129,18 +129,38 @@ namespace Inventory
                         selectedHero.baseHero.curHP == selectedHero.baseHero.baseHP &&
                         selectedHero.baseHero.curMP == selectedHero.baseHero.baseMP)
                         return;
+                    itemAction.PerformAction(itemIndex, selectedHero.gameObject);
+
+                    this.inventoryUI.InitializeHeroButton();
+                    this.inventoryUI.InitializeHeroBar(inventoryItem.item);
+                    selectedHero.GetComponent<HeroPanelHandler>().UpdateHeroPanel();
+                    HealController.Instance.HPBar(selectedHero);
+                    ManaController.Instance.UpdateManaBar(selectedHero);
+
 
                     if (destroyableItem != null)
                     {
                         this.inventoryData.RemoveItem(inventoryItem.item, 1);
                     }
 
-                    itemAction.PerformAction(itemIndex, selectedHero.gameObject);
+                    var inventoryState = this.inventoryData.GetCurrentInventoryState();
+                    bool isItemStillExist = false;
+                    foreach (var item in inventoryState.Values)
+                    {
+                        if (item.item == inventoryItem.item && item.quantity > 0)
+                        {
+                            isItemStillExist = true;
+                            // Cập nhật lại đúng cái số nhỏ nhỏ góc dưới ô đồ
+                            this.inventoryUI.UpdateData(itemIndex, item.item.ItemImage, item.item.Name, item.quantity);
+                            break;
+                        }
+                    }
 
-                    // Thêm dòng này: Cập nhật lại UI Kho đồ SAU KHI thực hiện hành động (Dùng máu hoặc Đổi vũ khí)
-                    UpdateFilteredInventoryUI(this.currentButtonIndex);
-
-                    this.inventoryUI.ResetSelection();
+                    if (!isItemStillExist)
+                    {
+                        UpdateFilteredInventoryUI(this.currentButtonIndex);
+                        this.inventoryUI.ResetSelection();
+                    }
                 });
             }
         }

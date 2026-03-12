@@ -12,10 +12,11 @@ public class CharacterStatHealthModifierSO : CharacterStatModifierSO
         Debug.Log("CharacterStatHealthModifierSO: AffectCharacter: " + hsm);
         if (hsm != null)
         {
-            hsm.baseHero.baseHP += hpVal;
-            hsm.baseHero.baseMP+= mpVal;
-            hsm.baseHero.curHP = hsm.baseHero.baseHP;
-            hsm.baseHero.curMP = hsm.baseHero.baseMP;
+            hsm.baseHero.curHP += hpVal;
+            hsm.baseHero.curMP += mpVal;
+
+            if (hsm.baseHero.curHP > hsm.baseHero.baseHP) hsm.baseHero.curHP = hsm.baseHero.baseHP;
+            if(hsm.baseHero.curMP > hsm.baseHero.baseMP) hsm.baseHero.curMP = hsm.baseHero.baseMP;
         }
         else Debug.Log("CharacterStatHealthModifierSO: AffectCharacter: No HeroStateMachine found in parent");
     }

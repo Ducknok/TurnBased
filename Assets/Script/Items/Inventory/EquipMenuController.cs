@@ -114,7 +114,22 @@ public class EquipMenuController : DucMonobehaviour
     }
     private void HandleItemPanelInput()
     {
-        if (itemPanelUIs.Count == 0) return;
+        if (Input.GetKeyDown(KeyCode.LeftControl))
+        {
+            this.LoadHeroStat(heroesInCombat[currentSwapIndex]);
+            this.ClearEquipmentOfType();
+            return;
+        }
+
+        if (itemPanelUIs.Count == 0)
+        {
+            if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+            {
+                this.LoadHeroStat(heroesInCombat[currentSwapIndex]);
+                this.ClearEquipmentOfType();
+            }
+            return;
+        }
 
         if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
         {
@@ -137,12 +152,6 @@ public class EquipMenuController : DucMonobehaviour
             {
                 this.ApplyEquip(currentItemPanelItems[currentItemPanelIndex]);
             }
-        }
-
-        if (Input.GetKeyDown(KeyCode.LeftControl))
-        {
-            this.LoadHeroStat(heroesInCombat[currentSwapIndex]);
-            this.ClearEquipmentOfType();
         }
     }
 

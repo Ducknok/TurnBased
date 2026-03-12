@@ -59,60 +59,45 @@ public class EnemyUI : DucMonobehaviour
         }
     }
 
-    // =====================================================================
-    // HÀM MỚI: TẠO LOCK VÀ ĐĂNG KÝ VÀO DICTIONARY NGAY LẬP TỨC
-    // =====================================================================
     public void SetAttackTypes(List<BaseAttack.Effect> attackTypes)
     {
-        // 1. NGỪNG CÁC COROUTINE ĐANG CHẠY 
+
         StopAllCoroutines();
 
-        // 2. DỌN DẸP TRIỆT ĐỂ ĐỒ CŨ
         foreach (var icon in iconsToDestroy) if (icon != null) Destroy(icon);
         this.iconsToDestroy.Clear();
         this.attackTypeIcons.Clear();
 
         if (attackTypes.Count == 0 || baseIconPrefab == null) return;
 
-        // --- BẮT ĐẦU FIX LỖI KÍCH CỠ & KHOẢNG CÁCH ---
-        float worldSpacing = 1f; // Khoảng cách CỐ ĐỊNH trong không gian (bạn có thể tinh chỉnh số này)
+
+        float worldSpacing = 1f;
         float startX = -(attackTypes.Count - 1) * worldSpacing / 2f;
 
-        // 3. TẠO ICON VÀ GÁN VÀO DICTIONARY LUÔN
         for (int i = 0; i < attackTypes.Count; i++)
         {
             BaseAttack.Effect type = attackTypes[i];
 
-            // Tính toán vị trí chính xác ở ngoài môi trường thực
             Vector3 spawnPos = attacktypesIconPosition.position + new Vector3(startX + i * worldSpacing, 0, 0);
 
-            // Spawn icon ở đúng vị trí đó
+
             GameObject iconObj = Instantiate(baseIconPrefab, spawnPos, Quaternion.identity);
 
-            // Set parent nhưng GIAO KÈO giữ nguyên vị trí World Space (true)
             iconObj.transform.SetParent(attacktypesIconPosition, true);
-
-            // BÍ QUYẾT: Ép Scale của icon về kích thước chuẩn của Prefab, KHỬ toàn bộ ảnh hưởng từ Boss
-            // Dù Boss có to bằng cái nhà hay nhỏ như con kiến, icon vẫn luôn hiển thị đúng 1 kích cỡ!
             Vector3 originalScale = baseIconPrefab.transform.localScale;
             iconObj.transform.localScale = new Vector3(
                 originalScale.x / attacktypesIconPosition.lossyScale.x,
                 originalScale.y / attacktypesIconPosition.lossyScale.y,
                 originalScale.z / attacktypesIconPosition.lossyScale.z
             );
-
-            // Đăng ký vào Dictionary ngay
             if (!attackTypeIcons.ContainsKey(type)) attackTypeIcons[type] = new List<GameObject>();
             attackTypeIcons[type].Add(iconObj);
 
             iconsToDestroy.Add(iconObj);
-
-            // Tắt Animator tạm thời để chạy hiệu ứng xoay bằng script
             Animator anim = iconObj.GetComponent<Animator>();
             if (anim != null) anim.enabled = false;
         }
 
-        // 4. CHẠY HIỆU ỨNG XOAY (ROULETTE) SAU KHI ĐÃ ĐĂNG KÝ XONG DỮ LIỆU
         StartCoroutine(RollAttackTypesCoroutine(attackTypes));
     }
 
@@ -123,7 +108,6 @@ public class EnemyUI : DucMonobehaviour
         float elapsedTime = 0f;
         List<BaseAttack.Effect> allEffects = new List<BaseAttack.Effect>(spriteDictionary.Keys);
 
-        // Xoay hình ảnh liên tục cho đẹp mắt
         while (elapsedTime < rollDuration)
         {
             for (int i = 0; i < iconsToDestroy.Count; i++)
@@ -135,8 +119,6 @@ public class EnemyUI : DucMonobehaviour
             elapsedTime += rollSpeed;
             yield return new WaitForSeconds(rollSpeed);
         }
-
-        // Chốt kết quả hình ảnh cuối cùng khớp với dữ liệu trong Dictionary
         for (int i = 0; i < iconsToDestroy.Count; i++)
         {
             BaseAttack.Effect finalEffect = finalTypes[i];

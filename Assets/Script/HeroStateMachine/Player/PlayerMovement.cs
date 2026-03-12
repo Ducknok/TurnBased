@@ -17,7 +17,6 @@ public class PlayerMovement : DucMonobehaviour
     public Vector2 movement;
     public Vector2 lastMove = Vector2.down;
 
-    // History for follower system
     public List<Vector3> positionHistory = new List<Vector3>();
     private float recordTimer;
     [SerializeField] private float recordInterval = 0.1f;

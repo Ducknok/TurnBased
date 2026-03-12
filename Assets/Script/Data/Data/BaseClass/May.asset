@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: May
   m_EditorClassIdentifier: Assembly-CSharp::BaseHero
   theName: May
-  baseHP: 500
-  curHP: 500
-  baseMP: 500
-  curMP: 500
+  baseHP: 50
+  curHP: 50
+  baseMP: 10
+  curMP: 10
   baseATK: 5
   curATK: 5
   baseMATK: 5

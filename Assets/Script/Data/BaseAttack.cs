@@ -78,23 +78,17 @@ public abstract class SkillBehaviour : DucMonobehaviour
         return effects;
     }
 
-    // =================================================================
-    // TÍNH NĂNG MỚI: PHÂN LOẠI SÁT THƯƠNG VẬT LÝ / PHÉP THUẬT
-    // =================================================================
+
     protected virtual bool IsMagicalAttack()
     {
-        // Nếu chiêu có mang hệ nguyên tố -> Là sát thương Phép Thuật
+
         if (skillData.effect1 == BaseAttack.Effect.Wind || skillData.effect1 == BaseAttack.Effect.Lightning)
         {
             return true;
         }
-        // Sword, Lance, Physical, None -> Là sát thương Vật lý
         return false;
     }
 
-    // =================================================================
-    // TÍNH NĂNG MỚI: TÍNH CÔNG THỨC SÁT THƯƠNG & TRỪ GIÁP (DEF)
-    // =================================================================
     protected virtual void ApplyDamageToTarget(GameObject attacker, GameObject target, int rawDamage)
     {
         Transform body = target.transform.Find("Body");
@@ -110,9 +104,7 @@ public abstract class SkillBehaviour : DucMonobehaviour
 
         EnemyStateMachine esm = target.GetComponent<EnemyStateMachine>();
         HeroStateMachine hsm = target.GetComponent<HeroStateMachine>();
-        //BossStateMachine bsm = target.GetComponent<BossStateMachine>();
 
-        // 1. CHỌN CHỈ SỐ PHÒNG THỦ CỦA MỤC TIÊU
         bool isMagic = IsMagicalAttack();
         int targetDefense = 0;
 
@@ -120,20 +112,12 @@ public abstract class SkillBehaviour : DucMonobehaviour
             targetDefense = isMagic ? esm.baseEnemy.curMDEF : esm.baseEnemy.curDEF;
         else if (hsm != null && hsm.baseHero != null)
             targetDefense = isMagic ? hsm.baseHero.curMDEF : hsm.baseHero.curDEF;
-        //else if (bsm != null && bsm.bossStats != null)
-        //    targetDefense = isMagic ? bsm.bossStats.curMDEF : bsm.bossStats.curDEF;
 
-        // 2. CÔNG THỨC SÁT THƯƠNG: Sát thương thực tế = Tấn công - Phòng thủ
-        // Tối thiểu là 1 để tránh tình trạng chém không xi nhê (0 máu) hoặc âm máu
+
         int finalDamage = Mathf.Max(1, rawDamage - targetDefense);
 
-        // Bỏ qua nếu là chiêu Buff/Hồi máu (Raw Damage <= 0)
         if (rawDamage <= 0) finalDamage = 0;
 
-        // In ra Console để bạn dễ debug theo dõi vũ khí & giáp hoạt động thế nào
-        //Debug.Log($"<color=orange>[Chiến Đấu] {attacker.name} -> {target.name} | Sát Thương: {rawDamage} - Giáp Địch: {targetDefense} = <b>{finalDamage} Dmg cuối</b> (Phép: {isMagic})</color>");
-
-        // 3. TRUYỀN SÁT THƯƠNG VÀO HỆ THỐNG MẤT MÁU
         if (esm != null)
         {
             EnemyTakeDamage takeDamageComp = esm.GetComponent<EnemyTakeDamage>();
@@ -151,10 +135,6 @@ public abstract class SkillBehaviour : DucMonobehaviour
             HeroTakeDamage heroTakeDamageComp = hsm.GetComponent<HeroTakeDamage>();
             if (heroTakeDamageComp != null) heroTakeDamageComp.TakeDamage(hsm.gameObject, finalDamage);
         }
-        //else if (bsm != null)
-        //{
-        //    bsm.TakeDamage(finalDamage);
-        //}
     }
 
     protected virtual void ApplySingleTargetDamage(GameObject attacker, GameObject target)
@@ -163,18 +143,13 @@ public abstract class SkillBehaviour : DucMonobehaviour
 
         HeroStateMachine heroAttacker = attacker.GetComponent<HeroStateMachine>();
         EnemyStateMachine enemyAttacker = attacker.GetComponent<EnemyStateMachine>();
-        //BossStateMachine bossAttacker = attacker.GetComponent<BossStateMachine>();
 
         bool isMagic = IsMagicalAttack();
 
-        // CỘNG CHỈ SỐ TẤN CÔNG (ATK hoặc MATK) TỪ NHÂN VẬT & VŨ KHÍ
         if (heroAttacker != null && heroAttacker.baseHero != null)
             rawDamage += isMagic ? heroAttacker.baseHero.curMATK : heroAttacker.baseHero.curATK;
         else if (enemyAttacker != null && enemyAttacker.baseEnemy != null)
             rawDamage += isMagic ? enemyAttacker.baseEnemy.curMATK : enemyAttacker.baseEnemy.curATK;
-        //else if (bossAttacker != null && bossAttacker.bossStats != null)
-        //    rawDamage += isMagic ? bossAttacker.bossStats.curMATK : bossAttacker.bossStats.curATK;
-
         ApplyDamageToTarget(attacker, target, rawDamage);
 
         if (heroAttacker != null && heroAttacker.heroPanelHandler != null)
@@ -191,17 +166,13 @@ public abstract class SkillBehaviour : DucMonobehaviour
 
         HeroStateMachine heroAttacker = attacker.GetComponent<HeroStateMachine>();
         EnemyStateMachine enemyAttacker = attacker.GetComponent<EnemyStateMachine>();
-        //BossStateMachine bossAttacker = attacker.GetComponent<BossStateMachine>();
 
         bool isMagic = IsMagicalAttack();
-
-        // CỘNG CHỈ SỐ TẤN CÔNG CHO ĐÒN AOE
         if (heroAttacker != null && heroAttacker.baseHero != null)
             rawDamage += isMagic ? heroAttacker.baseHero.curMATK : heroAttacker.baseHero.curATK;
         else if (enemyAttacker != null && enemyAttacker.baseEnemy != null)
             rawDamage += isMagic ? enemyAttacker.baseEnemy.curMATK : enemyAttacker.baseEnemy.curATK;
-        //else if (bossAttacker != null && bossAttacker.bossStats != null)
-        //    rawDamage += isMagic ? bossAttacker.bossStats.curMATK : bossAttacker.bossStats.curATK;
+
 
         if (primaryTarget != null)
         {

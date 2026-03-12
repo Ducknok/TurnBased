@@ -28,19 +28,15 @@ public class HealController : Singleton<HealController>
     }
     public void RestoreHPAfterRevive(HeroStateMachine hsm)
     {
-        // T?ng mana hi?n t?i
-        hsm.baseHero.curHP = Mathf.FloorToInt(hsm.baseHero.baseHP * 0.5f); // H?i 50% m¨¢u
+        hsm.baseHero.curHP = Mathf.FloorToInt(hsm.baseHero.baseHP * 0.5f);
 
-        // ??m b?o mana kh?ng v??t qu¨¢ gi¨¢ tr? t?i ?a
         if (hsm.baseHero.curHP > hsm.baseHero.baseHP)
         {
             hsm.baseHero.curHP = hsm.baseHero.baseHP;
         }
 
-        // T¨ªnh t? l? mana ?? c?p nh?t thanh UI
         float ratio = (float)hsm.baseHero.curHP / hsm.baseHero.baseHP;
 
-        // T?o Sequence ?? l¨¤m animation
         Sequence sequence = DOTween.Sequence();
         sequence.Append(hsm.heroPanelHandler.heroHPBarFill.DOFillAmount(ratio, 0.25f)).SetEase(Ease.InOutSine);
         sequence.AppendInterval(this.trailDelay);

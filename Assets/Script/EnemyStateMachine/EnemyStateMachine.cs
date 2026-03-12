@@ -118,6 +118,12 @@ public class EnemyStateMachine : DucMonobehaviour
     }
     private void CheckAlive()
     {
+        if (this.baseEnemy.curHP > 0)
+        {
+            this.currentState = TurnState.WAITING;
+            return;
+        }
+
         if (!this.alive)
         {
             return;
@@ -142,7 +148,6 @@ public class EnemyStateMachine : DucMonobehaviour
                 }
             }
 
-            // 2. GỌI COROUTINE TẠO NHỊP DỪNG TRƯỚC KHI GỤC NGÃ
             StartCoroutine(DeathRoutine());
         }
     }
@@ -168,7 +173,6 @@ public class EnemyStateMachine : DucMonobehaviour
         myAttack.Type = "Enemy";
         myAttack.AttacksGameObject = this.gameObject;
 
-        // Tránh lỗi nếu playersInCombat rỗng
         if (this.combatStateMachine.playersInCombat.Count > 0)
         {
             myAttack.AttackerTarget = this.combatStateMachine.playersInCombat[Random.Range(0, combatStateMachine.playersInCombat.Count)];
@@ -191,22 +195,29 @@ public class EnemyStateMachine : DucMonobehaviour
         }
         else
         {
+            this.activeLocks.Clear();
             this.GenerateTimerIcon();
         }
 
         this.savedAttack = myAttack;
     }
 
-    // Attack
     protected virtual IEnumerator TimeForAction()
     {
-        if (this.actionStarted || !this.enemyAttacked || this.isLockBrokenOnce)
+        // Kiểm tra các điều kiện cơ bản
+        if (this.actionStarted || !this.enemyAttacked)
         {
             yield break;
         }
+
+        if (this.isLockBrokenOnce)
+        {
+            this.CheckCombatState();
+            yield break;
+        }
+
         this.actionStarted = true;
         yield return StartCoroutine(this.currentAttack.Activate(this.gameObject, this.playerToAttack));
-
 
         this.combatStateMachine.enemiesAttacked.Add(this.gameObject);
         StartCoroutine(MoveTowardsStart());
@@ -248,23 +259,22 @@ public class EnemyStateMachine : DucMonobehaviour
     {
         this.RemoveInPerformList();
         this.combatStateMachine.combatState = CombatStateMachine.PerformAction.WAIT;
-        // Reset action flags
+
         this.actionStarted = false;
         this.enemyAttacked = false;
         this.isLockBrokenOnce = false;
-        // Update enemiesAttacked list
         if (!this.combatStateMachine.enemiesAttacked.Contains(this.gameObject))
         {
             this.combatStateMachine.enemiesAttacked.Add(this.gameObject);
         }
         this.CheckTurn();
-        // Set state back to WAITING
+
         this.currentState = TurnState.WAITING;
-        //Debug.Log($"State changed to WAITING for {gameObject.name}");
+
     }
     public void RemoveInPerformList()
     {
-        // Update combat state and remove action from performList
+
         if (this.combatStateMachine.performList.Count > 0 && this.combatStateMachine.performList[0].AttacksGameObject == this.gameObject)
         {
             this.combatStateMachine.performList.RemoveAt(0);
@@ -278,19 +288,18 @@ public class EnemyStateMachine : DucMonobehaviour
 
         if (allHeroesDone && allEnemiesDone)
         {
-            // Reset enemy state, bắt đầu lượt mới cho hero
+
             this.ChooseActionAfterDone();
         }
         else if (allHeroesDone)
         {
-            // Hero đã xong, chuyển lượt cho enemy
+
             this.combatStateMachine.enemiesAttacked.Clear();
             this.combatStateMachine.heroTurn = false;
             this.combatStateMachine.enemyTurn = true;
         }
         else
         {
-            // Reset enemy state, bắt đầu lượt mới cho hero
             this.ChooseActionAfterDone();
         }
     }
@@ -299,8 +308,17 @@ public class EnemyStateMachine : DucMonobehaviour
         this.combatStateMachine.enemiesAttacked.Clear();
         this.combatStateMachine.heroTurn = true;
         this.combatStateMachine.enemyTurn = false;
-        this.timer = Random.Range(1, this.combatStateMachine.playersInCombat.Count + 1);
-        this.ChooseAction();
+
+        if (this.timer <= 0)
+        {
+            this.timer = Random.Range(1, this.combatStateMachine.playersInCombat.Count + 1);
+            this.ChooseAction();
+        }
+        else
+        {
+            // Thêm dòng này để UI luôn cập nhật đúng số Timer hiện tại mỗi khi qua lượt
+            this.GenerateTimerIcon();
+        }
     }
 
     //-----------------------------GENERATE-------------------------
@@ -309,10 +327,8 @@ public class EnemyStateMachine : DucMonobehaviour
        
         this.activeLocks.Clear();
 
-        // 1. TÌM HỆ PHÁI CỦA CÁC HERO ĐANG CÓ TRÊN SÂN MỘT CÁCH CHẮC CHẮN NHẤT
         List<BaseAttack.Effect> heroEffects = new List<BaseAttack.Effect>();
 
-        // Mở rộng phạm vi tìm kiếm: Không phụ thuộc vào mảng playersInCombat nữa
         List<GameObject> heroesToScan = new List<GameObject>();
         if (this.combatStateMachine != null && this.combatStateMachine.playersInCombat.Count > 0)
         {
@@ -320,11 +336,9 @@ public class EnemyStateMachine : DucMonobehaviour
         }
         else
         {
-            // Cứu cánh: Tự tìm trên toàn bản đồ
-            heroesToScan.AddRange(GameObject.FindGameObjectsWithTag("Hero"));
+            heroesToScan.AddRange(GameObject.FindGameObjectsWithTag("Player"));
         }
 
-        Debug.Log($"[EnemyStateMachine] Bắt đầu quét điểm yếu. Đã tìm thấy {heroesToScan.Count} Heroes trên bản đồ.");
 
         foreach (GameObject heroGO in heroesToScan)
         {
@@ -333,50 +347,38 @@ public class EnemyStateMachine : DucMonobehaviour
 
             if (hero != null && hero.baseHero != null)
             {
-                // Lấy hệ nguyên tố (Wind, Lightning...)
+
                 if (System.Enum.TryParse(hero.baseHero.elemental.ToString(), out BaseAttack.Effect elemEffect))
                 {
                     heroEffects.Add(elemEffect);
                 }
 
-                // Lấy nghề nghiệp để suy ra đòn đánh (Warrior -> Sword, Lancer -> Lance)
                 string hType = hero.baseHero.heroType.ToString();
                 if (hType == "Warrior") heroEffects.Add(BaseAttack.Effect.Sword);
                 else if (hType == "Lancer") heroEffects.Add(BaseAttack.Effect.Lance);
             }
         }
 
-        // Lọc bỏ các hệ bị trùng nhau
         heroEffects = heroEffects.Distinct().ToList();
-
-        // Đề phòng lỗi (Fallback): Nếu không có Hero nào (Điều này rất hiếm khi xảy ra nữa)
         if (heroEffects.Count == 0)
         {
-            Debug.LogWarning("[EnemyStateMachine] KHÔNG THỂ TÌM THẤY HERO NÀO! Bắt buộc phải random toàn bộ hệ.");
+
             foreach (BaseAttack.Effect eff in System.Enum.GetValues(typeof(BaseAttack.Effect)))
             {
                 heroEffects.Add(eff);
             }
         }
-        else
-        {
-            Debug.Log($"[EnemyStateMachine] Điểm yếu chốt sổ cho Boss: {string.Join(", ", heroEffects)}");
-        }
-
-        // 2. SINH RA ĐIỂM YẾU BẤT KỲ TỪ DANH SÁCH CỦA HERO
         for (int i = 0; i < 1; i++)
         {
-            int numTypes = 3; // Mỗi khóa có 3 điểm yếu
+            int numTypes = 3;
             List<BaseAttack.Effect> types = new List<BaseAttack.Effect>();
 
             for (int j = 0; j < numTypes; j++)
             {
-                // Chỉ random trong số các hệ mà Hero đang sở hữu
                 BaseAttack.Effect randomType = heroEffects[Random.Range(0, heroEffects.Count)];
                 types.Add(randomType);
             }
 
-            // Gửi danh sách đã bốc thăm này cho UI hiển thị
             this.enemyUI.SetAttackTypes(types);
             activeLocks.Add(new LockSystem(types));
         }
@@ -410,7 +412,7 @@ public class EnemyStateMachine : DucMonobehaviour
             }
         }
 
-        Debug.LogWarning("Không tìm thấy prefab cho skill: " + baseAttack.attackName);
+
         return null;
     }
 }
