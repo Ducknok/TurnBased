@@ -17,11 +17,6 @@ public class Lance : SkillBehaviour
         yield return new WaitForSeconds(0.5f);
         anim.Play(hsm.currentAttack.skillData.attackName);
         yield return new WaitForSeconds(0.5f);
-        this.ApplySkillEffects(hsm.gameObject);
-    }
-
-    protected override void ApplySkillEffects(GameObject attacker)
-    {
-        base.ApplySkillEffects(attacker);
+        this.ApplySingleTargetDamage(hsm.gameObject, target);
     }
 }

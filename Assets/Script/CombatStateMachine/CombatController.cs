@@ -39,11 +39,11 @@ public class CombatController : Singleton<CombatController>
     private void LoadCombatZone()
     {
         if (this.cbz != null) return;
-        this.cbz = FindObjectOfType<CombatZone>();
+        this.cbz = FindAnyObjectByType<CombatZone>();
     }
     private void LoadCombatStateMachine()
     {
         if (this.cbm != null) return;
-        this.cbm = FindObjectOfType<CombatStateMachine>();
+        this.cbm = FindAnyObjectByType<CombatStateMachine>();
     }
 }

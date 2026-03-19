@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6eb35976fd9ec52488d3d97a35459c00, type: 3}
+  m_Name: Bomb Slime
+  m_EditorClassIdentifier: Assembly-CSharp::BaseEnemy
+  theName: Bomb Slime
+  baseHP: 100
+  curHP: 100
+  baseMP: 0
+  curMP: 0
+  baseATK: 20
+  curATK: 20
+  baseMATK: 20
+  curMATK: 20
+  baseDEF: 0
+  curDEF: 0
+  baseMDEF: 0
+  curMDEF: 0
+  normalAttacks:
+  - {fileID: 11400000, guid: 462b7eda1e3f28c4591c7898f57cb0b4, type: 2}
+  specialAttacks: []
+  enemyType: 4
+  rarity: 0

@@ -4,6 +4,6 @@ using UnityEngine;
 
 public abstract class CharacterStatModifierSO : ScriptableObject
 {
-    public abstract void AffectCharacter(GameObject character, float val1, float val2);
+    public abstract void AffectCharacter(GameObject character, int val1, int val2);
 
 }

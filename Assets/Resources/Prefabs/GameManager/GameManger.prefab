@@ -15,11 +15,10 @@ GameObject:
   - component: {fileID: 6126718128691247629}
   - component: {fileID: 8903077403994976805}
   - component: {fileID: 2054552262097257860}
-  - component: {fileID: 1252194906274764017}
-  - component: {fileID: 534486629077115341}
   - component: {fileID: 5451395305145733820}
   - component: {fileID: 5556492085394165506}
   - component: {fileID: 8360623010214395495}
+  - component: {fileID: 9004449021500124103}
   m_Layer: 0
   m_Name: GameManger
   m_TagString: Untagged
@@ -110,7 +109,60 @@ MonoBehaviour:
   - quantity: 1
     item: {fileID: 11400000, guid: 5615864efc1ceda4f96066cf1a53daff, type: 2}
     itemState: []
+  - quantity: 2
+    item: {fileID: 11400000, guid: 1ee7bc09b57db5742b75380a12ccb243, type: 2}
+    itemState: []
+  - quantity: 1
+    item: {fileID: 11400000, guid: 76703d4a2b5a57a40b8fefd2e73c775c, type: 2}
+    itemState: []
+  - quantity: 1
+    item: {fileID: 11400000, guid: f2974d6ec2e45cf43beccb93d53cdd7c, type: 2}
+    itemState: []
+  - quantity: 1
+    item: {fileID: 11400000, guid: 53f2acc617d1f0a46aaf81c6219e0635, type: 2}
+    itemState: []
+  - quantity: 1
+    item: {fileID: 11400000, guid: 1936b73cbc7b9434fad03655e915cf79, type: 2}
+    itemState: []
+  - quantity: 1
+    item: {fileID: 11400000, guid: 493e1d54c892cd14681625525fb79c31, type: 2}
+    itemState: []
+  - quantity: 1
+    item: {fileID: 11400000, guid: 14d6ae5769fc7f14b8ce55d170788cb6, type: 2}
+    itemState: []
+  - quantity: 1
+    item: {fileID: 11400000, guid: 5b0047b9b74f4e44b8707d7459406096, type: 2}
+    itemState: []
+  - quantity: 1
+    item: {fileID: 11400000, guid: 780be290fd6c0314783a2430b74b3afb, type: 2}
+    itemState: []
+  - quantity: 1
+    item: {fileID: 11400000, guid: 4265579a8017bb64faada2dd409384ab, type: 2}
+    itemState: []
+  - quantity: 1
+    item: {fileID: 11400000, guid: 0a6b82c91c0677443a1efcb945c4fbc7, type: 2}
+    itemState: []
+  - quantity: 1
+    item: {fileID: 11400000, guid: c8b89dd2356e98b489e1b1aba3c99cb5, type: 2}
+    itemState: []
+  - quantity: 1
+    item: {fileID: 11400000, guid: fe9ed2d99c4458d46bfa642b42d1605c, type: 2}
+    itemState: []
+  - quantity: 1
+    item: {fileID: 11400000, guid: 7a8a281c4a9a0c34abab5572e1c4c710, type: 2}
+    itemState: []
+  - quantity: 1
+    item: {fileID: 11400000, guid: dbcd4dda10863ea4c9c20a85acb09106, type: 2}
+    itemState: []
+  - quantity: 1
+    item: {fileID: 11400000, guid: 74a79554500a0d94c8d4ada66d452946, type: 2}
+    itemState: []
+  - quantity: 1
+    item: {fileID: 11400000, guid: 14d6ae5769fc7f14b8ce55d170788cb6, type: 2}
+    itemState: []
   inventoryTabs:
+  - {fileID: 0}
+  - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
 --- !u!114 &8903077403994976805
@@ -137,32 +189,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d80689f92f04934390a1a6eed9870a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1252194906274764017
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3551149479000004527}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dcadf787e81324048b41d45ee6745964, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &534486629077115341
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3551149479000004527}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5581fcc704a57f34b86ed575b7ee4661, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  interval: 1
-  totalTicks: 3
 --- !u!114 &5451395305145733820
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -222,3 +248,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   virtualCamera: {fileID: 0}
+--- !u!114 &9004449021500124103
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3551149479000004527}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50dcadfad7ceb904798107c5cdbbf226, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SaveManager
+  characters:
+  - {fileID: 11400000, guid: c2641c7a39b054844942a95ba250d53f, type: 2}
+  - {fileID: 11400000, guid: f097843f152297c4cb53e4275bb1c94a, type: 2}

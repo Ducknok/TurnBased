@@ -87,7 +87,7 @@ public abstract class Spawner : DucMonobehaviour
     //Spawn object
     public virtual Transform Spawn(string prefabName, Vector3 spawnPos, Quaternion rotation)
     {
-        Debug.Log(prefabName);
+        //Debug.Log(prefabName);
         Transform prefab = GetPrefabByName(prefabName);
         if (prefab == null)
         {
@@ -132,7 +132,7 @@ public abstract class Spawner : DucMonobehaviour
     public virtual Transform GetPrefabByName(string prefabName)
     {
         string cleanPrefabName = prefabName.Trim();
-
+        //Debug.LogError(prefabName);
         foreach (Transform prefab in this.prefabs)
         {
             if (prefab.name.Contains(cleanPrefabName))

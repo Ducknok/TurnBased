@@ -1,4 +1,4 @@
-using Cinemachine;
+﻿using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,7 +8,7 @@ public class CameraController : Singleton<CameraController>
 {
     //Camera
     public CinemachineVirtualCamera virtualCamera;
-    
+
 
     protected override void OnDisable()
     {
@@ -23,24 +23,57 @@ public class CameraController : Singleton<CameraController>
     protected override void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         base.OnSceneLoaded(scene, mode);
+        RefreshCamera();
+    }
+    protected override void Start()
+    {
+        base.Start();
+        RefreshCamera();
+    }
+    public void RefreshCamera()
+    {
+        StopAllCoroutines();
         StartCoroutine(WaitToSetCamera());
     }
-
     IEnumerator WaitToSetCamera()
     {
-        yield return null;
-        this.virtualCamera = FindObjectOfType<CinemachineVirtualCamera>();
-        this.SetCameraFollowHero(PartyManager.Instance.currentLeader.transform.parent.parent.GetComponent<HeroStateMachine>());
-    }
-    public void SetCameraFollowHero(HeroStateMachine heroSelected)
-    {
-        //Debug.LogError(heroSelected);
-        this.ResetCamera();
-        if (virtualCamera == null)
+        if (this.virtualCamera == null)
         {
-            Debug.LogWarning("Virtual Camera is not assigned.");
+            this.virtualCamera = FindAnyObjectByType<CinemachineVirtualCamera>();
+        }
+
+        yield return new WaitUntil(() => PartyManager.Instance != null && PartyManager.Instance.currentLeader != null);
+
+        this.SetCameraFollowCurrentLeader();
+    }
+
+    public void SetCameraFollowCurrentLeader()
+    {
+        if (PartyManager.Instance == null || PartyManager.Instance.currentLeader == null)
+        {
             return;
         }
+
+        HeroStateMachine leaderHero = PartyManager.Instance.currentLeader.transform.parent.parent.GetComponent<HeroStateMachine>();
+
+        if (leaderHero != null)
+        {
+            this.SetCameraFollowHero(leaderHero);
+        }
+    }
+
+    public void SetCameraFollowHero(HeroStateMachine heroSelected)
+    {
+        if (virtualCamera == null)
+        {
+            virtualCamera = FindAnyObjectByType<CinemachineVirtualCamera>();
+            if (virtualCamera == null)
+            {
+                return;
+            }
+        }
+
+        this.ResetCamera();
 
         if (heroSelected == null)
         {
@@ -56,31 +89,39 @@ public class CameraController : Singleton<CameraController>
         }
 
         virtualCamera.Follow = body;
-        // Optional: focus immediately
+
         virtualCamera.OnTargetObjectWarped(body, body.position);
     }
+
     public void SetCameraForCombat(Transform obj)
     {
-        this.ResetCamera();
         if (virtualCamera == null)
         {
-            Debug.LogWarning("Virtual Camera is not assigned.");
-            return;
+            virtualCamera = FindAnyObjectByType<CinemachineVirtualCamera>();
+            if (virtualCamera == null)
+            {
+                Debug.LogWarning("Virtual Camera is not assigned and could not be found.");
+                return;
+            }
         }
+
+        this.ResetCamera();
 
         if (obj == null)
         {
-            Debug.LogWarning("Hero is null. Cannot set camera.");
+            Debug.LogWarning("Object is null. Cannot set camera.");
             return;
         }
 
         virtualCamera.Follow = obj;
-        // Optional: focus immediately
         virtualCamera.OnTargetObjectWarped(obj, obj.position);
     }
+
     public void ResetCamera()
     {
-        this.virtualCamera.Follow = null;
+        if (this.virtualCamera != null)
+        {
+            this.virtualCamera.Follow = null;
+        }
     }
-
 }

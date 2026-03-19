@@ -10,7 +10,7 @@ public class EquipableItemUI : DucMonobehaviour
 
     protected override void Awake()
     {
-        this.controller = FindObjectOfType<EquipMenuController>();
+        this.controller = FindAnyObjectByType<EquipMenuController>();
     }
 
     public void Setup(EquippableItemSO data, EquipMenuController equipMenuController)
@@ -18,7 +18,6 @@ public class EquipableItemUI : DucMonobehaviour
         this.itemData = data;
         this.controller = equipMenuController;
 
-        // G?n ?nh và tên
         Image itemImage = transform.Find("Button/WeaponImage")?.GetComponent<Image>();
         TextMeshProUGUI itemName = transform.Find("WeaponName")?.GetComponent<TextMeshProUGUI>();
 

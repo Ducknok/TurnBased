@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c5cd8b2141e4f941a2210d29baea2ce, type: 3}
+  m_Name: Attack1
+  m_EditorClassIdentifier: 
+  attackImage: {fileID: -2072138837, guid: 3db17c9b52b577a438833767985907ae, type: 3}
+  attackName: Attack1
+  attackDescription: Normal Attack
+  attackDamage: 2
+  attackCost: 0
+  maxEnemyCount: 1
+  attackType: 0
+  effect1: 5
+  effect2: 5
+  hitParticleName: SlashHitParticle

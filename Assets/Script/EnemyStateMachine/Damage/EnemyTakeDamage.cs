@@ -12,20 +12,18 @@ public class EnemyTakeDamage : TakeDamageController
     {
         this.impulseSource = this.transform.GetComponent<CinemachineImpulseSource>();
     }
-    public override void TakeDamage(GameObject target, float getDamageAmount)
+    public override void TakeDamage(GameObject target, int getDamageAmount)
     {
         throw new System.NotImplementedException();
     }
 
-    public override void TakeDamage(GameObject target, float getDamageAmount, BaseAttack.Effect attackType1, BaseAttack.Effect attackType2)
+    public override void TakeDamage(GameObject target, int getDamageAmount, BaseAttack.Effect attackType1, BaseAttack.Effect attackType2)
     {
         CameraShakeManager.instance.CameraShake(impulseSource);
         EnemyStateMachine esm = target.GetComponent<EnemyStateMachine>();
-        this.CheckLock(esm, getDamageAmount, attackType1, attackType2);
-        this.DamagePop(esm, getDamageAmount);   
-        //TODO: Viet 1 ham hp rieng cho enemy
-        // C?p nh?t thanh m¨¢u
-        float ratio = esm.baseEnemy.curHP /  esm.baseEnemy.baseHP;
+        int finalDamage = this.CheckLock(esm, getDamageAmount, attackType1, attackType2);
+        this.DamagePop(esm, finalDamage);
+        float ratio = (float)esm.baseEnemy.curHP /  esm.baseEnemy.baseHP;
         if (esm.enemyHPBarFill != null)
         {
             Sequence sequence = DOTween.Sequence();
@@ -36,7 +34,6 @@ public class EnemyTakeDamage : TakeDamageController
 
         StartCoroutine(esm.ClearEnemyInfo());
 
-        // Ki?m tra ch?t
         if (esm.baseEnemy.curHP <= 0)
         {
             esm.baseEnemy.curHP = 0;
@@ -44,11 +41,11 @@ public class EnemyTakeDamage : TakeDamageController
             StartCoroutine(this.DeadSequence(esm));
         }
     }
-    private void CheckLock(EnemyStateMachine esm, float getDamageAmount, BaseAttack.Effect attackType1, BaseAttack.Effect attackType2)
+    private int CheckLock(EnemyStateMachine esm, int getDamageAmount, BaseAttack.Effect attackType1, BaseAttack.Effect attackType2)
     {
-        // Ki?m tra n?u enemy c¨® Lock
         bool hasLocks = esm.activeLocks.Count > 0;
         bool allLocksBroken = false;
+
         if (hasLocks)
         {
             foreach (var lockSystem in esm.activeLocks)
@@ -56,30 +53,45 @@ public class EnemyTakeDamage : TakeDamageController
                 lockSystem.TryBreakLock(attackType1, attackType2);
                 esm.enemyUI.GrayOutAttackType(attackType1, attackType2);
             }
-
             allLocksBroken = esm.activeLocks.TrueForAll(lockSystem => lockSystem.IsBroken());
         }
 
         if (hasLocks && allLocksBroken && !esm.isLockBrokenOnce)
         {
-            getDamageAmount *= 1.5f;
+            getDamageAmount = Mathf.CeilToInt(getDamageAmount * 1.5f);
             esm.isLockBrokenOnce = true;
             StartCoroutine(esm.enemyUI.ClearTimerIcon());
             StartCoroutine(esm.enemyUI.ClearAllAttackTypeIcons());
             esm.currentState = EnemyStateMachine.TurnState.WAITING;
         }
+
+        return getDamageAmount; 
     }
-    private void DamagePop(EnemyStateMachine esm, float getDamageAmount)
+    private void DamagePop(EnemyStateMachine esm, int getDamageAmount)
     {
-        // X? l? ch¨ª m?ng
         bool isCritical = Random.Range(0, 100) < 20;
         if (isCritical) getDamageAmount *= 2;
 
-        // Hi?n th? popup s¨¢t th??ng
         int finalDamage = Mathf.CeilToInt(getDamageAmount);
-        DamagePopup.Create(esm.transform.Find("Body").position, finalDamage, isCritical, false);
-        esm.baseEnemy.curHP -= finalDamage;
-        esm.curHpNumber.text = esm.baseEnemy.curHP.ToString();
+
+        Transform body = esm.transform.Find("Body");
+        Vector3 popPos = body != null ? body.position : esm.transform.position;
+        DamagePopup.Create(popPos, finalDamage, isCritical, false);
+
+        if (esm.baseEnemy != null)
+        {
+            esm.baseEnemy.curHP -= finalDamage;
+        }
+
+        if (esm.curHpNumber != null)
+        {
+            esm.curHpNumber.text = esm.baseEnemy.curHP.ToString();
+        }
+
+        if (esm.enemyHPBarFill != null && esm.baseEnemy != null)
+        {
+            esm.enemyHPBarFill.fillAmount = (float)esm.baseEnemy.curHP / esm.baseEnemy.baseHP;
+        }
     }
     IEnumerator DeadSequence(EnemyStateMachine esm)
     {

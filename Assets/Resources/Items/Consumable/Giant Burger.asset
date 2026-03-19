@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 974e5d7ae6792a844958ce2271187f9a, type: 3}
+  m_Name: Giant Burger
+  m_EditorClassIdentifier: 
+  itemType: 2
+  rarity: 1
+  <IsStackable>k__BackingField: 1
+  <MaxStackSize>k__BackingField: 99
+  <Name>k__BackingField: Giant Burger
+  <ReceiveEffect>k__BackingField: +50 HP
+  <Description>k__BackingField: A massive, juicy grilled meat burger. One is enough
+    to fill your belly and prepare you for a tough boss fight.
+  <ItemImage>k__BackingField: {fileID: -729589978483119448, guid: 48f4e9a97c1469a459904e7bf188ba9f,
+    type: 3}
+  <DefaultParameterList>k__BackingField: []
+  <Modifiers>k__BackingField:
+  - stat: {fileID: 11400000, guid: 878c4a7146a23c949a406b6ad6496612, type: 2}
+    val1: 50
+    val2: 0

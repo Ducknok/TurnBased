@@ -8,7 +8,6 @@ public class HeroPanelHandler : DucMonobehaviour
 {
     public HeroStateMachine hsm;
     //For the Player Bar
-    
     public Image heroHPBarFill;
     public Image heroHPBarTrail;
     public Image heroMPBarFill;
@@ -19,28 +18,27 @@ public class HeroPanelHandler : DucMonobehaviour
     private GameObject playerPanelInstance;
     public Transform heroPanelSpacer;
     // Start is called before the first frame update
-
+    protected override void Awake()
+    {
+        this.LoadComponent();
+    }
     protected override void OnEnable()
     {
         base.OnEnable();
-    }
+        this.CreateHeroPanel();
 
-    protected override void OnDisable()
-    {
-        base.OnDisable();
     }
 
     protected override void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
 
-        this.LoadComponent();
         this.CreateHeroPanel();
     }
     private void LoadComponent()
     {
         this.hsm = this.gameObject.GetComponent<HeroStateMachine>();
-        this.playerPanel = Resources.Load<GameObject>($"Prefabs/GUI/{this.hsm.baseHero.theName}Bar");
-        this.heroPanelSpacer = GameObject.Find("BattleCanvas").transform.Find("Panel").transform.Find("HeroPanel").transform.Find("HeroPanelSpacer");
+        this.playerPanel = Resources.Load<GameObject>($"Prefabs/UI/UIHero/UI{this.hsm.baseHero.theName}Bar");
+        this.heroPanelSpacer = GameObject.Find("BattleCanvas").transform.Find("Panel").transform.Find("UIHero").transform.Find("HeroPanelSpacer");
         if (heroPanelSpacer == null)
         {
             Debug.LogError("Không tìm thấy BattleCanvas!");
@@ -51,7 +49,6 @@ public class HeroPanelHandler : DucMonobehaviour
     {
         heroHPBarFill = hpFill;
         heroMPBarFill = mpFill;
-        //this.DescreaseMana();
     }
     //TODO: Tach toan bo ham gay st, hoi mana, mau, tao panel ra 1 class rieng xong goi lai trong class hero hoac 1 class moi 
     //Create a player panel
@@ -83,9 +80,9 @@ public class HeroPanelHandler : DucMonobehaviour
     //Update stats hp, mp, heal
     public void UpdateHeroPanel()
     {
-        
         this.stats.heroHP.text = this.hsm.baseHero.curHP.ToString();
         this.stats.heroMP.text = this.hsm.baseHero.curMP.ToString();
+       
     }
 
     

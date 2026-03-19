@@ -22,7 +22,7 @@ public class PlayerController : Singleton<PlayerController>
     protected void LoadHeroSM()
     {
         if (this.heroSMList != null && this.heroSMList.Count > 0) return;
-        this.heroSMList = new List<HeroStateMachine>(GameObject.FindObjectsOfType<HeroStateMachine>());
+        this.heroSMList = new List<HeroStateMachine>(GameObject.FindObjectsByType<HeroStateMachine>(FindObjectsSortMode.None));
     }
 
 }

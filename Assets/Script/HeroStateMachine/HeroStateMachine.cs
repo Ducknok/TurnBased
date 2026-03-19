@@ -30,11 +30,11 @@ public class HeroStateMachine : DucMonobehaviour
     public TurnState currentState;
     public GameObject choose;
     //Choose Player for action
-    private int selectedHeroIndex = 0; // Hero đang được chọn
+    private int selectedHeroIndex = 0;
     //IENUMERATOR
     public GameObject enemyToAttack;
     public float animSpeed = 15f;
-    private int heroIndex; // Chỉ số của hero trong playerPositions
+    private int heroIndex;
     public bool attackEnd;
     private bool actionStarted;
     //esm.
@@ -48,7 +48,7 @@ public class HeroStateMachine : DucMonobehaviour
     // Start is called before the first frame update
     protected override void Awake()
     {
-        var existingHeroes = FindObjectsOfType<HeroStateMachine>();
+        var existingHeroes = FindObjectsByType<HeroStateMachine>(FindObjectsSortMode.None);
 
         foreach (var hero in existingHeroes)
         {
@@ -87,8 +87,6 @@ public class HeroStateMachine : DucMonobehaviour
     // Handle current state and check state
     private void HandleCurrentState()
     {
-        //Debug.Log(this.currentState);
-        // Kiểm tra nếu chuột trái được click
         switch (this.currentState)
         {
             case (TurnState.PROCESSING):
@@ -290,16 +288,16 @@ public class HeroStateMachine : DucMonobehaviour
             yield break;
         }
         this.actionStarted = true;
-        //wait abit
-        //animate back to start position
+        ManaController.Instance.ManaBar(this.gameObject.GetComponent<HeroStateMachine>());
 
-        StartCoroutine(this.currentAttack.Activate(this.gameObject, this.enemyToAttack)) ;
-        yield return new WaitForSeconds(2f);
+        yield return StartCoroutine(this.currentAttack.Activate(this.gameObject, this.enemyToAttack));
+
+
         CombatController.Instance.CBM.UpdateEnemyTimer();
         StartCoroutine(MoveTowardsStart());
     }
-    
-   
+
+
     public void ReviveHero()
     {
         HealController.Instance.RestoreHPAfterRevive(this);
@@ -364,20 +362,15 @@ public class HeroStateMachine : DucMonobehaviour
     }
     public SkillBehaviour GetSkillBehaviourForAttack(BaseAttack baseAttack)
     {
-        // Kiểm tra xem có skill behaviour nào đã được tạo cho skill này chưa
-        //Debug.LogWarning(baseAttack);
         SkillBehaviour existingSkill = GetComponentsInChildren<SkillBehaviour>()
             .FirstOrDefault(s => s.skillData.attackName == baseAttack.attackName);
-       //Debug.LogWarning(existingSkill);
         if (existingSkill != null)
         {
             return existingSkill;
         }
 
-        // Nếu chưa có, tạo mới
         string skillPrefabPath = "Skills/" + baseAttack.attackName.Replace(" ", "");
         GameObject skillPrefab = Resources.Load<GameObject>(skillPrefabPath);
-        //Debug.LogWarning(skillPrefabPath);
         Transform skillSpacer = this.transform.Find("Skills");
         if (skillPrefab != null)
         {
@@ -390,7 +383,7 @@ public class HeroStateMachine : DucMonobehaviour
             }
         }
 
-        Debug.LogWarning("Không tìm thấy prefab cho skill: " + baseAttack.attackName);
+        //Debug.LogWarning("Không tìm thấy prefab cho skill: " + baseAttack.attackName);
         return null;
     }
 

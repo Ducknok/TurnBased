@@ -54,7 +54,7 @@ public class EnemyStateMachine : DucMonobehaviour
         this.enemyMoveToCombat = this.transform.GetComponentInChildren<EnemyMoveToCombat>();
         this.anim = this.transform.Find("Body").GetComponent<Animator>();
         this.enemyUI = this.transform.GetComponent<EnemyUI>();
-       
+
     }
     // Start is called before the first frame update
     protected override void Start()
@@ -62,12 +62,20 @@ public class EnemyStateMachine : DucMonobehaviour
         DOTween.SetTweensCapacity(500, 50);
         this.baseEnemy.curHP = this.baseEnemy.baseHP;
         this.timer = Random.Range(1, this.combatStateMachine.playersInCombat.Count + 1);
-        this.initialPosition = enemyMoveToCombat.targetPosition.transform.position; // Store initial position
-        this.ChooseAction();
-        this.currentState = TurnState.WAITING;
+
+        this.currentState = TurnState.PROCESSING;
         this.choose.SetActive(false);
     }
 
+
+    public void StartCombatFlow()
+    {
+        this.initialPosition = this.transform.position;
+
+        this.ChooseAction();
+
+        this.currentState = TurnState.WAITING;
+    }
 
     // Update is called once per frame
     protected override void Update()
@@ -105,24 +113,26 @@ public class EnemyStateMachine : DucMonobehaviour
         {
             this.enemyAttacked = true;
             this.combatStateMachine.CollectAction(savedAttack);
-            ///this.currentState = TurnState.ACTION;
+            //this.currentState = TurnState.ACTION;
         }
     }
     private void CheckAlive()
     {
+        if (this.baseEnemy.curHP > 0)
+        {
+            this.currentState = TurnState.WAITING;
+            return;
+        }
+
         if (!this.alive)
         {
             return;
         }
         else
         {
-            // Set alive false 
             this.alive = false;
-
-            // Not attackable by heroes
             this.combatStateMachine.enemiesInCombat.Remove(this.gameObject);
 
-            // Remove all inputs hero attacks
             for (int i = this.combatStateMachine.performList.Count - 1; i >= 0; i--)
             {
                 if (this.combatStateMachine.performList[i].AttacksGameObject == this.gameObject)
@@ -138,27 +148,41 @@ public class EnemyStateMachine : DucMonobehaviour
                 }
             }
 
-
-            this.anim.Play("Dead");
-
-            StartCoroutine(this.ClearEnemyInfo());
-            // Destroy object after 3s and effect after dead
-            StartCoroutine(this.DestroyObject());
-
-            // Đảm bảo không bị kẹt lượt nếu quái chết khi chưa kịp đánh
-            this.combatStateMachine.combatState = CombatStateMachine.PerformAction.CHECKALIVE;
+            StartCoroutine(DeathRoutine());
         }
     }
-    // Choose enemy
+
+    private IEnumerator DeathRoutine()
+    {
+
+        yield return new WaitForSeconds(0.6f);
+        this.anim.Play("Dead");
+
+        StartCoroutine(this.ClearEnemyInfo());
+        StartCoroutine(this.DestroyObject());
+
+        this.combatStateMachine.combatState = CombatStateMachine.PerformAction.CHECKALIVE;
+    }
     public void ChooseAction()
     {
+        
         this.savedAttack = new HandleTurn();
         if (this.savedAttack.Attacker != null) return;
         HandleTurn myAttack = new HandleTurn();
         myAttack.Attacker = this.baseEnemy.theName;
         myAttack.Type = "Enemy";
         myAttack.AttacksGameObject = this.gameObject;
-        myAttack.AttackerTarget = this.combatStateMachine.playersInCombat[Random.Range(0, combatStateMachine.playersInCombat.Count)];
+
+        if (this.combatStateMachine.playersInCombat.Count > 0)
+        {
+            myAttack.AttackerTarget = this.combatStateMachine.playersInCombat[Random.Range(0, combatStateMachine.playersInCombat.Count)];
+        }
+        else
+        {
+            GameObject[] heroes = GameObject.FindGameObjectsWithTag("Hero");
+            if (heroes.Length > 0) myAttack.AttackerTarget = heroes[Random.Range(0, heroes.Length)];
+        }
+
         int num = Random.Range(0, this.baseEnemy.normalAttacks.Count);
         myAttack.choosenAttack = this.baseEnemy.normalAttacks[num];
         this.currentAttack = GetSkillBehaviourForAttack(myAttack.choosenAttack);
@@ -171,22 +195,30 @@ public class EnemyStateMachine : DucMonobehaviour
         }
         else
         {
+            this.activeLocks.Clear();
             this.GenerateTimerIcon();
         }
 
         this.savedAttack = myAttack;
     }
 
-    // Attack
-    private IEnumerator TimeForAction()
+    protected virtual IEnumerator TimeForAction()
     {
-        if (this.actionStarted || !this.enemyAttacked || this.isLockBrokenOnce)
+        // Kiểm tra các điều kiện cơ bản
+        if (this.actionStarted || !this.enemyAttacked)
         {
             yield break;
         }
+
+        if (this.isLockBrokenOnce)
+        {
+            this.CheckCombatState();
+            yield break;
+        }
+
         this.actionStarted = true;
-        StartCoroutine(this.currentAttack.Activate(this.gameObject, this.playerToAttack));
-        yield return new WaitForSeconds(1f);
+        yield return StartCoroutine(this.currentAttack.Activate(this.gameObject, this.playerToAttack));
+
         this.combatStateMachine.enemiesAttacked.Add(this.gameObject);
         StartCoroutine(MoveTowardsStart());
     }
@@ -197,61 +229,52 @@ public class EnemyStateMachine : DucMonobehaviour
         this.combatStateMachine.ClearEnemyInfoPanel();
     }
 
-    IEnumerator DestroyObject()
+    protected IEnumerator DestroyObject()
     {
         yield return new WaitForSeconds(0.75f);
         Destroy(this.gameObject);
     }
 
-    IEnumerator MoveTowardsStart()
+    protected virtual IEnumerator MoveTowardsStart()
     {
-        //Debug.Log($"MoveTowardsStart started for {gameObject.name}");
 
-        // Wait for attack animation to finish
         yield return new WaitForSeconds(0.6f);
-        // Play Idle animation
         if (this.anim != null && !this.anim.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
         {
             this.anim.Play("Idle");
-            //Debug.Log($"Playing Idle animation for {gameObject.name}");
         }
 
-        // Ensure no conflicting tweens
         this.transform.DOKill();
 
-        // Move back to initial position
-        //Debug.Log($"Moving {gameObject.name} to initial position: {initialPosition}");
         this.transform.Find("Body").DOMove(initialPosition, 0.5f)
             .SetEase(Ease.OutQuad);
-            //.OnComplete(() => Debug.Log($"Move completed for {gameObject.name} at position: {this.transform.position}"));
 
         yield return new WaitForSeconds(1f);
         this.CheckCombatState();
         yield return new WaitForSeconds(1f);
         this.currentState = TurnState.WAITING;
-       
+
     }
     public void CheckCombatState()
     {
         this.RemoveInPerformList();
         this.combatStateMachine.combatState = CombatStateMachine.PerformAction.WAIT;
-        // Reset action flags
+
         this.actionStarted = false;
         this.enemyAttacked = false;
         this.isLockBrokenOnce = false;
-        // Update enemiesAttacked list
         if (!this.combatStateMachine.enemiesAttacked.Contains(this.gameObject))
         {
             this.combatStateMachine.enemiesAttacked.Add(this.gameObject);
         }
         this.CheckTurn();
-        // Set state back to WAITING
+
         this.currentState = TurnState.WAITING;
-        //Debug.Log($"State changed to WAITING for {gameObject.name}");
+
     }
     public void RemoveInPerformList()
     {
-        // Update combat state and remove action from performList
+
         if (this.combatStateMachine.performList.Count > 0 && this.combatStateMachine.performList[0].AttacksGameObject == this.gameObject)
         {
             this.combatStateMachine.performList.RemoveAt(0);
@@ -265,20 +288,19 @@ public class EnemyStateMachine : DucMonobehaviour
 
         if (allHeroesDone && allEnemiesDone)
         {
-            // Reset enemy state, bắt đầu lượt mới cho hero
+
             this.ChooseActionAfterDone();
         }
         else if (allHeroesDone)
         {
-            // Hero đã xong, chuyển lượt cho enemy
+
             this.combatStateMachine.enemiesAttacked.Clear();
             this.combatStateMachine.heroTurn = false;
             this.combatStateMachine.enemyTurn = true;
         }
         else
         {
-            // Reset enemy state, bắt đầu lượt mới cho hero
-            this.ChooseActionAfterDone(); 
+            this.ChooseActionAfterDone();
         }
     }
     private void ChooseActionAfterDone()
@@ -286,30 +308,84 @@ public class EnemyStateMachine : DucMonobehaviour
         this.combatStateMachine.enemiesAttacked.Clear();
         this.combatStateMachine.heroTurn = true;
         this.combatStateMachine.enemyTurn = false;
-        this.timer = Random.Range(1, this.combatStateMachine.playersInCombat.Count + 1);
-        this.ChooseAction();
+
+        if (this.timer <= 0)
+        {
+            this.timer = Random.Range(1, this.combatStateMachine.playersInCombat.Count + 1);
+            this.ChooseAction();
+        }
+        else
+        {
+            // Thêm dòng này để UI luôn cập nhật đúng số Timer hiện tại mỗi khi qua lượt
+            this.GenerateTimerIcon();
+        }
     }
-    
+
     //-----------------------------GENERATE-------------------------
-    public void GenerateLocks()
+    public virtual void GenerateLocks()
     {
+       
         this.activeLocks.Clear();
+
+        List<BaseAttack.Effect> heroEffects = new List<BaseAttack.Effect>();
+
+        List<GameObject> heroesToScan = new List<GameObject>();
+        if (this.combatStateMachine != null && this.combatStateMachine.playersInCombat.Count > 0)
+        {
+            heroesToScan.AddRange(this.combatStateMachine.playersInCombat);
+        }
+        else
+        {
+            heroesToScan.AddRange(GameObject.FindGameObjectsWithTag("Player"));
+        }
+
+
+        foreach (GameObject heroGO in heroesToScan)
+        {
+            if (heroGO == null || !heroGO.activeInHierarchy) continue;
+            HeroStateMachine hero = heroGO.GetComponent<HeroStateMachine>();
+
+            if (hero != null && hero.baseHero != null)
+            {
+
+                if (System.Enum.TryParse(hero.baseHero.elemental.ToString(), out BaseAttack.Effect elemEffect))
+                {
+                    heroEffects.Add(elemEffect);
+                }
+
+                string hType = hero.baseHero.heroType.ToString();
+                if (hType == "Warrior") heroEffects.Add(BaseAttack.Effect.Sword);
+                else if (hType == "Lancer") heroEffects.Add(BaseAttack.Effect.Lance);
+            }
+        }
+
+        heroEffects = heroEffects.Distinct().ToList();
+        if (heroEffects.Count == 0)
+        {
+
+            foreach (BaseAttack.Effect eff in System.Enum.GetValues(typeof(BaseAttack.Effect)))
+            {
+                heroEffects.Add(eff);
+            }
+        }
         for (int i = 0; i < 1; i++)
         {
-            int numTypes = 3; // Each Lock has 1 or 2 Effects
+            int numTypes = 3;
             List<BaseAttack.Effect> types = new List<BaseAttack.Effect>();
 
             for (int j = 0; j < numTypes; j++)
             {
-                BaseAttack.Effect randomType = (BaseAttack.Effect)Random.Range(0, System.Enum.GetValues(typeof(BaseAttack.Effect)).Length);
+                BaseAttack.Effect randomType = heroEffects[Random.Range(0, heroEffects.Count)];
                 types.Add(randomType);
             }
+
             this.enemyUI.SetAttackTypes(types);
             activeLocks.Add(new LockSystem(types));
         }
     }
-    public void GenerateTimerIcon()
+    public virtual void GenerateTimerIcon()
     {
+        
         this.enemyUI.SetTimerIcon(this.timer);
     }
     public SkillBehaviour GetSkillBehaviourForAttack(BaseAttack baseAttack)
@@ -336,7 +412,7 @@ public class EnemyStateMachine : DucMonobehaviour
             }
         }
 
-        Debug.LogWarning("Không tìm thấy prefab cho skill: " + baseAttack.attackName);
+
         return null;
     }
 }

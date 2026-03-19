@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60e766e85f7081345b933aa467bb6d1b, type: 3}
+  m_Name: Ring of Balance
+  m_EditorClassIdentifier: Assembly-CSharp::Inventory.Model.EquippableItemSO
+  itemType: 3
+  rarity: 0
+  <IsStackable>k__BackingField: 1
+  <MaxStackSize>k__BackingField: 99
+  <Name>k__BackingField: Ring of Balance
+  <ReceiveEffect>k__BackingField: +3 ATK, +3 MATK
+  <Description>k__BackingField: A gleaming topaz rests at the center of this ring.
+    It harmonizes physical might with magical prowess.
+  <ItemImage>k__BackingField: {fileID: -1836799943, guid: e7e6f3fde188fd045812d52fd2d72332,
+    type: 3}
+  <DefaultParameterList>k__BackingField:
+  - itemParameter: {fileID: 11400000, guid: 9201eba36d55d714db818ff484519046, type: 2}
+    value: 1000
+  <Modifiers>k__BackingField:
+  - stat: {fileID: 11400000, guid: c7443d0fed72bae4b8a12d0c1bd17666, type: 2}
+    val1: 3
+    val2: 3
+  allowedWeapons: 4

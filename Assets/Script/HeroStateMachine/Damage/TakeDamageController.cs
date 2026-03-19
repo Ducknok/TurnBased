@@ -3,7 +3,7 @@ using UnityEngine;
 
 public abstract class TakeDamageController : DucMonobehaviour
 {
-    public abstract void TakeDamage(GameObject target, float getDamageAmount);
-    public abstract void TakeDamage(GameObject target, float getDamageAmount, BaseAttack.Effect attackType1, BaseAttack.Effect attackType2);
+    public abstract void TakeDamage(GameObject target, int getDamageAmount);
+    public abstract void TakeDamage(GameObject target, int getDamageAmount, BaseAttack.Effect attackType1, BaseAttack.Effect attackType2);
 
 }

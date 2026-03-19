@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[Serializable]
+[CreateAssetMenu(fileName = "New Enemy Data", menuName = "RPG/Base Data/New Enemy Base Data")]
 public class BaseEnemy: BaseClass
 {
     public enum Type
@@ -12,6 +12,7 @@ public class BaseEnemy: BaseClass
         Fire,
         Water,
         ELETRIC,
+        None,
     }
 
     public enum Rarity

@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6eb35976fd9ec52488d3d97a35459c00, type: 3}
+  m_Name: Fire Slime
+  m_EditorClassIdentifier: Assembly-CSharp::BaseEnemy
+  theName: Fire Slime
+  baseHP: 100
+  curHP: 100
+  baseMP: 0
+  curMP: 0
+  baseATK: 15
+  curATK: 15
+  baseMATK: 15
+  curMATK: 15
+  baseDEF: 5
+  curDEF: 5
+  baseMDEF: 5
+  curMDEF: 5
+  normalAttacks:
+  - {fileID: 11400000, guid: 5a13442d450f1604a988106067889bdb, type: 2}
+  - {fileID: 11400000, guid: 849df6e63b927464b83f92178f55c0e0, type: 2}
+  specialAttacks: []
+  enemyType: 1
+  rarity: 0

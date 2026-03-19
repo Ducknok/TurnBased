@@ -21,10 +21,9 @@ public class CombatZone : DucMonobehaviour
     public float jumpHeight = 2f;         // Jump height for entering combat
     public bool isInCombat = false;      // State to check if combat is active
 
-    [System.Obsolete]
     protected override void Awake()
     {
-        this.cbm = FindObjectOfType<CombatStateMachine>();
+        this.cbm = FindAnyObjectByType<CombatStateMachine>();
         StartCoroutine(WaitSetCameraController());
     }
     protected override void OnEnable()
@@ -37,7 +36,7 @@ public class CombatZone : DucMonobehaviour
     }
     protected override void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        this.cbm = FindObjectOfType<CombatStateMachine>();
+        this.cbm = FindAnyObjectByType<CombatStateMachine>();
         StartCoroutine(WaitSetCameraController());
     }
     private IEnumerator WaitSetCameraController()
@@ -45,14 +44,15 @@ public class CombatZone : DucMonobehaviour
         yield return null; // đợi 1 frame
         this.cameraCtrl = CameraController.Instance;
     }
+
     private void LoadHeroList()
     {
-
         var players = this.cbm.playersInCombat;
 
         this.heros = new GameObject[players.Count];
         this.bodies = new GameObject[players.Count];
 
+        // SỬA LỖI: Thay hàm lồng nhau bằng vòng lặp for
         for (int i = 0; i < players.Count; i++)
         {
             GameObject hero = players[i];
@@ -68,21 +68,16 @@ public class CombatZone : DucMonobehaviour
             if (bodyTransform != null)
             {
                 bodies[i] = bodyTransform.gameObject;
-                // Debug.Log($"Body found for {hero.name}: {bodyTransform.name}");
             }
             else
             {
                 Debug.LogWarning($"Body not found for hero {hero.name}");
             }
-            // 🔽 Gọi HeroPosition() ở đây
+
             var heroSM = hero.GetComponent<HeroStateMachine>();
             if (heroSM != null)
             {
-                heroSM.HeroPosition(); // 👈 Gọi hàm bạn đã viết
-            }
-            else
-            {
-                Debug.LogWarning($"Không tìm thấy HeroCombatStateMachine trên {hero.name}");
+                heroSM.HeroPosition();
             }
         }
     }
@@ -91,16 +86,25 @@ public class CombatZone : DucMonobehaviour
     {
         if (collider.CompareTag("Body") && !isInCombat)
         {
+            StartCombatEncounter(); // Gọi hàm mới thay vì tự xử lý
+        }
+    }
+
+    // HÀM MỚI: Cho phép quái vật tự động kích hoạt Combat khi rượt kịp người chơi
+    public void StartCombatEncounter()
+    {
+        if (!isInCombat)
+        {
             isInCombat = true;
             StartCoroutine(InitiateCombat());
         }
     }
+
     private IEnumerator InitiateCombat()
     {
-        //Debug.Log("Combat Started!");
         this.LoadHeroList();
         CameraController.Instance.SetCameraForCombat(this.centerPosition);
-        // Kiểm tra kích thước mảng trước khi di chuyển
+
         if (heros.Length > playerPositions.Length || enemies.Length > enemyPositions.Length)
         {
             yield break;
@@ -109,7 +113,6 @@ public class CombatZone : DucMonobehaviour
         // Move players
         for (int i = 0; i < heros.Length; i++)
         {
-            //Debug.Log($"Player {i} move to {playerPositions[i].position}");
             MoveToPosition(bodies[i].transform, playerPositions[i].position);
         }
 
@@ -123,10 +126,9 @@ public class CombatZone : DucMonobehaviour
 
         StartCombat();
     }
-    // Move a character to a target position with a jump animation
+
     private void MoveToPosition(Transform character, Vector3 targetPosition)
     {
-        //Debug.Log($"Moving {character.name} from {character.position} to {targetPosition}");
         Vector3[] path = new Vector3[]
         {
         character.position,
@@ -134,35 +136,53 @@ public class CombatZone : DucMonobehaviour
         targetPosition
         };
 
-        character.DOPath(path, movementDuration, PathType.CatmullRom).SetEase(Ease.InOutQuad); // .OnComplete( /*=> Debug.Log($"{character.name} reached {targetPosition}")*/);
+        character.DOPath(path, movementDuration, PathType.CatmullRom).SetEase(Ease.InOutQuad);
     }
 
-    // Logic to handle the actual combat after positioning
     private void StartCombat()
     {
-
         this.isInCombat = true;
         foreach (var hero in PlayerController.Instance.HeroSMList)
         {
             hero.anim.SetFloat("Speed", 0);
             hero.anim.SetBool("IdleBattle", this.isInCombat);
         }
+
+        foreach (var enemy in enemies)
+        {
+            if (enemy != null)
+            {
+                var esm = enemy.GetComponent<EnemyStateMachine>();
+                if (esm != null)
+                {
+                    esm.StartCombatFlow();
+                }
+            }
+        }
     }
-    // End the combat
+
     public void EndCombat()
     {
         Debug.Log("Combat Ended!");
         isInCombat = false;
-        foreach(var hero in PlayerController.Instance.HeroSMList)
+
+        foreach (var hero in PlayerController.Instance.HeroSMList)
         {
             hero.anim.SetBool("IdleBattle", this.isInCombat);
         }
+
         this.cbm.combatState = CombatStateMachine.PerformAction.WAIT;
         this.cbm.playerInput = CombatStateMachine.PlayerGUI.ACTIVATE;
-        cameraCtrl.SetCameraFollowHero(PartyManager.Instance.currentLeader.transform.parent.GetComponent<HeroStateMachine>());
+
+        if (this.cameraCtrl != null)
+        {
+            this.cameraCtrl.RefreshCamera();
+        }
+
         this.DisActiveObject();
-        // Reset positions, handle rewards, etc.
     }
+
+   
     private void DisActiveObject()
     {
         this.gameObject.SetActive(false);
@@ -184,5 +204,5 @@ public class CombatZone : DucMonobehaviour
         {
             if (pos != null) Gizmos.DrawSphere(pos.position, 0.2f);
         }
-    } 
+    }
 }

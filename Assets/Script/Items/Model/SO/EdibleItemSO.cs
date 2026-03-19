@@ -22,6 +22,10 @@ namespace Inventory.Model
             {
                 data.stat.AffectCharacter(character, data.val1, data.val2);
             }
+            if (SaveManager.Instance != null)
+            {
+                SaveManager.Instance.SaveGame();
+            }
             return true;
         }
     }

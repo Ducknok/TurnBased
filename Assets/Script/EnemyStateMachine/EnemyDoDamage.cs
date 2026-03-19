@@ -29,7 +29,7 @@ public class EnemyDoDamage : DealDamageController
         Vector3 targetPosition = hsm.transform.Find("Body").position;
         if (esm.currentAttack != null && esm.currentAttack.skillData != null)
         {
-            float calDamage = esm.baseEnemy.curATK + esm.currentAttack.skillData.attackDamage;
+            int calDamage = esm.baseEnemy.curATK + esm.currentAttack.skillData.attackDamage;
 
             Transform hitParticle = VFXSpawner.Instance.Spawn(esm.currentAttack.skillData.hitParticleName, targetPosition, Quaternion.identity);
             if (hitParticle != null)

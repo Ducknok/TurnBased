@@ -14,7 +14,11 @@ public class VFXSpawner : Spawner
     //Ducknok's VFX
     public static string lightningtStrike = "LightningStrike";
     public static string lightningTrail = "LightningTrail";
-    public static string ducknokClone = "DucknokClone";
+    public static string thunderBolt = "ThunderBolt";
+    public static string magneticOrb = "MagneticOrb";
+    public static string thunderNuke = "ThunderNuke";
+    public static string thunderBird = "ThunderBird";
+
 
     //May's VFX
     public static string windBlade = "WindBlade";
@@ -32,6 +36,7 @@ public class VFXSpawner : Spawner
     public static string fireHitParticle = "FireHitParticle";
     public static string windHitParticle = "WindHitParticle";
     public static string slashHitParticle = "SlashHitParticle";
+    public static string pinkHitParticle = "PinkHitParticle";
 
     protected override void Awake()
     {

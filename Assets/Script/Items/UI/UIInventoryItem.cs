@@ -13,11 +13,9 @@ namespace Inventory.UI
     {
         [SerializeField]
         private Image itemImage;
-        [SerializeField]
-        private TextMeshProUGUI quantityText;
-
-        [SerializeField]
-        private Image borderImage;
+        [SerializeField] private TextMeshProUGUI quantity;
+        [SerializeField] private TextMeshProUGUI itemName;
+        [SerializeField] private Image bg;
         public event Action<UIInventoryItem> OnItemSelected, OnItemDroppedOn /*OnItemBeginDrag, OnItemEndDrag /*OnItemSold*/;
         private bool empty = true;
 
@@ -33,40 +31,21 @@ namespace Inventory.UI
         }
         public void Deselect()
         {
-            this.borderImage.enabled = false;
+            this.bg.enabled = false;
         }
-        public void SetData(Sprite sprite, int quantity)
+        public void SetData(Sprite sprite, string itemName, int quantity)
         {
             this.itemImage.gameObject.SetActive(true);
             this.itemImage.sprite = sprite;
-            this.quantityText.text = quantity + "";
+            this.itemName.text = itemName;
+            this.quantity.text = quantity + "";
             this.empty = false;
         }
         public void Select()
         {
-            this.borderImage.enabled = true;
+            this.bg.enabled = true;
             this.OnItemSelected?.Invoke(this);
         }
-
-        //public void OnBeginDrag(PointerEventData eventData)
-        //{
-        //    if (empty) return;
-        //    OnItemBeginDrag?.Invoke(this);
-        //}
-
-        //public void OnEndDrag(PointerEventData eventData)
-        //{
-        //    OnItemEndDrag?.Invoke(this);
-        //}
-
-        //public void OnDrop(PointerEventData eventData)
-        //{
-        //    OnItemDroppedOn?.Invoke(this);
-        //}
-
-        //public void OnDrag(PointerEventData eventData)
-        //{
-            
-        //}
     }
+
 }

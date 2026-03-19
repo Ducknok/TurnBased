@@ -53,16 +53,16 @@ public class ButtonController : Singleton<ButtonController>
     private void LoadCBM()
     {
         if (this.combatCtrl != null) return;
-        this.combatCtrl = FindObjectOfType<CombatController>();
+        this.combatCtrl = FindAnyObjectByType<CombatController>();
     }
     private void LoadTransform()
     {
         this.panel = GameObject.Find("BattleCanvas").transform.Find("Panel");
-        this.actionPanel = this.panel.Find("ActionPanel").gameObject;
-        this.skillPanel = this.panel.Find("SkillBarPanel").gameObject;
+        this.actionPanel = this.panel.Find("UIAction").gameObject;
+        this.skillPanel = this.panel.Find("UISkillBar").gameObject;
         this.actionSpacer = this.actionPanel.transform.Find("ActionSpacer");
         this.skillSpacer = this.skillPanel.transform.Find("SkillBarSpacer");
-        this.attackTypeInfoSpacer = this.panel.Find("AttackTypeInfoPanel").transform.Find("AttackTypeInfoPanelSpacer");
+        this.attackTypeInfoSpacer = this.panel.Find("UIAttackTypeInfo").transform.Find("AttackTypeInfoPanelSpacer");
     }
     public override void CheckState()
     {

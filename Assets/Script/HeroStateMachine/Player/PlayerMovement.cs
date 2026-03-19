@@ -1,86 +1,99 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using Cinemachine;
-using UnityEngine.SceneManagement;
 
 public class PlayerMovement : DucMonobehaviour
 {
+    [Header("Leader")]
     public bool isLeader = false;
-    [SerializeField] private MainInventoryController mainInventory;
-    [SerializeField] public float moveSpeed = 5f;
-    [SerializeField] private Rigidbody2D rb;
-    [SerializeField] public Animator anim;
-    public Vector2 movement;
 
-    // Lưu lịch sử vị trí
+    [Header("Movement")]
+    [SerializeField] private float moveSpeed = 5f;
+
+    [Header("Components")]
+    [SerializeField] private Rigidbody2D rb;
+    [SerializeField] private Animator anim;
+    [SerializeField] private MainInventoryController mainInventory;
+
+    public Vector2 movement;
+    public Vector2 lastMove = Vector2.down;
+
     public List<Vector3> positionHistory = new List<Vector3>();
     private float recordTimer;
     [SerializeField] private float recordInterval = 0.1f;
-    public Vector2 lastMove = Vector2.down;
 
     protected override void Awake()
     {
-        this.rb = this.transform.parent.GetComponent<Rigidbody2D>();
-        this.anim = this.transform.parent.GetComponent<Animator>();
-        this.mainInventory = FindObjectOfType<MainInventoryController>();
+        if (rb == null)
+            rb = GetComponent<Rigidbody2D>();
+
+        if (anim == null)
+            anim = GetComponent<Animator>();
+
+        if (mainInventory == null)
+            mainInventory = FindAnyObjectByType<MainInventoryController>();
     }
+
     protected override void Update()
     {
-        this.MoveInput();
+        MoveInput();
     }
+
     protected override void FixedUpdate()
     {
-        this.CheckState();
-        
+        CheckState();
     }
+
     private void MoveInput()
     {
-        if (CombatController.Instance.CBZ.isInCombat || this.mainInventory.isMainInventoryOpen) return;
-        else
+        if (CombatController.Instance.CBZ.isInCombat || mainInventory.isMainInventoryOpen)
+            return;
+
+        if (!isLeader) return;
+
+        movement.x = Input.GetAxisRaw("Horizontal");
+        movement.y = Input.GetAxisRaw("Vertical");
+
+        anim.SetFloat("Horizontal", movement.x);
+        anim.SetFloat("Vertical", movement.y);
+
+        anim.SetFloat("Speed", movement.sqrMagnitude);
+
+        if (movement != Vector2.zero)
         {
-            if (!isLeader) return; 
-
-            movement.Set(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-
-            anim.SetFloat("Horizontal", movement.x);
-            anim.SetFloat("Vertical", movement.y);
             lastMove = movement.normalized;
-            anim.SetFloat("Speed", movement.sqrMagnitude);
 
-            if (movement != Vector2.zero)
-            {
-                anim.SetFloat("LastHorizontal", movement.x);
-                anim.SetFloat("LastVertical", movement.y);
-            }
+            anim.SetFloat("LastHorizontal", movement.x);
+            anim.SetFloat("LastVertical", movement.y);
         }
     }
+
     public override void CheckState()
     {
-        if (CombatController.Instance.CBZ.isInCombat || this.mainInventory.isMainInventoryOpen)
+        if (CombatController.Instance.CBZ.isInCombat || mainInventory.isMainInventoryOpen)
         {
             rb.linearVelocity = Vector2.zero;
             return;
         }
-        else
-        {
-            if (this.isLeader)
-            {
-                rb.linearVelocity = movement.normalized * moveSpeed;
 
-                recordTimer += Time.fixedDeltaTime;
-                if (recordTimer >= recordInterval)
-                {
-                    positionHistory.Insert(0, this.transform.parent.position);
-                    recordTimer = 0f;
-                }
-            }
+        if (!isLeader) return;
+
+        rb.linearVelocity = movement.normalized * moveSpeed;
+
+        // record movement history for followers
+        recordTimer += Time.fixedDeltaTime;
+
+        if (recordTimer >= recordInterval)
+        {
+            positionHistory.Insert(0, transform.position);
+            recordTimer = 0f;
+
+            if (positionHistory.Count > 200)
+                positionHistory.RemoveAt(positionHistory.Count - 1);
         }
     }
-   
+
     public void ClearHistory()
     {
         positionHistory.Clear();
     }
-
-    
 }

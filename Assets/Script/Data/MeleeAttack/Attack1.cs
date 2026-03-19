@@ -26,11 +26,6 @@ public class Attack1 : SkillBehaviour
         }
         float animLength = anim.GetCurrentAnimatorStateInfo(0).length;
         yield return new WaitForSeconds(animLength);
-        this.ApplySkillEffects(esm.gameObject);
-    }
-
-    protected override void ApplySkillEffects(GameObject attacker)
-    {
-        EnemyDoDamage.Instance.DoDamage(attacker);
+        this.ApplySingleTargetDamage(esm.gameObject, target);
     }
 }
